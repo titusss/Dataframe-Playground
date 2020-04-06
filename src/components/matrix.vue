@@ -12,12 +12,26 @@ To-Do: Replace this with a method that generates a single SVG (D3.js) for better
     </div>
     <div class="table_buttons">
       <b-button-group>
-        <b-button v-b-popover.hover.bottom="'Merge uploaded data with selected table for differential expression.'" title="Differential Expression" :pressed.sync="myToggle" :disabled="button_enabled == 0" size="sm" variant="secondary"><img src="../assets/differential.svg" class="img_in_btn">Differential</b-button>
+        <b-button v-b-toggle.collapse-differential v-b-popover.hover.top="'Merges uploaded data with selected table for differential expression when selected.'" title="Differential Expression" :pressed.sync="is_differential" :disabled="button_enabled == 0" size="sm" variant="secondary"><img src="../assets/differential.svg" class="img_in_btn">Differential</b-button>
         <b-button v-b-modal.modal_delete :disabled="button_enabled == 0" size="sm" variant="danger"><img src="../assets/trash.svg" class="img_in_btn">Remove</b-button>
-          <!-- <b-modal id="modal_delete" title="Confirm Deletion">
-            <p class="my-4">Do you really want to remove the selected table?</p>
-          </b-modal> -->
       </b-button-group>
+
+            <b-collapse id="collapse-differential" class="mt-2">
+         <b-card>
+          <p class="card-text">Select base column for normalization.</p>
+        <div class="">
+          <b-form>
+            <b-form-select
+          id="input-3"
+          v-model="form.normalization_column"
+          :options="columns"
+          required
+        ></b-form-select>
+        </b-form>
+        </div>
+         </b-card>
+        </b-collapse>
+
     </div>
   </div>
 </template>
@@ -37,7 +51,11 @@ export default {
       is_hot: false,
       selected: undefined,
       button_enabled: false,
-      myToggle: false,
+      is_differential: false,
+      form: {
+        normalization_column: null
+      },
+       columns: [{ text: 'Select One', value: null },"Mouse 1","Mouse 2 Cow","Pig","Chicken Macrophage","SPI2","NO","SPI2","H2O2","SPI2","-Mg2","SPI2"]
     }
   },
   created() {
@@ -92,7 +110,7 @@ rect {
 }
 
 .active, svg:hover {
-  --cell-color: #484848 !important;
+  --cell-color: #484848;
 }
 
 .table_preview {
@@ -112,6 +130,11 @@ svg {
   animation-name: pulse;
   animation-duration: 1.5s;
   animation-iteration-count: infinite;
+}
+
+.btn-secondary:not(:disabled):not(.disabled).active {
+  background-color: #007bff !important;
+  border-color: #007bff !important;
 }
 
 @keyframes pulse {
