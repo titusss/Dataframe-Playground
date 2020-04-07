@@ -15,8 +15,12 @@
     "core-js": "^3.6.4",
     "portal-vue": "^2.1.7",
     "vue": "^2.6.11",
+<<<<<<< HEAD:frontend-container/package.json
     "vue-router": "^3.1.6",
     "vue-typeahead-bootstrap": "^2.3.0"
+=======
+    "vue-router": "^3.1.6"
+>>>>>>> bbb249f... Added flask server and sceleton backend:package.json
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.2.0",

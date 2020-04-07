@@ -2,24 +2,33 @@
   <div id="app">
     
     <div>
-      <b-button id="show-btn" @click="$bvModal.show('bv-modal-addData')">Add table</b-button>
-      <b-modal id="bv-modal-addData" hide-footer>
-        <addDataContainer/>
+      <b-button id="show-btn" @click="$bvModal.show('bv_modal_addData')">Add table</b-button>
+      <b-modal id="bv_modal_addData" hide-footer>
+        <addDataForm @close="hide_modal" />
       </b-modal>
-      <baseContainer/>
+      <baseContainer @show="show_modal" />
     </div>
   </div>
 </template>
 
 <script>
-import addDataContainer from './components/addDataContainer.vue'
+import addDataForm from './components/addDataForm.vue'
 import baseContainer from './components/baseContainer'
 
 export default {
   name: 'App',
   components: {
-    addDataContainer,
+    addDataForm,
     baseContainer
+  },
+  methods: {
+    hide_modal() {
+      this.$bvModal.hide('bv_modal_addData');
+      console.log("ahhh");
+    },
+    show_modal() {
+      this.$bvModal.show('bv_modal_addData');
+    }
   }
 }
 </script>
@@ -38,7 +47,7 @@ export default {
 .center {
   text-align: center;
 }
-#bv-modal-addData>* {
+#bv_modal_addData>* {
   max-width: 90vw !important;
 }
 </style>
