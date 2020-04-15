@@ -23,13 +23,26 @@
                     id="input-group-4"
                     description="Upload a CSV, TSV, or Excel from your machine."
                   >
+
+                  <b-form-group
+                    id="input-group-4"
+                    description="Upload a CSV, TSV, or Excel from your machine."
+                  >
                     <b-form-file
+                      id="upload_form" role="form" enctype="multipart/form-data" method="POST"
                       v-model="form.source.file"
                       :state="Boolean(form.source.file)"
                       placeholder="Choose a file or drop it here..."
                       drop-placeholder="Drop file here..."
                       accept=".txt"
                     ></b-form-file>
+                    <!-- <div class="mt-3">Selected file: {{ form.source.file ? form.source.file.name : '' }}</div> -->
+                  </b-form-group>
+                  <form id="upload_form" role="form" enctype="multipart/form-data" method="POST">
+                    <input type="file" name="file"  id="file">
+                  </form>
+
+
                     <!-- <div class="mt-3">Selected file: {{ form.source.file ? form.source.file.name : '' }}</div> -->
                   </b-form-group>
                 </b-tab>
@@ -124,42 +137,37 @@ export default {
       axios
         .get(path)
         .then(res => {
-          console.log(res.data.matrix);
           this.matrices = res.data.matrix;
-          console.log(this.matrices);
-          // this.get_active_matrices(this.matrices);
         })
         .catch(error => {
-          // eslint-disable-next-line
           console.error(error);
         });
     },
-    add_matrix(payload) {
-      const path = "http://localhost:5000/matrix";
-      console.log(payload);
+    add_matrix(path, payload) {
+      var data = new FormData();
+        data.append('file', payload);
+        data.append('form', JSON.stringify(this.form));
+        for (var pair of data.entries()) {
+          console.log(pair[0]+ ', ' + pair[1]); 
+        }
       axios
-        .post(path, payload)
+        .post(path, data)
         .then(() => {
-          this.fetch_matrices();
+          console.log("posted");
         })
         .catch(error => {
           console.log(error);
-          this.fetch_matrices();
         });
     },
     onSubmit(evt) {
       evt.preventDefault();
-      this.validateForm(this.form.source);
-      // this.$refs.bv_modal_addData.hide();
-      const payload = this.form;
-      this.add_matrix(payload);
+      const payload = this.form.source.file;
+      this.add_matrix("http://localhost:5000/upload", payload);
       this.$emit('close');
     },
     onReset(evt) {
       this.$emit('close');
-      console.log("reset");
       evt.preventDefault();
-      // this.$refs.bv_modal_addData.hide();
     },
     validateForm(obj) {
       var properties = 0;
@@ -193,34 +201,6 @@ export default {
           this.fetch_matrices();
         });
     },
-
-    // get_active_matrices(matrices) {
-    //   // Unneeded currently, remove in production
-    //   var i = 0;
-    //   for(i=0;i<matrices.length;i++) {
-    //     if (Object.prototype.hasOwnProperty.call(this.matrices[i], 'title')) {
-    //       this.active_matrices.push(this.matrices[i]);
-    //     }
-    //   }
-    //   console.log(this.active_matrices);
-    // }
-    //   onSubmit(evt) {
-    //     evt.preventDefault();
-    //   },
-    //   onReset(evt) {
-    //     evt.preventDefault();
-    //     // Reset our form values
-    //     this.form.email = "";
-    //     this.form.name = "";
-    //     this.form.food = null;
-    //     this.form.type = [];
-    //     // Trick to reset/clear native browser form validation state
-    //     this.show = false;
-    //     this.$nextTick(() => {
-    //       this.show = true;
-    //     });
-    //   }
-    // }
   }
 };
 </script>
