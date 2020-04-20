@@ -1,6 +1,3 @@
-<!-- Generates a single Matrix.
-To-Do: Replace this with a method that generates a single SVG (D3.js) for better performance -->
-
 <template>
   <div>
     <div class="table_preview">
@@ -104,9 +101,10 @@ export default {
   },
   methods: {
     select_matrix(matrix) {
+      console.log(matrix);
+      this.$emit('matrix_activated',matrix);
       if (Object.prototype.hasOwnProperty.call(matrix, "title")) {
         this.button_enabled = true;
-
       } else {
         this.button_enabled = false;
       }
