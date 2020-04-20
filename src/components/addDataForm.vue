@@ -23,28 +23,19 @@
                     id="input-group-4"
                     description="Upload a CSV, TSV, or Excel from your machine."
                   >
-
-                  <b-form-group
-                    id="input-group-4"
-                    description="Upload a CSV, TSV, or Excel from your machine."
-                  >
                     <b-form-file
-                      id="upload_form" role="form" enctype="multipart/form-data" method="POST"
+                      id="upload_form" role="form" enctype="multipart/form-data"
                       v-model="form.source.file"
                       :state="Boolean(form.source.file)"
                       placeholder="Choose a file or drop it here..."
                       drop-placeholder="Drop file here..."
-                      accept=".txt"
+                      accept=".txt, .xlsx"
                     ></b-form-file>
                     <!-- <div class="mt-3">Selected file: {{ form.source.file ? form.source.file.name : '' }}</div> -->
                   </b-form-group>
-                  <form id="upload_form" role="form" enctype="multipart/form-data" method="POST">
-                    <input type="file" name="file"  id="file">
-                  </form>
 
 
                     <!-- <div class="mt-3">Selected file: {{ form.source.file ? form.source.file.name : '' }}</div> -->
-                  </b-form-group>
                 </b-tab>
                 <b-tab title="Database">
                   <b-form-group
@@ -87,6 +78,7 @@
           v-bind:rect_width="15"
           v-bind:rect_height="15"
           v-bind:gap="20"
+          @matrix_activated="onMatrixActivated"
         />
       </b-col>
     </b-row>
@@ -107,8 +99,11 @@ export default {
       sourceErrMsg: "",
       showErrorAlert: false,
       matrices: [],
+      activeMatrix: null,
       form: {
         title: "",
+        x: null,
+        y: null,
         type: [],
         source: {
           file: null,
@@ -147,9 +142,6 @@ export default {
       var data = new FormData();
         data.append('file', payload);
         data.append('form', JSON.stringify(this.form));
-        for (var pair of data.entries()) {
-          console.log(pair[0]+ ', ' + pair[1]); 
-        }
       axios
         .post(path, data)
         .then(() => {
@@ -161,9 +153,7 @@ export default {
     },
     onSubmit(evt) {
       evt.preventDefault();
-      const payload = this.form.source.file;
-      this.add_matrix("http://localhost:5000/upload", payload);
-      this.$emit('close');
+      this.validateForm(this.form.source);
     },
     onReset(evt) {
       this.$emit('close');
@@ -183,7 +173,9 @@ export default {
         this.sourceErrMsg = "Please enter no more than one data-source.";
         this.showErrorAlert = true;
       } else {
-        return this.form;
+        const payload = this.form.source.file;
+        this.add_matrix("http://localhost:5000/upload", payload);
+        this.$emit('close');
       }
     },
     delete_matrix(deleted_matrix_id) {
@@ -201,6 +193,11 @@ export default {
           this.fetch_matrices();
         });
     },
+    onMatrixActivated(matrix) {
+      this.form.x = matrix.x;
+      this.form.y = matrix.y;
+      console.log(this.form);
+    }
   }
 };
 </script>

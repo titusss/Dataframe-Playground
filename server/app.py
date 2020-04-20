@@ -8,107 +8,18 @@ from flask_cors import CORS
 import uuid
 import pandas as pd
 import json
-# from clustergrammer import Network
+import load_file
 
 UPLOAD_FOLDER = './uploads'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-
-INPUT = [
-    {
-
-    }
-]
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'xlsx'}
 
 MATRIX = [
     {
         "id": uuid.uuid4().hex,
         "width": 5,
-        "height": 2,
+        "height": 5,
         "x": 2,
         "y": 2,
-        "isActive": False
-    },
-    {
-        "id": uuid.uuid4().hex,
-        "width": 3,
-        "height": 2,
-        "x": 3,
-        "y": 2,
-        "isActive": False
-    },
-    {
-        "id": uuid.uuid4().hex,
-        "width": 1,
-        "height": 2,
-        "x": 4,
-        "y": 2,
-        "isActive": False
-    },
-    {
-        "id": uuid.uuid4().hex,
-        "width": 2,
-        "height": 8,
-        "x": 1,
-        "y": 3,
-        "isActive": False
-    },
-    {
-        "id": uuid.uuid4().hex,
-        "title": "Conditional expression (MADs)",
-        "width": 5,
-        "height": 8,
-        "x": 2,
-        "y": 3,
-        "isActive": True
-    },
-    {
-        "id": uuid.uuid4().hex,
-        "title": "Hfq Co-IP",
-        "width": 3,
-        "height": 8,
-        "x": 3,
-        "y": 3,
-        "isActive": True
-    },
-    {
-        "id": uuid.uuid4().hex,
-        "title": "Median expression (TPM)",
-        "width": 1,
-        "height": 8,
-        "x": 4,
-        "y": 3,
-        "isActive": True
-    },
-    {
-        "id": uuid.uuid4().hex,
-        "width": 2,
-        "height": 8,
-        "x": 5,
-        "y": 3,
-        "isActive": False
-    },
-    {
-        "id": uuid.uuid4().hex,
-        "width": 5,
-        "height": 2,
-        "x": 2,
-        "y": 4,
-        "isActive": False
-    },
-    {
-        "id": uuid.uuid4().hex,
-        "width": 3,
-        "height": 2,
-        "x": 3,
-        "y": 4,
-        "isActive": False
-    },
-    {
-        "id": uuid.uuid4().hex,
-        "width": 1,
-        "height": 2,
-        "x": 4,
-        "y": 4,
         "isActive": False
     }
 ]
@@ -148,18 +59,15 @@ def upload_file():
             return redirect(request.url)
         file = request.files['file']
         dataList = json.loads(request.form['form'])
-        print(dataList)
-        print(type(dataList))
-        print(dataList['title'])
-        
-        # if user does not select file, browser also
-        # submit an empty part without filename
+        # If user does not select file, browser also submit an empty part without filename
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
+            extension = os.path.splitext(file.filename)[1]
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            make_preview(file, extension, dataList, False)
             return "success"
 
 @app.route('/uploads/<filename>')
@@ -171,55 +79,21 @@ def single_matrix(matrix_id):
     response_object = {'status': 'success'}
     if request.method == 'PUT':
         post_data = request.get_json()
-        remove_matrix(matrix_id)
-        MATRIX.append({
-            'title': post_data.get('title'),
-            'id': uuid.uuid4().hex,
-            "width": post_data.get('width'),
-            'height': post_data.get('height'),
-            'x': post_data.get('x'),
-            'y': post_data.get('y'),
-            'isActive': post_data.get('isActive')
-        })
         response_object['message'] = 'Matrix updated!'
     if request.method == 'DELETE':
-        remove_matrix(matrix_id)
+        make_preview(False, False, False, matrix_id)
+        # remove_matrix(matrix_id)
         response_object['message'] = 'Matrix removed!'
     return jsonify(response_object)
 
-# Module for converting .csv to tab-seperated .txt
-
-
-def export_matrix_tsv(input_file, cat_amount):
-    # Import a csv and load it into pandas dataframe.
-    df = pd.read_csv(input_file)
-    # Append category title string before values for all cat columns.
-    df[df.columns[0:cat_amount]] = df.columns[0:cat_amount] + \
-        ': ' + df[df.columns[0:cat_amount]].astype(str)
-    # Remove the category titles from first row.
-    for i in range(cat_amount):
-        df = df.rename(columns={df.columns[i]: ''})
-    # Export the data frame as tab-seperated .txt.
-    df.to_csv('output_matrix.txt', sep='\t', index=False)
-    print('Output file has been generated and saved.')
-    return df
-
-# Module for convertig tab-seperated .txt into clustergrammer-ready json
-
-
-def make_json(MatrixName):
-    # This creates a network and loads it into a file.
-    net = Network()
-    net.load_file(MatrixName + '.txt')
-    net.cluster(dist_type='cos', views=['N_row_sum', 'N_row_var'], dendro=True,
-                sim_mat=True, filter_sim=0.1, calc_cat_pval=False, enrichrgram=False, run_clustering=True)
-    # write jsons for front-end visualizations
-    net.write_json_to_file('viz', 'json/mult_view.json', 'indent')
-    net.write_json_to_file(
-        'sim_row', 'json/mult_view_sim_row.json', 'no-indent')
-    net.write_json_to_file(
-        'sim_col', 'json/mult_view_sim_col.json', 'no-indent')
-
+def make_preview(input_file, extension, dataList, remove_id):
+    MATRIX.clear()
+    MATRICES = load_file.process_upload(input_file, extension, dataList, remove_id)
+    for i in range(len(MATRICES)):
+        print(MATRICES[i])
+        MATRIX.append(MATRICES[i])
+    print(MATRIX)
+    return
 
 if __name__ == '__main__':
     app.run()
