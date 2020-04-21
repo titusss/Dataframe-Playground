@@ -9,9 +9,11 @@ import uuid
 import pandas as pd
 import json
 import load_file
+import visualize
 
 UPLOAD_FOLDER = './uploads'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'xlsx'}
+ALLOWED_EXTENSIONS = {'txt', 'xlsx', 'csv'}
+vis_plugin = "cg"
 
 MATRIX = [
     {
@@ -67,7 +69,8 @@ def upload_file():
             extension = os.path.splitext(file.filename)[1]
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            make_preview(file, extension, dataList, False)
+            DATAFRAME = make_preview(file, extension, dataList, False)
+            visualize.route(vis_plugin, DATAFRAME)
             return "success"
 
 @app.route('/uploads/<filename>')
@@ -88,12 +91,12 @@ def single_matrix(matrix_id):
 
 def make_preview(input_file, extension, dataList, remove_id):
     MATRIX.clear()
-    MATRICES = load_file.process_upload(input_file, extension, dataList, remove_id)
+    MATRICES, DATAFRAME = load_file.process_upload(input_file, extension.lower(), dataList, remove_id)
     for i in range(len(MATRICES)):
         print(MATRICES[i])
         MATRIX.append(MATRICES[i])
     print(MATRIX)
-    return
+    return DATAFRAME
 
 if __name__ == '__main__':
     app.run()
