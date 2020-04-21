@@ -9,9 +9,9 @@ active_matrices = [[]]
 
 def process_upload(input_file, extension, metadata, remove_id):
     global active_matrices
-    active_matrices = make_active_matrix(input_file, extension, metadata, active_matrices, remove_id)
+    active_matrices, df = make_active_matrix(input_file, extension, metadata, active_matrices, remove_id)
     matrices = make_matrices(active_matrices)
-    return matrices
+    return matrices, df
 
 def make_active_matrix(input_file, extension, metadata, active_matrices, remove_id):
     if input_file != False:
@@ -19,12 +19,12 @@ def make_active_matrix(input_file, extension, metadata, active_matrices, remove_
         if extension == ".xlsx":
             df = pd.read_excel(input_file)
         elif extension == ".csv":
-            df = pd.read_csv(input_file)
+            df = pd.read_csv(input_file, sep=';')
         elif extension == ".txt":
             df = pd.read_csv(input_file, sep='\t')
         else:
             print("Error: No valid extension. Please upload .xlsx (Excel), .csv, or .txt (TSV).")
-            return
+            return "Error"
         MATRIX = make_single_matrix(metadata['x'],metadata['y'],max_preview_columns,max_preview_rows,metadata['title'],True)
         if MATRIX['y']-1>len(active_matrices):
             active_matrices.append([])
@@ -43,7 +43,7 @@ def make_active_matrix(input_file, extension, metadata, active_matrices, remove_
         for matrixX in range(len(active_matrices[matrixY])):
             active_matrices[matrixY][matrixX]['x'] = matrixX+2
             active_matrices[matrixY][matrixX]['y'] = matrixY+2
-    return active_matrices
+    return active_matrices, df
 
 def make_matrices(active_matrices):
     matrices.clear() # flush all matrices to rebuild it later. Bad perfomance < more readable algorithm
