@@ -4,18 +4,13 @@
       <b-col>
         <h2>Add Data</h2>
         <addDataForm />
-         <pre class="mt-3 mb-0">{{ text }}</pre>
-      <b-button type="submit" variant="primary">Add</b-button>
-      <b-button type="reset" variant="danger" @click="$bvModal.hide('bv_modal_addData')">Cancel</b-button>
+        <pre class="mt-3 mb-0">{{ text }}</pre>
+        <b-button type="submit" variant="primary">Add</b-button>
+        <b-button type="reset" variant="danger" @click="$bvModal.hide('bv_modal_addData')">Cancel</b-button>
       </b-col>
       <b-col class="center">
         <h2>Matrix Preview</h2>
-        <matrix
-          v-bind:matrices="matrices"
-          v-bind:rect_width="15"
-          v-bind:rect_height="15"
-          v-bind:gap="20"
-        />
+        <matrix v-bind:rect_width="15" v-bind:rect_height="15" v-bind:gap="20" />
       </b-col>
     </b-row>
   </b-container>
@@ -32,5 +27,5 @@ export default {
     addDataForm,
     matrix
   }
-}
+};
 </script>

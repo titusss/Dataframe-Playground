@@ -142,10 +142,13 @@ export default {
       var data = new FormData();
         data.append('file', payload);
         data.append('form', JSON.stringify(this.form));
+      let self = this;
       axios
         .post(path, data)
         .then(() => {
-          console.log("posted");
+          this.$nextTick(() => {
+            self.$emit('dataframe_change');
+          });
         })
         .catch(error => {
           console.log(error);
@@ -186,6 +189,7 @@ export default {
           this.fetch_matrices();
           this.message = "Matrix removed!";
           this.showMessage = true;
+          this.$emit('dataframe_change');
         })
         .catch(error => {
           // eslint-disable-next-line

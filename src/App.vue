@@ -1,35 +1,62 @@
 <template>
   <div id="app">
-    
     <div>
       <b-button id="show-btn" @click="$bvModal.show('bv_modal_addData')">Add table</b-button>
       <b-modal id="bv_modal_addData" hide-footer>
-        <addDataForm @close="hide_modal" />
+        <addDataForm @dataframe_change="get_vis_link"/>
       </b-modal>
       <baseContainer @show="show_modal" />
+      <div class="visualization">
+        <visualization v-bind:vis_link="vis_link"/>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios"
 import addDataForm from './components/addDataForm.vue'
 import baseContainer from './components/baseContainer'
+import visualization from './components/visualization'
 
 export default {
   name: 'App',
   components: {
     addDataForm,
-    baseContainer
+    baseContainer,
+    visualization
+  },
+  data() {
+    return {
+      vis_link: ""
+    }
+  },
+  created() {
+    this.get_vis_link()
   },
   methods: {
     hide_modal() {
       this.$bvModal.hide('bv_modal_addData');
-      console.log("ahhh");
     },
     show_modal() {
       this.$bvModal.show('bv_modal_addData');
+    },
+    get_vis_link() {
+      this.hide_modal();
+      console.log("get_vis_link");
+      const path = "http://localhost:5000/visualization";
+      axios
+          .get(path)
+          .then(res => {
+              console.log(res);
+              this.vis_link = res.data.vis_link;
+          })
+          .catch(error => {
+              console.error(error);
+              this.get_vis_link();
+          });
+        }
     }
-  }
 }
 </script>
 

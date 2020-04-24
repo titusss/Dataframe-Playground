@@ -13,8 +13,8 @@ import visualize
 
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'txt', 'xlsx', 'csv'}
-vis_plugin = "cg"
-
+vis_plugin = "clustergrammer"
+VIS_PATH = [""]
 MATRIX = [
     {
         "id": uuid.uuid4().hex,
@@ -46,6 +46,14 @@ def remove_matrix(matrix_id):
             return True
     return False
 
+@app.route('/visualization', methods=['GET', 'POST'])
+def vis_link():
+    vis_response_object = {'status': 'success'}
+    vis_response_object['vis_link'] = VIS_PATH[0]
+    print("VIS_PATH: ",VIS_PATH)
+    print("vis_response_object: ", vis_response_object)
+    return jsonify(vis_response_object)
+
 @app.route('/matrix', methods=['GET', 'POST'])
 def all_matrix():
     response_object = {'status': 'success'}
@@ -61,7 +69,7 @@ def upload_file():
             return redirect(request.url)
         file = request.files['file']
         dataList = json.loads(request.form['form'])
-        # If user does not select file, browser also submit an empty part without filename
+        # If user does not select file, browser also submit an empty part without filename.
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
@@ -69,8 +77,8 @@ def upload_file():
             extension = os.path.splitext(file.filename)[1]
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            DATAFRAME = make_preview(file, extension, dataList, False)
-            visualize.route(vis_plugin, DATAFRAME)
+            DATAFRAME = make_preview(file, extension, dataList, False) # Main API point. Uploaded dataframe.
+            make_vis_link(vis_plugin, DATAFRAME) # Main API point. Parse Dataframe to whichever visualization plugin you want.
             return "success"
 
 @app.route('/uploads/<filename>')
@@ -97,6 +105,11 @@ def make_preview(input_file, extension, dataList, remove_id):
         MATRIX.append(MATRICES[i])
     print(MATRIX)
     return DATAFRAME
+
+def make_vis_link(vis_plugin, DATAFRAME):
+    VIS_PATH.clear()
+    VIS_PATH.append(visualize.route(vis_plugin, DATAFRAME))
+    return VIS_PATH
 
 if __name__ == '__main__':
     app.run()
