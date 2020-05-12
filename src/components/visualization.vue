@@ -14,7 +14,11 @@ export default {
 
 <style>
 #iframe_visualization {
-    width: 90vw;
-    height: 80vh;
+    width: 100%;
+    height: 150vh;
+    border-radius: 20px;
+    padding: 10px;
+    background-color: #fff;
+    margin-top: 3em;
 }
 </style>
