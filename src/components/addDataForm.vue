@@ -33,8 +33,6 @@
                     ></b-form-file>
                     <!-- <div class="mt-3">Selected file: {{ form.source.file ? form.source.file.name : '' }}</div> -->
                   </b-form-group>
-
-
                     <!-- <div class="mt-3">Selected file: {{ form.source.file ? form.source.file.name : '' }}</div> -->
                 </b-tab>
                 <b-tab title="Database">
@@ -143,11 +141,14 @@ export default {
         data.append('file', payload);
         data.append('form', JSON.stringify(this.form));
       let self = this;
+      // self.$parent.$bvModal.hide('bv_modal_addData')
       axios
         .post(path, data)
-        .then(() => {
+        .then(res => {
+          console.log(res);
           this.$nextTick(() => {
-            self.$emit('dataframe_change');
+            console.log("after next tick res: ", res);
+            self.$emit('dataframe_change', res);
           });
         })
         .catch(error => {
