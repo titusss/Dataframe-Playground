@@ -126,7 +126,7 @@ export default {
   },
   methods: {
     fetch_matrices() {
-      const path = "http://localhost:5000/matrix";
+      const path = "http://192.168.1.31:5000/matrix";
       axios
         .get(path)
         .then(res => {
@@ -178,12 +178,12 @@ export default {
         this.showErrorAlert = true;
       } else {
         const payload = this.form.source.file;
-        this.add_matrix("http://localhost:5000/upload", payload);
+        this.add_matrix("http://192.168.1.31:5000/upload", payload);
         this.$emit('close');
       }
     },
     delete_matrix(deleted_matrix_id) {
-      const path = `http://localhost:5000/matrix/${deleted_matrix_id}`;
+      const path = `http://192.168.1.31:5000/matrix/${deleted_matrix_id}`;
       axios
         .delete(path)
         .then(() => {

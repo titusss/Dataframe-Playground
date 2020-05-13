@@ -78,7 +78,7 @@ export default {
     onSubmit(evt) {
       evt.preventDefault()
       const payload = this.form.icon;
-      this.add_plugin("http://localhost:5000/plugins", payload);
+      this.add_plugin("http://192.168.1.31:5000/plugins", payload);
     },
     onReset(evt) {
       evt.preventDefault()

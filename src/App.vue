@@ -15,7 +15,6 @@
 
 <template>
   <div id="app">
-
     <div class="grid_container">
       <!-- <div class="header">
         <b-button variant="secondary" size="sm"><b-icon icon="cloud-download" aria-hidden="true"></b-icon></b-button>
@@ -25,11 +24,11 @@
         <div class="main_cell_header">
           <div class="cell_title_ud"><h5 class="title">Upload data</h5></div>
           <div class="cell_upload_data field">
-            <b-button variant="secondary" v-on:plugin_clicked="show_modal('bv_modal_addData')" ><b-icon icon="table"></b-icon>Upload</b-button>
+            <b-button variant="secondary"><b-icon icon="table"></b-icon>Upload</b-button>
           </div>
           <div class="cell_title_sp"><h5 class="title">Select the visualization</h5></div>
           <div class="cell_select_plugin field plugins">
-            <plugins v-for="plugin in plugin_list" :key="plugin.name" :title="plugin.name" :desc="plugin.desc" :img="plugin.icon"/>
+            <plugins v-on:plugin_clicked="show_modal('bv_modal_addData')" v-for="plugin in plugin_list" :key="plugin.name" :title="plugin.name" :desc="plugin.desc" :img="plugin.icon"/>
             <plugins v-on:plugin_clicked="show_modal('modal_add_plugin')" :title="'Add Plugin'" :desc="'Connect a new visualization'" :img="'add_plugin.svg'" @click="$bvModal.show('bv_modal_addData')"/>
           </div>
         </div>
@@ -37,6 +36,7 @@
         <div class="field">
           <search_query/>
         </div>
+        <router-view><visualization v-bind:vis_link="vis_link"/></router-view>
         <div v-bind:class="{hide: inactive}">
           <visualization v-bind:vis_link="vis_link"/>
         </div>
@@ -53,6 +53,9 @@
         <add_plugin @plugins_change="get_plugins"/>
       </b-modal>
     </div>
+    <router-link :to="{ path: '/vis', query: { vis: 'https://titusebbecke.com'}}">
+      About
+    </router-link>
   </div>
 
 </template>
@@ -63,7 +66,6 @@ import visualization from './components/visualization'
 import plugins from './components/plugins'
 import add_plugin from './components/add_plugin'
 import search_query from './components/search_query'
-
 export default {
   name: 'App',
   components: {
@@ -71,7 +73,10 @@ export default {
     visualization,
     plugins,
     add_plugin,
-    search_query
+    search_query,
+  },
+  created() {
+    this.$router.push({ path: '/vis', query: { vis: 'https://titusebbecke.com'}})
   },
   data() {
     return {
@@ -82,9 +87,6 @@ export default {
         {url: "", name:"SandDance", desc:"Microsoft's 2D & 3D data exploration tool.", icon: "sanddance_logo.svg"}
       ]
     }
-  },
-  created() {
-    // this.get_vis_link()
   },
   methods: {
     get_plugins(res) {
