@@ -1,8 +1,7 @@
 # To-Do: Configure CORS to only allow specific requests. Very important!
 
 import os
-from flask import Flask, flash, request, redirect, url_for, jsonify
-from flask import send_from_directory
+from flask import Flask, flash, request, redirect, url_for, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 import uuid
@@ -41,6 +40,8 @@ MATRIX = [
     }
 ]
 
+
+
 # configuration
 DEBUG = True
 
@@ -48,7 +49,11 @@ DEBUG = True
 app = Flask(__name__)
 app.secret_key = "super secret key"  # INSECURE AND FOR DEBUGGING PURPOSES
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-CORS(app, resources={r'/*': {'origins': '*'}}) # enable CORS
+CORS(app)
+# CORS(app, resources={r'/*': {'origins': '*'}}) # enable CORS
+
+if __name__ == '__main__':
+    app.run(threaded = True)
 
 def allowed_file(filename, extension_whitelist):
     return '.' in filename and \
@@ -60,6 +65,10 @@ def remove_matrix(matrix_id):
             MATRIX.remove(matrix)
             return True
     return False
+
+@app.route('/')
+def helloWorld():
+    return "Hello world!"
 
 @app.route('/plugins', methods=['GET', 'POST'])
 def add_plugin():
@@ -89,7 +98,6 @@ def add_matrix():
         file, dataList, extension, filepath, filename = upload_file(request, ALLOWED_EXTENSIONS_MATRIX, '.' + app.config['UPLOAD_FOLDER'])
         DATAFRAME = make_preview(file, extension, dataList, False) # Main API point. Uploaded dataframe.
         make_vis_link(vis_plugin, DATAFRAME) # Main API point. Parse Dataframe to whichever visualization plugin you want.
-        print("responding with: ", jsonify(respond_data('vis_link', VIS_PATH[0])))
         return jsonify(respond_data('vis_link', VIS_PATH[0]))
     else: 
         return "method unclear"
@@ -144,6 +152,3 @@ def make_vis_link(vis_plugin, DATAFRAME):
     VIS_PATH.clear()
     VIS_PATH.append(visualize.route(vis_plugin, DATAFRAME))
     return VIS_PATH
-
-if __name__ == '__main__':
-    app.run()

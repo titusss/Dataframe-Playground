@@ -7,6 +7,23 @@ matrices = []
 max_y = 1
 active_matrices = [[]]
 
+def save_df_mongo(dataframe, metadata):
+    from pymongo import MongoClient
+    import pandas as pd
+    data_dict = {}
+    data_dict['metadata'] = metadata
+    data_dict['dataframe'] = dataframe.to_dict('records')
+    
+    client = MongoClient()
+    db = client.projectname
+    visualizations = db.visualizations
+    
+    data_id = visualizations.insert(data_dict)
+    client.close()
+    temp_data = db.visualizations.find_one({"_id": data_id})
+    print(data_id)
+    return data_id
+
 def process_upload(input_file, extension, metadata, remove_id):
     global active_matrices
     global merged_df
@@ -16,6 +33,7 @@ def process_upload(input_file, extension, metadata, remove_id):
         merged_df = merge_dataframes(merged_df, df, metadata['title'], added_axis)
     else:
         merged_df = df
+    save_df_mongo(merged_df, metadata)
     matrices = make_matrices(active_matrices)
     return matrices, merged_df
 
