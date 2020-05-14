@@ -6,7 +6,7 @@ import matrix from './components/matrix.vue';
 Vue.use(VueRouter)
 
 export default new VueRouter({
-    // mode: 'history',
+    mode: 'history',
     base: process.env.BASE_URL,
     routes: [
     {
@@ -15,10 +15,10 @@ export default new VueRouter({
       component: matrix,
     },
     {
-        path: '/vis', 
+        path: '/', 
         component: visualization,
         props(route) {
-          return {  myprop: route.query.myprop }
+          return {  myprop: route.query.config }
         }
       }
   ],

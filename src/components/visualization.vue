@@ -1,6 +1,6 @@
 <template>
 <div>
-<p>{{this.$route.query.vis}}</p>
+<p>{{this.$route.query.config}}</p>
   <iframe id="iframe_visualization" v-bind:src="vis_link" frameborder="0"></iframe>
 </div>
 </template>
@@ -8,13 +8,11 @@
 <script>
 export default {
     name: "visualization",
-    data() {
-        return {
-            vis_link: null,
-        }
+    props: {
+        vis_link: String
     },
     created() {
-        this.vis_link = this.$route.query.vis
+        // this.vis_link = this.$route.query.vis
         console.log(this.vis_link)
     }
 }
