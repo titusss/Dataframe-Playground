@@ -10,13 +10,6 @@ import json
 import process_file
 import upload_to_db
 import visualize
-from pymongo import MongoClient
-from bson.json_util import loads, dumps, ObjectId
-
-client = MongoClient()
-db = client.projectname
-visualizations = db.visualizations
-
 
 UPLOAD_FOLDER = '/static' # Change this to /uploads in production
 ALLOWED_EXTENSIONS_MATRIX = {'txt', 'xlsx', 'csv'}
@@ -47,13 +40,7 @@ MATRIX = [
         "isActive": False
     }
 ]
-DB_ENTRY_MOCKUP = {
-    'active_matrices': [],
-    'transformed_dataframe': [],
-    'dataframes': [],
-    'preview_matrices': MATRIX,
-    'vis_link': ''
-}
+
 
 
 # configuration
@@ -97,54 +84,67 @@ def add_plugin():
         return jsonify(respond_data('plugin_list', PLUGINS))
 
 
-@app.route('/config', methods=['GET', 'POST'])
-def respond_config():
-    if request.form['url'] != 'undefined':
-        db_entry_id = ObjectId(loads(request.form['url']))
-        db_entry = db.visualizations.find_one({"_id": db_entry_id})
-        db_entry['_id'] = str(db_entry['_id'])
-        print(db_entry)
-        textfile = open('textfile.txt', 'w')
-        textfile.write(str(db_entry))
-        textfile.close()
-        return jsonify({'db_entry': db_entry})
-    else:
-        print('jjjjj')
-        return dumps({'db_entry': DB_ENTRY_MOCKUP})
+@app.route('/visualization', methods=['GET', 'POST'])
+def vis_link():
+    print("vis get")
+    return jsonify(respond_data('vis_link', VIS_PATH[0]))
 
 @app.route('/matrix', methods=['GET', 'POST'])
 def all_matrix():
     return jsonify(respond_data('matrix', MATRIX))
-    
-@app.route('/upload', methods=['GET', 'POST'])
+
+
+
+
+
+@app.route('/upload', methods=['POST'])
 def add_matrix():
-    if request.method == 'POST':
-        file, metadata, extension = upload_file(request, ALLOWED_EXTENSIONS_MATRIX)
-        db_entry_id = process_file.main(file, metadata, extension, visualizations, vis_plugin)
-        # print(db.visualizations.find_one({"_id": db_entry_id}))
-        return dumps({'db_entry_id': db_entry_id})
-    else: 
-        return "method unclear"
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+    file = request.files['file']
+    metadata = json.loads(request.form['form'])
+    if file.filename == '':
+        flash('No selected file')
+        return redirect(request.url)
+    if file and allowed_file(file.filename, ALLOWED_EXTENSIONS_MATRIX):
+        import upload_to_db
+        import process_file
+        extension = os.path.splitext(file.filename)[1]
+        df = process_file.convert_to_df(file, metadata['index'], extension)
+        db_data_id = upload_to_db.save_df_mongo(df, metadata)
+        
+
+
+
+def upload_data(request, extension_whitelist, db_collection_name):
+    
+    return file, dataList, extension, filepath, filename
+
+
 
 def respond_data(label, payload):
     response_object = {'status': 'success'}
     response_object[label] = payload
     return response_object
 
-def upload_file(request, extension_whitelist):
+def upload_file(request, extension_whitelist, file_dir):
     # check if the post request has the file part
     if 'file' not in request.files:
         flash('No file part')
         return redirect(request.url)
     file = request.files['file']
-    metadata = json.loads(request.form['form'])
+    dataList = json.loads(request.form['form'])
     # If user does not select file, browser also submit an empty part without filename.
     if file.filename == '':
         flash('No selected file')
         return redirect(request.url)
     if file and allowed_file(file.filename, extension_whitelist):
         extension = os.path.splitext(file.filename)[1]
-    return file, metadata, extension
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(file_dir, filename)
+        file.save(filepath)
+    return file, dataList, extension, filepath, filename
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
@@ -169,5 +169,7 @@ def make_preview(input_file, extension, dataList, remove_id):
         MATRIX.append(MATRICES[i])
     return DATAFRAME
 
-print('ran')
-client.close()
+def make_vis_link(vis_plugin, DATAFRAME):
+    VIS_PATH.clear()
+    VIS_PATH.append(visualize.route(vis_plugin, DATAFRAME))
+    return VIS_PATH

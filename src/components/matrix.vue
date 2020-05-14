@@ -75,7 +75,6 @@ export default {
   },
   data() {
     return {
-      active_matrices: [],
       is_hot: false,
       selected: undefined,
       button_enabled: false,
