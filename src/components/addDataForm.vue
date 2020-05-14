@@ -89,6 +89,9 @@ import axios from "axios";
 
 export default {
   name: "addDataForm",
+  props: {
+    matrices: Array
+  },
   components: {
     matrix
   },
@@ -96,13 +99,15 @@ export default {
     return {
       sourceErrMsg: "",
       showErrorAlert: false,
-      matrices: [],
+      matrices_old: [],
       activeMatrix: null,
       form: {
         title: "",
         x: null,
         y: null,
         type: [],
+        index: 'GeneID',
+        db_entry_id: '',
         source: {
           file: null,
           database: null,
@@ -123,6 +128,7 @@ export default {
   },
   created() {
     this.fetch_matrices();
+    console.log("proped matrices: ", this.matrices)
   },
   methods: {
     fetch_matrices() {
@@ -130,13 +136,16 @@ export default {
       axios
         .get(path)
         .then(res => {
-          this.matrices = res.data.matrix;
+          this.matrices_old = res.data.matrix;
         })
         .catch(error => {
           console.error(error);
         });
     },
     add_matrix(path, payload) {
+      if (this.$route.query.config) {
+        this.form.db_entry_id = this.$route.query.config;
+      }
       var data = new FormData();
         data.append('file', payload);
         data.append('form', JSON.stringify(this.form));
@@ -145,7 +154,6 @@ export default {
       axios
         .post(path, data)
         .then(res => {
-          console.log(res);
           this.$nextTick(() => {
             console.log("after next tick res: ", res);
             self.$emit('dataframe_change', res);
