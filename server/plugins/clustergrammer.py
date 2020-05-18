@@ -1,5 +1,5 @@
-def main(df):
-    file_path = csv_to_tsv(df, 5) # Define the path to the file you want to visualize.
+def main(df, cat_amount):
+    file_path = csv_to_tsv(df, cat_amount) # Define the path to the file you want to visualize.
     upload_url = "http://amp.pharm.mssm.edu/clustergrammer/matrix_upload/" # Define the path to the visualizing sertver endpoint.
     return upload_url, file_path
 
@@ -8,6 +8,7 @@ def csv_to_tsv(df, cat_amount):
     import copy
     dataframe = copy.deepcopy(df)
     file_path = "uploads/output_matrix.txt"
+    print('cat_aount: ', cat_amount)
     # Append category title string before values for all cat columns.
     dataframe[dataframe.columns[0:cat_amount]] = dataframe.columns[0:cat_amount] + \
         ': ' + dataframe[dataframe.columns[0:cat_amount]].astype(str)

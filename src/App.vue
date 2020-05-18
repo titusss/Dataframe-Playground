@@ -15,7 +15,7 @@
 
 <template>
   <div id="app">
-    <div v-if="loading">Loading ...</div>
+    <div v-if="loading"><b-spinner variant="primary" label="Spinning"></b-spinner> Loading ...</div>
     <div v-if="config">
     <div class="grid_container">
       <!-- <div class="header">
