@@ -5,7 +5,6 @@ from flask import Flask, flash, request, redirect, url_for, jsonify, send_from_d
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 import uuid
-import pandas as pd
 import json
 import process_file
 import upload_to_db
@@ -50,7 +49,6 @@ MATRIX = [
 DB_ENTRY_MOCKUP = {
     'active_matrices': [],
     'transformed_dataframe': [],
-    'dataframes': [],
     'preview_matrices': MATRIX,
     'vis_link': ''
 }
@@ -73,12 +71,12 @@ def allowed_file(filename, extension_whitelist):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in extension_whitelist
 
-def remove_matrix(matrix_id):
-    for matrix in MATRIX:
-        if matrix['id'] == matrix_id:
-            MATRIX.remove(matrix)
-            return True
-    return False
+# def remove_matrix(matrix_id):
+#     for matrix in MATRIX:
+#         if matrix['id'] == matrix_id:
+#             MATRIX.remove(matrix)
+#             return True
+#     return False
 
 @app.route('/')
 def helloWorld():
@@ -90,10 +88,8 @@ def add_plugin():
         file, dataList, extension, filepath, filename = upload_file(request, ALLOWED_EXTENSIONS_ICON, "/Users/titusebbecke/Documents/Work/Helmholtz/2020/Experiments/2003_Hiri_VueBootstrap/hzi_vis_03/public/src/assets")
         dataList['icon'] = filename # Change this: Deliver static image from webserver not from flask
         PLUGINS.append(dataList)
-        print("PLUGINS: ", PLUGINS)
         return jsonify(respond_data('plugin_list', PLUGINS))
     elif request.method == 'GET':
-        print('method: GET: ', PLUGINS)
         return jsonify(respond_data('plugin_list', PLUGINS))
 
 
@@ -103,13 +99,8 @@ def respond_config():
         db_entry_id = ObjectId(loads(request.form['url']))
         db_entry = db.visualizations.find_one({"_id": db_entry_id})
         db_entry['_id'] = str(db_entry['_id'])
-        print(db_entry)
-        textfile = open('textfile.txt', 'w')
-        textfile.write(str(db_entry))
-        textfile.close()
-        return jsonify({'db_entry': db_entry})
+        return dumps({'db_entry': db_entry})
     else:
-        print('jjjjj')
         return dumps({'db_entry': DB_ENTRY_MOCKUP})
 
 @app.route('/matrix', methods=['GET', 'POST'])
@@ -118,49 +109,52 @@ def all_matrix():
     
 @app.route('/upload', methods=['GET', 'POST'])
 def add_matrix():
-    if request.method == 'POST':
-        file, metadata, extension = upload_file(request, ALLOWED_EXTENSIONS_MATRIX)
-        db_entry_id = process_file.main(file, metadata, extension, visualizations, vis_plugin)
-        # print(db.visualizations.find_one({"_id": db_entry_id}))
-        return dumps({'db_entry_id': db_entry_id})
-    else: 
-        return "method unclear"
+    metadata = json.loads(request.form['form'])
+    print("metadata: ", metadata)
+    print(request)
+    source, extension = upload_file(request, ALLOWED_EXTENSIONS_MATRIX, metadata)
+    db_entry_id = process_file.add_matrix(source, metadata, extension, visualizations, vis_plugin)
+    # print(db.visualizations.find_one({"_id": db_entry_id}))
+    return dumps({'db_entry_id': db_entry_id})
 
 def respond_data(label, payload):
     response_object = {'status': 'success'}
     response_object[label] = payload
     return response_object
 
-def upload_file(request, extension_whitelist):
+def upload_file(request, extension_whitelist, metadata):
     # check if the post request has the file part
-    if 'file' not in request.files:
-        flash('No file part')
-        return redirect(request.url)
-    file = request.files['file']
-    metadata = json.loads(request.form['form'])
-    # If user does not select file, browser also submit an empty part without filename.
-    if file.filename == '':
-        flash('No selected file')
-        return redirect(request.url)
-    if file and allowed_file(file.filename, extension_whitelist):
-        extension = os.path.splitext(file.filename)[1]
-    return file, metadata, extension
+    print('it reached here')
+    if metadata['source']['file'] != None:
+        print('and even to here')
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # If user does not select file, browser also submit an empty part without filename.
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename, extension_whitelist):
+            extension = os.path.splitext(file.filename)[1]
+        return file, extension
+    elif metadata['source']['text'] != "null":
+        print('ahahahaha')
+        return metadata['source']['text'], "string"
+    print('here')
+    return "hallo??", "axxaxa"
+
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-@app.route('/matrix/<matrix_id>', methods=['PUT', 'DELETE'])
-def single_matrix(matrix_id):
-    response_object = {'status': 'success'}
-    if request.method == 'PUT':
-        post_data = request.get_json()
-        response_object['message'] = 'Matrix updated!'
-    if request.method == 'DELETE':
-        make_preview(False, False, False, matrix_id)
-        # remove_matrix(matrix_id)
-        response_object['message'] = 'Matrix removed!'
-    return jsonify(response_object)
+@app.route('/matrix/<matrix_id>', methods=['GET', 'POST'])
+def remove_matrix(matrix_id):
+    metadata = json.loads(request.form['form'])
+    print('###### metadata: ', metadata)
+    db_entry_id = process_file.remove_matrix(DB_ENTRY_MOCKUP, metadata, visualizations, vis_plugin, matrix_id)
+    return dumps({'db_entry_id': db_entry_id})
 
 def make_preview(input_file, extension, dataList, remove_id):
     MATRIX.clear()

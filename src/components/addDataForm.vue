@@ -1,19 +1,25 @@
  <!-- Main form for adding data tables/matrices --> 
  
  <template>
+
+        <b-overlay :show="show_loading_overlay" rounded="sm" variant="white">
   <b-container class="bv-example-row">
     <b-row>
       <b-col>
         <h2>Add Data</h2>
         <b-form @submit="onSubmit" @reset="onReset" v-if="show">
-          <b-form-group id="input-group-4" label="Type:" label-for="checkboxes-4">
+          <!-- <b-form-group id="input-group-4" label="Type:" label-for="checkboxes-4">
             <b-form-radio-group v-model="form.type" id="checkboxes-4" required>
               <b-form-radio name="table" value="RadioTable">Table</b-form-radio>
               <b-form-radio name="category" value="RadioCategory">Category</b-form-radio>
             </b-form-radio-group>
-          </b-form-group>
+          </b-form-group> -->
           <b-form-group id="input-group-2" label="Title:" label-for="input-2">
             <b-form-input id="input-2" v-model="form.title" required placeholder></b-form-input>
+          </b-form-group>
+          <b-form-group id="group-cat-amount" label="Category columns:" label-for="input-cat-amount" description="Enter the amount of columns with non numeric values. A value of '4' turns the first four columns into categories. Cells with non numeric values can only be categories and should be at the beginning of your table.">
+            <b-form-spinbutton id="sb-cat-amount" v-model="form.cat_amount" min="0" required></b-form-spinbutton>
+            <!-- <b-form-input id="input-cat-amount" v-model="form.cat_amount" required placeholder="Number of categories..."></b-form-input> -->
           </b-form-group>
           <b-form-group id="input-group-6" label="Source:" label-for="source-card">
             <b-card no-body id="source-card">
@@ -81,6 +87,7 @@
       </b-col>
     </b-row>
   </b-container>
+        </b-overlay>
 </template>
 
 <script>
@@ -97,6 +104,7 @@ export default {
   },
   data() {
     return {
+      show_loading_overlay: false,
       sourceErrMsg: "",
       showErrorAlert: false,
       matrices_old: [],
@@ -106,8 +114,8 @@ export default {
         x: null,
         y: null,
         type: [],
-        index: 'GeneID',
         db_entry_id: '',
+        cat_amount: 1,
         source: {
           file: null,
           database: null,
@@ -142,8 +150,9 @@ export default {
           console.error(error);
         });
     },
-    add_matrix(path, payload) {
-      if (this.$route.query.config) {
+    change_matrix(path, payload) {
+      this.show_loading_overlay = true;
+      if (this.$route.query.config) { 
         this.form.db_entry_id = this.$route.query.config;
       }
       var data = new FormData();
@@ -157,6 +166,7 @@ export default {
           this.$nextTick(() => {
             console.log("after next tick res: ", res);
             self.$emit('dataframe_change', res);
+            this.show_loading_overlay = false;
           });
         })
         .catch(error => {
@@ -186,25 +196,14 @@ export default {
         this.showErrorAlert = true;
       } else {
         const payload = this.form.source.file;
-        this.add_matrix("http://192.168.1.31:5000/upload", payload);
+        this.change_matrix("http://192.168.1.31:5000/upload", payload);
         this.$emit('close');
       }
     },
     delete_matrix(deleted_matrix_id) {
       const path = `http://192.168.1.31:5000/matrix/${deleted_matrix_id}`;
-      axios
-        .delete(path)
-        .then(() => {
-          this.fetch_matrices();
-          this.message = "Matrix removed!";
-          this.showMessage = true;
-          this.$emit('dataframe_change');
-        })
-        .catch(error => {
-          // eslint-disable-next-line
-          console.error(error);
-          this.fetch_matrices();
-        });
+      const payload = null
+      this.change_matrix(path, payload)
     },
     onMatrixActivated(matrix) {
       this.form.x = matrix.x;
