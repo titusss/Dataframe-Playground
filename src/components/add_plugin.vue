@@ -69,7 +69,8 @@ export default {
         url: '',
         name: '',
         desc: '',
-        icon: null
+        icon: null,
+        db_entry_id: ''
       },
       show: true
     }
@@ -78,7 +79,7 @@ export default {
     onSubmit(evt) {
       evt.preventDefault()
       const payload = this.form.icon;
-      this.add_plugin("http://192.168.1.31:5000/plugins", payload);
+      this.add_plugin("http://0.0.0.0:5000/plugins", payload);
     },
     onReset(evt) {
       evt.preventDefault()
@@ -93,10 +94,13 @@ export default {
       })
     },
     add_plugin(path, payload) {
+      if (this.$route.query.config) {
+        this.form.db_entry_id = this.$route.query.config;
+      }
       var data = new FormData();
+        data.append('file', payload);
+        data.append('form', JSON.stringify(this.form));
       let self = this;
-      data.append('file', payload);
-      data.append('form', JSON.stringify(this.form));
       axios
         .post(path, data)
         .then(res => {

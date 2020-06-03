@@ -1,12 +1,21 @@
 # This is the main point for visualizations.
 # Parse all relevant dataframes to this module and decide what plugin to use with route().
 
-def route(vis_plugin, df, cat_amount):
+def route(collection, df, cat_amount, plugins_id):
     import importlib
-    import requests
-    vis = importlib.import_module("plugins.{}".format(vis_plugin))
-    upload_url, file_path = vis.main(df, cat_amount)
-    response = requests.post(upload_url, files={'file': open(file_path, 'rb')})
-    print(response.text)
-    vis_link = response.text
-    return vis_link
+    from pymongo import MongoClient
+    from bson.json_util import ObjectId
+    vis_links = []
+    print('plugins_id: ', plugins_id)
+    for i in range(len(plugins_id)):
+        print('i: ', i)
+        plugin_entry = collection.find_one({"_id": ObjectId(plugins_id[i])})
+        print('plugin_entry: ', plugin_entry)
+        plugin = importlib.import_module("plugins.{}".format(plugin_entry['name']))
+        entry = {}
+        entry['plugin_name'] = plugin_entry['name']
+        entry['link'] = plugin.main(df, cat_amount)
+        print(entry)
+        vis_links.append(entry)
+        print('vis_links: ', vis_links)
+    return vis_links
