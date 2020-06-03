@@ -1,8 +1,10 @@
  <!-- Main form for adding data tables/matrices --> 
  
  <template>
+ <div>
+     <b-progress v-if="show_loading_overlay" :value="bar_value" variant="success" striped :animated="animate"></b-progress>
+  <b-overlay :show="show_loading_overlay" rounded="sm" variant="white">
 
-        <b-overlay :show="show_loading_overlay" rounded="sm" variant="white">
   <b-container class="bv-example-row">
     <b-row>
       <b-col>
@@ -18,7 +20,7 @@
             <b-form-input id="input-2" v-model="form.title" required placeholder></b-form-input>
           </b-form-group>
           <b-form-group id="group-cat-amount" label="Category columns:" label-for="input-cat-amount" description="Enter the amount of columns with non numeric values. A value of '4' turns the first four columns into categories. Cells with non numeric values can only be categories and should be at the beginning of your table.">
-            <b-form-spinbutton id="sb-cat-amount" v-model="form.cat_amount" min="0" required></b-form-spinbutton>
+            <b-form-spinbutton id="sb-cat-amount" placeholder="--" v-model="form.cat_amount" wrap min="0" required></b-form-spinbutton>
             <!-- <b-form-input id="input-cat-amount" v-model="form.cat_amount" required placeholder="Number of categories..."></b-form-input> -->
           </b-form-group>
           <b-form-group id="input-group-6" label="Source:" label-for="source-card">
@@ -55,13 +57,13 @@
                   </b-form-group>
                 </b-tab>
                 <b-tab title="Text">
-                  <b-form-group id="input-group-1" description="Paste comma-seperated values here.">
+                  <b-form-group id="input-group-1" description="Paste a tab-seperated table here. Avoid using the dot character ('.') as it will be replaces with an underscore ('_').">
                     <b-form-textarea
                       id="textarea"
                       v-model="form.source.text"
-                      placeholder="Comma-seperated values..."
+                      placeholder="Tab-seperated table..."
                       rows="9"
-                      max-rows="10000"
+                      max-rows="18"
                     ></b-form-textarea>
                   </b-form-group>
                 </b-tab>
@@ -87,7 +89,8 @@
       </b-col>
     </b-row>
   </b-container>
-        </b-overlay>
+  </b-overlay>
+ </div>
 </template>
 
 <script>
@@ -104,18 +107,23 @@ export default {
   },
   data() {
     return {
+      animate: true,
       show_loading_overlay: false,
       sourceErrMsg: "",
       showErrorAlert: false,
       matrices_old: [],
       activeMatrix: null,
+      timer: null,
+      bar_value: 1,
       form: {
         title: "",
         x: null,
         y: null,
         type: [],
         db_entry_id: '',
-        cat_amount: 1,
+        cat_amount: null,
+        plugins_id: [],
+        locked: false,
         source: {
           file: null,
           database: null,
@@ -135,21 +143,33 @@ export default {
     };
   },
   created() {
-    this.fetch_matrices();
+    console.log(this.plugins)
+    // this.fetch_matrices();
     console.log("proped matrices: ", this.matrices)
+
+  },
+  beforeDestroy() {
+    clearInterval(this.timer)
+    this.timer = null
   },
   methods: {
-    fetch_matrices() {
-      const path = "http://192.168.1.31:5000/matrix";
-      axios
-        .get(path)
-        .then(res => {
-          this.matrices_old = res.data.matrix;
-        })
-        .catch(error => {
-          console.error(error);
-        });
+    progress_bar() {
+    console.log('mounted')
+    this.timer = setInterval(() => {
+      this.bar_value = this.bar_value + Math.random()*40
+      }, 2000)
     },
+    // fetch_matrices() {
+    //   const path = "http://192.168.1.31:5000/matrix";
+    //   axios
+    //     .get(path)
+    //     .then(res => {
+    //       this.matrices_old = res.data.matrix;
+    //     })
+    //     .catch(error => {
+    //       console.error(error);
+    //     });
+    // },
     change_matrix(path, payload) {
       this.show_loading_overlay = true;
       if (this.$route.query.config) { 
@@ -165,6 +185,7 @@ export default {
         .then(res => {
           this.$nextTick(() => {
             console.log("after next tick res: ", res);
+            console.log(JSON.stringify(res));
             self.$emit('dataframe_change', res);
             this.show_loading_overlay = false;
           });
@@ -175,6 +196,7 @@ export default {
     },
     onSubmit(evt) {
       evt.preventDefault();
+      this.progress_bar();
       this.validateForm(this.form.source);
     },
     onReset(evt) {
@@ -194,14 +216,17 @@ export default {
       } else if (properties > 1) {
         this.sourceErrMsg = "Please enter no more than one data-source.";
         this.showErrorAlert = true;
+      } else if (Number.isInteger(this.form.cat_amount) === false) {
+        this.sourceErrMsg = "Please specify the amount of category columns.";
+        this.showErrorAlert = true;
       } else {
         const payload = this.form.source.file;
-        this.change_matrix("http://192.168.1.31:5000/upload", payload);
+        this.change_matrix("http://0.0.0.0:5000/upload", payload);
         this.$emit('close');
       }
     },
     delete_matrix(deleted_matrix_id) {
-      const path = `http://192.168.1.31:5000/matrix/${deleted_matrix_id}`;
+      const path = `http://0.0.0.0:5000/matrix/${deleted_matrix_id}`;
       const payload = null
       this.change_matrix(path, payload)
     },

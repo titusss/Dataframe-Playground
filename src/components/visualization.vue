@@ -1,6 +1,5 @@
 <template>
 <div>
-<p>{{this.$route.query.config}}</p>
   <iframe id="iframe_visualization" v-bind:src="vis_link" frameborder="0"></iframe>
 </div>
 </template>
@@ -21,10 +20,9 @@ export default {
 <style>
 #iframe_visualization {
     width: 100%;
-    height: 150vh;
+    height: 110vh;
     border-radius: 20px;
     padding: 10px;
     background-color: #fff;
-    margin-top: 3em;
 }
 </style>
