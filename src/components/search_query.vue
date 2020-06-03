@@ -3,7 +3,7 @@
     <b-form-select v-model="object" :options="options_object" size="sm" class="mt-3"></b-form-select>
     <p>is</p>
     <b-form-select v-model="compare" :options="options_compare" size="sm" class="mt-3"></b-form-select>
-    <b-form-textarea v-model="text" placeholder="31020239" rows="1" max-rows="1"></b-form-textarea>
+    <b-form-textarea v-model="number" placeholder="31020239" rows="1" max-rows="1"></b-form-textarea>
     <b-form-select v-model="operator" :options="options_operator" size="sm" class="mt-3"></b-form-select>
     <p>is</p>
     <b-form-select v-model="compare_not" :options="options_compare" size="sm" class="mt-3"></b-form-select>
