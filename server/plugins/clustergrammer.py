@@ -1,7 +1,11 @@
 def main(df, cat_amount):
+    import requests
     file_path = csv_to_tsv(df, cat_amount) # Define the path to the file you want to visualize.
     upload_url = "http://amp.pharm.mssm.edu/clustergrammer/matrix_upload/" # Define the path to the visualizing sertver endpoint.
-    return upload_url, file_path
+    response = requests.post(upload_url, files={'file': open(file_path, 'rb')})
+    print(response.text)
+    vis_link = response.text
+    return vis_link
 
 def csv_to_tsv(df, cat_amount):
     import pandas as pd

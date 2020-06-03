@@ -9,54 +9,69 @@ active_matrices = [[]]
 def convert_to_df(input_file, extension):
     import pandas as pd
     if extension == ".xlsx":
-        df = pd.read_excel(input_file, index_col=0)
+        df = pd.read_excel(input_file)
     elif extension == ".csv":
-        df = pd.read_csv(input_file, sep=';')
+        df = pd.read_csv(input_file, sep=',')
     elif extension == ".txt":
         df = pd.read_csv(input_file, sep='\t')
     elif extension == "string":
-        print(input_file)
         from io import StringIO
-        df = pd.read_csv(StringIO(input_file), sep='\t', index_col=0)
-        print("string df: ", df)
+        df = pd.read_csv(StringIO(input_file), sep='\t')
     else:
         print("Error: No valid extension. Please upload .xlsx (Excel), .csv, or .txt (TSV).")
         return "Error"
-    
+    df.fillna(0, inplace=True)
+    df.columns = df.columns.str.replace('.', '_')
     return df
 
-def remove_matrix(mockup_db_entry, metadata, collection, vis_plugin, remove_id):
+# NOTE: remove_matrix is just shy of being redundant enough with add_matrix to not merge them into one function
+def remove_matrix(mockup_db_entry, metadata, db, remove_id):
     from pymongo import MongoClient
     from bson.json_util import ObjectId
     import visualize
-    db_entry = collection.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
+    db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
     db_entry['active_matrices'] = [[i for i in nested if i['id'] != remove_id] for nested in db_entry['active_matrices']] # remove entries matching the remove_id
     db_entry['active_matrices'] = [j for j in db_entry['active_matrices'] if j != []] # remove empty subarrays
     db_entry['active_matrices'] = correct_matrice_positions(db_entry['active_matrices'])
     if len(sum(db_entry['active_matrices'], []))>0:
         db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
         db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
-        db_entry['vis_link'] = visualize.route(vis_plugin, pd.DataFrame.from_dict(db_entry['transformed_dataframe']), metadata['cat_amount']) # CHANGE: Right now every new visualization creates a new MongoDB entry
-        db_entry_id = collection.insert_one(db_entry).inserted_id
+        db_entry['vis_links'] = visualize.route(db.plugins, pd.DataFrame.from_dict(db_entry['transformed_dataframe']), metadata['cat_amount'], db_entry['plugins_id']) # CHANGE: Right now every new visualization creates a new MongoDB entry
+        db_entry['cat_amount'] = metadata['cat_amount']
+        db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
     else:
-        db_entry_id = collection.insert_one(mockup_db_entry).inserted_id
+        db_entry_id = db.visualizations.insert_one(db_entry).inserted_id # NOTE: this has produced same entries previously.
     return db_entry_id
 
-def add_matrix(input_file, metadata, extension, collection, vis_plugin):
+def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
     from pymongo import MongoClient
     from bson.json_util import ObjectId
     import visualize
     if metadata['db_entry_id'] != '':
-        db_entry = collection.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
+        db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
         df = convert_to_df(input_file, extension)
         db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
         db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
     else:
         df = convert_to_df(input_file, extension)
-        db_entry = new_db_entry(df, metadata)
+        db_entry = new_db_entry(df, metadata, pre_configured_plugins)
     db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
-    db_entry['vis_link'] = visualize.route(vis_plugin, pd.DataFrame.from_dict(db_entry['transformed_dataframe']), metadata['cat_amount']) # CHANGE: Right now every new visualization creates a new MongoDB entry
-    db_entry_id = collection.insert_one(db_entry).inserted_id
+    db_entry['vis_links'] = visualize.route(db.plugins, pd.DataFrame.from_dict(db_entry['transformed_dataframe']), metadata['cat_amount'], db_entry['plugins_id']) # CHANGE: Right now every new visualization creates a new MongoDB entry
+    db_entry['cat_amount'] = metadata['cat_amount']
+    if db_entry['locked'] == True or metadata['db_entry_id'] == '': # Double redundant check for locked write state of db-entry
+        db_entry['locked'] = False
+        db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
+        print(db.visualizations.find_one({'_id': db_entry_id}))
+        print('locked!')
+        print('type: ', type(db_entry_id))
+    elif db_entry['locked'] == False:
+        db.visualizations.update_one({'_id': ObjectId(metadata['db_entry_id'])}, {'$set': db_entry})
+        db_entry_id = ObjectId(metadata['db_entry_id'])
+        print(db.visualizations.find_one({'_id': db_entry_id}))
+        print('not locked!: ', db_entry_id)
+        print('type: ', type(db_entry_id))
+    else:
+        return "Error: The 'locked' state of this entry is not clear."
     return db_entry_id
 
 def merge_db_entry(db_entry, flattened_am):
@@ -67,9 +82,11 @@ def merge_db_entry(db_entry, flattened_am):
     db_entry['transformed_dataframe'] = df_merged.to_dict('records')
     return db_entry
 
-def new_db_entry(df, metadata):
+def new_db_entry(df, metadata, pre_configured_plugins):
     db_entry = {}
+    db_entry['locked'] = False
     db_entry['active_matrices'] = [[]]
+    db_entry['plugins_id'] = pre_configured_plugins
     db_entry['transformed_dataframe'] = df.to_dict('records')
     db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
     return db_entry
