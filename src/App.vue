@@ -133,7 +133,12 @@ export default {
       // this.config = null
       console.log(this.config)
       console.log(res.data.db_entry_id["$oid"])
-      this.$router.push({ path: '/', query: { config: res.data.db_entry_id["$oid"]}})
+      if(this.config._id == res.data.db_entry_id["$oid"]) {
+        this.$router.go()
+      }
+      else {
+        this.$router.push({ path: '/', query: { config: res.data.db_entry_id["$oid"]}})
+      }
       this.hide_modal('bv_modal_addData');
     },
     refresh(modal) {
