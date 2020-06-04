@@ -1,5 +1,6 @@
 import uuid
 import pandas as pd
+from bson.json_util import ObjectId
 
 max_preview_rows = 12
 max_preview_columns = 8
@@ -24,12 +25,28 @@ def convert_to_df(input_file, extension):
     df.columns = df.columns.str.replace('.', '_')
     return df
 
+def insert_update_entry(entry, collection, metadata):
+    print('#########')
+    print('db_entry', entry)
+    if entry['locked'] == True: # Insert new entry if visualization is locked or new
+        entry['locked'] = False
+        db_entry_id = collection.insert_one(entry).inserted_id
+        return_msg = db_entry_id
+    elif entry['locked'] == False: # Update existing entry if existing visualization is modified and not locked
+        collection.update_one({'_id': ObjectId(metadata['db_entry_id'])}, {'$set': entry})
+        db_entry_id = ObjectId(metadata['db_entry_id'])
+        return_msg = db_entry_id
+    else:
+        return_msg = "Error: The 'locked' state of this entry is not clear."
+    return return_msg
+
 # NOTE: remove_matrix is just shy of being redundant enough with add_matrix to not merge them into one function
 def remove_matrix(mockup_db_entry, metadata, db, remove_id):
     from pymongo import MongoClient
-    from bson.json_util import ObjectId
     import visualize
     db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
+    print('remove_id', remove_id)
+    print("db_entry[active_matrices]", db_entry['active_matrices'])
     db_entry['active_matrices'] = [[i for i in nested if i['id'] != remove_id] for nested in db_entry['active_matrices']] # remove entries matching the remove_id
     db_entry['active_matrices'] = [j for j in db_entry['active_matrices'] if j != []] # remove empty subarrays
     db_entry['active_matrices'] = correct_matrice_positions(db_entry['active_matrices'])
@@ -38,40 +55,30 @@ def remove_matrix(mockup_db_entry, metadata, db, remove_id):
         db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
         db_entry['vis_links'] = visualize.route(db.plugins, pd.DataFrame.from_dict(db_entry['transformed_dataframe']), metadata['cat_amount'], db_entry['plugins_id']) # CHANGE: Right now every new visualization creates a new MongoDB entry
         db_entry['cat_amount'] = metadata['cat_amount']
-        db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
+        db_entry_id = insert_update_entry(db_entry, db.visualizations, metadata)
     else:
-        db_entry_id = db.visualizations.insert_one(db_entry).inserted_id # NOTE: this has produced same entries previously.
+        mockup_db_entry['locked'] = db_entry['locked']
+        db_entry_id = insert_update_entry(mockup_db_entry, db.visualizations, metadata)
     return db_entry_id
 
 def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
     from pymongo import MongoClient
-    from bson.json_util import ObjectId
     import visualize
-    if metadata['db_entry_id'] != '':
+    if metadata['db_entry_id'] != '': # If you start a new visualization
         db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
         df = convert_to_df(input_file, extension)
         db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
         db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
-    else:
+    else: # If you modify an existing visualization
         df = convert_to_df(input_file, extension)
         db_entry = new_db_entry(df, metadata, pre_configured_plugins)
     db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
     db_entry['vis_links'] = visualize.route(db.plugins, pd.DataFrame.from_dict(db_entry['transformed_dataframe']), metadata['cat_amount'], db_entry['plugins_id']) # CHANGE: Right now every new visualization creates a new MongoDB entry
     db_entry['cat_amount'] = metadata['cat_amount']
-    if db_entry['locked'] == True or metadata['db_entry_id'] == '': # Double redundant check for locked write state of db-entry
-        db_entry['locked'] = False
+    if metadata['db_entry_id'] == '':
         db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
-        print(db.visualizations.find_one({'_id': db_entry_id}))
-        print('locked!')
-        print('type: ', type(db_entry_id))
-    elif db_entry['locked'] == False:
-        db.visualizations.update_one({'_id': ObjectId(metadata['db_entry_id'])}, {'$set': db_entry})
-        db_entry_id = ObjectId(metadata['db_entry_id'])
-        print(db.visualizations.find_one({'_id': db_entry_id}))
-        print('not locked!: ', db_entry_id)
-        print('type: ', type(db_entry_id))
     else:
-        return "Error: The 'locked' state of this entry is not clear."
+        db_entry_id = insert_update_entry(db_entry, db.visualizations, metadata)
     return db_entry_id
 
 def merge_db_entry(db_entry, flattened_am):
