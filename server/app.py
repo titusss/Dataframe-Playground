@@ -30,7 +30,7 @@ DB_ENTRY_MOCKUP = {
     'active_matrices': [],
     'transformed_dataframe': [],
     'preview_matrices': MATRIX,
-    'vis_link': '',
+    'vis_links': [],
     'plugins_id': PRE_CONFIGURED_PLUGINS
 }
 # MongoDB
