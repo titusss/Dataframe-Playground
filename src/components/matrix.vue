@@ -35,6 +35,7 @@
           title="Differential Expression"
           :pressed.sync="is_differential"
           :disabled="button_enabled == 0"
+          @click="emit_transformation"
           size="sm"
           variant="secondary"
         >
@@ -99,6 +100,14 @@ export default {
     };
   },
   methods: {
+    emit_transformation() {
+      let transformation = ''
+      if(this.is_differential === true) {
+        transformation = "relative_expression"
+      }
+      console.log(transformation)
+      this.$emit('transformation_selected', transformation)
+    },
     select_matrix(matrix) {
       console.log(matrix);
       this.$emit('matrix_activated',matrix);
