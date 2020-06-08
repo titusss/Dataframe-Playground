@@ -85,6 +85,7 @@
           v-bind:rect_height="15"
           v-bind:gap="20"
           @matrix_activated="onMatrixActivated"
+          @transformation_selected="change_transformation"
         />
       </b-col>
     </b-row>
@@ -124,11 +125,12 @@ export default {
         cat_amount: null,
         plugins_id: [],
         locked: false,
+        transformation: '',
         source: {
           file: null,
           database: null,
           url: null,
-          text: null
+          text: null,
         }
       },
       text: "",
@@ -153,6 +155,11 @@ export default {
     this.timer = null
   },
   methods: {
+    change_transformation(obj) {
+      console.log(obj)
+      this.form.transformation = obj
+      console.log('form: ', this.form)
+    },
     progress_bar() {
     console.log('mounted')
     this.timer = setInterval(() => {

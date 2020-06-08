@@ -2,7 +2,7 @@
   <div id="app">
     <div class="loading" v-if="loading"><b-spinner label="Spinning"></b-spinner><span>Loading ...</span></div>
     <div v-if="config">
-      <lockVisButton :locked="config.locked"/>
+      <toolbar :locked="config.locked"/>
     <div class="grid_container">
       <!-- <div class="header">
         <b-button variant="secondary" size="sm"><b-icon icon="cloud-download" aria-hidden="true"></b-icon></b-button>
@@ -54,7 +54,7 @@ import add_plugin from './components/add_plugin'
 import addDataButton from './components/addDataButton'
 import search_query from './components/search_query'
 import axios from 'axios'
-import lockVisButton from './components/lockVisButton'
+import toolbar from './components/toolbar'
 export default {
   name: 'App',
   components: {
@@ -64,7 +64,7 @@ export default {
     add_plugin,
     addDataButton,
     search_query,
-    lockVisButton
+    toolbar
   },
   data() {
     return {
