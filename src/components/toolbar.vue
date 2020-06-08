@@ -13,7 +13,7 @@
         <b-button title="Load file" variant="light">
           <b-icon icon="cloud-download" aria-hidden="true"></b-icon>
         </b-button>
-        <b-button title="New document" variant="light">
+        <b-button title="New document" variant="light" @click="new_session">
           <b-icon icon="file-earmark" aria-hidden="true"></b-icon>
         </b-button>
       </b-button-group>
@@ -35,7 +35,6 @@ export default {
    }
   },
   created() {
-    console.log(this.locked)
     if (this.locked == true) {
       this.disabled_lock = true;
       this.button_lock = "dark";
@@ -46,6 +45,9 @@ export default {
     }
   },
   methods: {
+    new_session() {
+      this.$router.push({ path: ''})
+    },
     lock_session() {
       this.disabled_lock = true
       const path = "http://0.0.0.0:5000/locked";

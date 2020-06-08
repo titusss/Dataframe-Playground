@@ -26,8 +26,6 @@ def convert_to_df(input_file, extension):
     return df
 
 def insert_update_entry(entry, collection, metadata):
-    print('#########')
-    print('db_entry', entry)
     if entry['locked'] == True: # Insert new entry if visualization is locked or new
         entry['locked'] = False
         db_entry_id = collection.insert_one(entry).inserted_id
@@ -45,8 +43,6 @@ def remove_matrix(mockup_db_entry, metadata, db, remove_id):
     from pymongo import MongoClient
     import visualize
     db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
-    print('remove_id', remove_id)
-    print("db_entry[active_matrices]", db_entry['active_matrices'])
     db_entry['active_matrices'] = [[i for i in nested if i['id'] != remove_id] for nested in db_entry['active_matrices']] # remove entries matching the remove_id
     db_entry['active_matrices'] = [j for j in db_entry['active_matrices'] if j != []] # remove empty subarrays
     db_entry['active_matrices'] = correct_matrice_positions(db_entry['active_matrices'])
@@ -64,27 +60,30 @@ def remove_matrix(mockup_db_entry, metadata, db, remove_id):
 def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
     from pymongo import MongoClient
     import visualize
-    if metadata['db_entry_id'] != '': # If you start a new visualization
+    if metadata['db_entry_id'] != '': # If you edit an existing visualization
         db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
         df = convert_to_df(input_file, extension)
         db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
         db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
-    else: # If you modify an existing visualization
+    else: # If you create a new visualization
         df = convert_to_df(input_file, extension)
         db_entry = new_db_entry(df, metadata, pre_configured_plugins)
     db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
     db_entry['vis_links'] = visualize.route(db.plugins, pd.DataFrame.from_dict(db_entry['transformed_dataframe']), metadata['cat_amount'], db_entry['plugins_id']) # CHANGE: Right now every new visualization creates a new MongoDB entry
     db_entry['cat_amount'] = metadata['cat_amount']
-    if metadata['db_entry_id'] == '':
+    if metadata['db_entry_id'] == '': # Enter new DB entry when creating a new visualization
         db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
-    else:
+    else: # Update existing DB entry when modifying an existing visualization
         db_entry_id = insert_update_entry(db_entry, db.visualizations, metadata)
     return db_entry_id
 
 def merge_db_entry(db_entry, flattened_am):
     df_merged = pd.DataFrame.from_dict(flattened_am[0]['dataframe'])
+    print('df_merged: ', df_merged)
+    print('flattened_am: ', flattened_am)
     for i in range(len(flattened_am)): # Looping through
         df_merged = pd.merge(df_merged, pd.DataFrame.from_dict(flattened_am[i]['dataframe']), how='outer')
+        print(flattened_am[i])
     df_merged.fillna(0, inplace=True) # Replace NA values with 0
     db_entry['transformed_dataframe'] = df_merged.to_dict('records')
     return db_entry
@@ -112,7 +111,21 @@ def make_active_matrix(metadata, df, active_matrices, dataframe):
         added_matrix['height'] = df.shape[0]
     if df.shape[1]<max_preview_columns:
         added_matrix['width'] = df.shape[1]
-    active_matrices[added_matrix['y']-2].insert(added_matrix['x']-2, added_matrix)
+    try:
+        print('here')
+        print(metadata)
+        if metadata['transformation'] == 'relative_expression':
+            print('daaa')
+            old_matrix = pd.DataFrame.from_dict(active_matrices[added_matrix['y']-2][added_matrix['x']-2]['dataframe'])
+            divided_dataframe = old_matrix.div(df)
+            divided_dataframe = divided_dataframe.astype(int)
+            print(divided_dataframe)
+            added_matrix['dataframe'] = divided_dataframe.to_dict('records')
+            print(added_matrix['dataframe'])
+        active_matrices[added_matrix['y']-2][added_matrix['x']-2] = added_matrix
+        # print(active_matrices[added_matrix['y']-2][added_matrix['x']-2])
+    except:
+        active_matrices[added_matrix['y']-2].insert(added_matrix['x']-2, added_matrix)
     active_matrices = correct_matrice_positions(active_matrices)
     return active_matrices, added_axis
 
@@ -151,3 +164,8 @@ def make_single_matrix(x, y, width, height, title, active, dataframe):
         'dataframe': dataframe
     }
     return ADD_MATRIX
+
+def method1(list,search_age):
+    for name,age in list.iteritems():
+        if age == search_age:
+            return dataframe
