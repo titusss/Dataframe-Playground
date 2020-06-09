@@ -71,6 +71,17 @@ def lock_session():
     db.visualizations.update_one({'_id': ObjectId(url)}, {'$set': {'locked': True}})
     return "success"
 
+@app.route('/visualization', methods=['POST'])
+def make_vis_link():
+    import pandas as pd
+    plugin = json.loads(request.form['plugin'])
+    url = json.loads(request.form['url'])
+    print('url: ', url, 'plugin: ', plugin)
+    db_entry = db.visualizations.find_one({"_id": ObjectId(url)}, {'_id': False})
+    vis_link = visualize.route(db.plugins, pd.DataFrame.from_dict(db_entry['transformed_dataframe']), db_entry['cat_amount'], plugin) # CHANGE: Right now every new visualization creates a new MongoDB entry
+    db.visualizations.update_one({'_id': ObjectId(url)}, {'$push': {'vis_links': vis_link}})
+    return "success"
+
 @app.route('/plugins', methods=['POST'])
 def add_plugin():
     import pandas as pd
@@ -81,13 +92,10 @@ def add_plugin():
     plugin_name = secure_filename(source.filename)
     source.save(os.path.join("/Users/titusebbecke/Documents/Work/Helmholtz/2020/Experiments/2003_Hiri_VueBootstrap/hzi_vis_03/public/src/assets", plugin_name))
     metadata['filename'] = plugin_name
-    print('yeeet')
     db_plugin_entry_id = db.plugins.insert_one(metadata).inserted_id
-    print('ahhh')
     if metadata['db_entry_id'] == '':
         db_entry = {}
         db_entry['plugins_id'] = [db_plugin_entry_id]
-        print('heree')
         db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
         print('db_entry_id empty url:', db_entry_id)
     else:

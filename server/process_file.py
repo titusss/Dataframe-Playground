@@ -69,7 +69,7 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
         df = convert_to_df(input_file, extension)
         db_entry = new_db_entry(df, metadata, pre_configured_plugins)
     db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
-    db_entry['vis_links'] = visualize.route(db.plugins, pd.DataFrame.from_dict(db_entry['transformed_dataframe']), metadata['cat_amount'], db_entry['plugins_id']) # CHANGE: Right now every new visualization creates a new MongoDB entry
+    
     db_entry['cat_amount'] = metadata['cat_amount']
     if metadata['db_entry_id'] == '': # Enter new DB entry when creating a new visualization
         db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
@@ -92,6 +92,7 @@ def new_db_entry(df, metadata, pre_configured_plugins):
     db_entry = {}
     db_entry['locked'] = False
     db_entry['active_matrices'] = [[]]
+    db_entry['vis_links'] = []
     db_entry['plugins_id'] = pre_configured_plugins
     db_entry['transformed_dataframe'] = df.to_dict('records')
     db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
@@ -112,18 +113,12 @@ def make_active_matrix(metadata, df, active_matrices, dataframe):
     if df.shape[1]<max_preview_columns:
         added_matrix['width'] = df.shape[1]
     try:
-        print('here')
-        print(metadata)
         if metadata['transformation'] == 'relative_expression':
-            print('daaa')
             old_matrix = pd.DataFrame.from_dict(active_matrices[added_matrix['y']-2][added_matrix['x']-2]['dataframe'])
             divided_dataframe = old_matrix.div(df)
             divided_dataframe = divided_dataframe.astype(int)
-            print(divided_dataframe)
             added_matrix['dataframe'] = divided_dataframe.to_dict('records')
-            print(added_matrix['dataframe'])
         active_matrices[added_matrix['y']-2][added_matrix['x']-2] = added_matrix
-        # print(active_matrices[added_matrix['y']-2][added_matrix['x']-2])
     except:
         active_matrices[added_matrix['y']-2].insert(added_matrix['x']-2, added_matrix)
     active_matrices = correct_matrice_positions(active_matrices)
