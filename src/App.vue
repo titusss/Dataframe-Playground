@@ -17,7 +17,7 @@
           </div>
           <div class="cell_title_sp"><h5 class="title">Select the visualization</h5></div>
           <div class="cell_select_plugin field plugins">
-            <plugins @click.native="select_plugin(plugin.name)" :active_plugin="active_plugin" v-for="plugin in config.plugins" :key="plugin.name" :title="plugin.name" :desc="plugin.desc" :img="plugin.filename"/>
+            <plugins @click.native="select_plugin(plugin)" :active_plugin="active_plugin_id" v-for="plugin in config.plugins" :key="plugin.name" :title="plugin.name" :desc="plugin.desc" :img="plugin.filename"/>
             <plugins v-on:plugin_clicked="show_modal('modal_add_plugin')" :title="'Add Plugin'" :desc="'Connect a new visualization'" :img="'add_plugin.svg'"/>
           </div>
         </div>
@@ -70,7 +70,7 @@ export default {
     return {
       loading: false,
       config: null,
-      active_plugin: null,
+      active_plugin_id: null,
       active_vis_link: '',
     }
   },
@@ -82,18 +82,38 @@ export default {
     '$route': 'load_config'
   },
   methods: {
-    select_plugin(plugin_name) {
-      console.log(plugin_name)
-      this.active_plugin = plugin_name;
-      this.active_vis_link = ''
-      console.log(this.config.vis_links[0].plugin_name)
-      for (let i = 0; i < this.config.vis_links.length; i++) {
-        console.log("hallo")
-        if (this.config.vis_links[i].plugin_name == this.active_plugin) {
-          this.active_vis_link = this.config.vis_links[i].link;
+    select_plugin(plugin) {
+      console.log("ayyyyy")
+      console.log(plugin)
+      this.active_plugin_id = plugin._id.$oid;
+      this.active_vis_link = '';
+      console.log(this.active_plugin_id)
+
+      if (this.config.vis_links.some(entry => entry.plugin_id == this.active_plugin_id)) {
+        console.log('contains')
+        for (let i = 0; i < this.config.vis_links.length; i++) {
+          if (this.config.plugins[i]._id.$oid == this.active_plugin_id) {
+            this.active_vis_link = this.config.vis_links[i].link;
+          }
         }
       }
-      console.log(this.active_vis_link)
+      else {
+        console.log("doesn't contain")
+        this.generate_vis_link(plugin)
+      }
+    },
+    generate_vis_link(plugin) {
+      const path ="http://0.0.0.0:5000/visualization";
+      var payload = new FormData();
+        payload.append('plugin', JSON.stringify(plugin));
+        payload.append('url', JSON.stringify(this.$route.query.config));
+      axios
+        .post(path, payload)
+        .then(res => {
+          this.config.vis_links.push(res);
+          this.active_vis_link = res.link
+          this.$router.go();
+        });
     },
     load_config() {
       this.config = null
