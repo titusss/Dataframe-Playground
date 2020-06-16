@@ -69,7 +69,6 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
         df = convert_to_df(input_file, extension)
         db_entry = new_db_entry(df, metadata, pre_configured_plugins)
     db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
-    
     db_entry['cat_amount'] = metadata['cat_amount']
     if metadata['db_entry_id'] == '': # Enter new DB entry when creating a new visualization
         db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
