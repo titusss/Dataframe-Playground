@@ -1,57 +1,97 @@
 <template>
-  <div class="query_operators">
-    <b-form-select v-model="object" :options="options_object" size="sm" class="mt-3"></b-form-select>
-    <p>is</p>
-    <b-form-select v-model="compare" :options="options_compare" size="sm" class="mt-3"></b-form-select>
-    <b-form-textarea v-model="number" placeholder="31020239" rows="1" max-rows="1"></b-form-textarea>
-    <b-form-select v-model="operator" :options="options_operator" size="sm" class="mt-3"></b-form-select>
-    <p>is</p>
-    <b-form-select v-model="compare_not" :options="options_compare" size="sm" class="mt-3"></b-form-select>
-    <b-form-textarea v-model="text" placeholder="'145', 'NaN', 'true'" rows="1" max-rows="1"></b-form-textarea>
-    <p class="h4 mb-4"><b-icon icon="plus-circle-fill"></b-icon></p>
-    <!-- <div class="mt-3">Selected: <strong>{{ selected }}</strong></div> -->
+  <div>
+    <b-form inline>
+      <div v-for="block in blocks" v-bind:key="block.id" class="block-wrapper">
+        <b-card bg-variant="light">
+          <component class="component-inline" v-bind:is="block.name"></component>
+        </b-card>
+        <b-button size="sm" variant="link" v-on:click="remove_query_block(block.id)">
+          <b-icon icon="trash"></b-icon>
+        </b-button>
+      </div>
+
+      <b-dropdown
+        size="sm"
+        variant="link"
+        id="add-dropdown"
+        text="Add..."
+        class="m-md-2 rounded"
+        no-caret
+        toggle-class="text-decoration-none"
+      >
+        <template v-slot:button-content>
+          <b-icon icon="plus-circle-fill"></b-icon>
+          <span class="sr-only">Search</span>
+        </template>
+        <b-dropdown-item v-on:click="add_query_block('all_values')">All values...</b-dropdown-item>
+        <b-dropdown-item v-on:click="add_query_block('values_in_column')">Values in column...</b-dropdown-item>
+        <b-dropdown-item v-on:click="add_query_block('values_in_row')">Values in row...</b-dropdown-item>
+        <b-dropdown-divider></b-dropdown-divider>
+        <b-dropdown-item v-on:click="add_query_block('and')">and</b-dropdown-item>
+        <b-dropdown-item v-on:click="add_query_block('or')">or</b-dropdown-item>
+      </b-dropdown>
+    </b-form>
   </div>
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        object: 'current',
-        options_object: [
-          { value: 'current', text: 'Cell value' },
-          { value: 'a', text: 'This is First option' },
-          { value: 'b', text: 'Selected Option' },
-          { value: { C: '3PO' }, text: 'This is an' },
-          { value: 'd', text: 'This one is disabled', disabled: true }
-        ],
-        compare: 'current',
-        options_compare: [
-          { value: 'current', text: 'less than' },
-          { value: 'a', text: 'equal to' },
-          { value: 'b', text: 'more than' },
-          { value: 'c', text: 'not' }
-        ],
-        operator: 'current',
-        options_operator: [
-          { value: 'current', text: 'and' },
-          { value: 'a', text: 'or' }
-        ]
-      }
+import values_in_column from "@/components/query_blocks/values_in_column.vue";
+import and from "@/components/query_blocks/and.vue";
+import or from "@/components/query_blocks/or.vue";
+import values_in_row from "@/components/query_blocks/values_in_row.vue";
+import values_in_dataframe from "@/components/query_blocks/values_in_dataframe.vue";
+import all_values from "@/components/query_blocks/all_values.vue";
+export default {
+  name: "search_query",
+  components: {
+    values_in_column,
+    and,
+    or,
+    values_in_row,
+    all_values,
+    values_in_dataframe
+  },
+  methods: {
+    add_query_block(block) {
+      this.blocks.push({ name: block, id: this.id });
+      this.id++;
+      console.log(this.blocks);
+    },
+    remove_query_block(block_id) {
+      this.blocks.splice(
+        this.blocks.findIndex(function(i) {
+          return i.id === block_id;
+        }), 1);
     }
+  },
+  data() {
+    return {
+      blocks: [],
+      id: 0
+    };
   }
+};
 </script>
 
 <style scoped>
-.query_operators>* {
-    display: inline-block;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    vertical-align: middle;
-    margin-right: 1rem;
+label {
+  margin-right: 0.5rem;
+  font-size: 0.875rem;
 }
-.custom-select, .form-control {
-    width: auto;
-    height: calc(1.5em + 0.5rem + 2px);
+svg {
+  margin: 0;
+}
+.block-wrapper {
+  width: 100%;
+}
+#add-dropdown {
+  margin: 0 !important;
+}
+.card-body {
+  padding: 0.35rem;
+}
+.card {
+  margin-bottom: 0.5rem;
+  display: inline-block;
 }
 </style>
