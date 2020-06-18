@@ -63,6 +63,12 @@ def allowed_file(filename, extension_whitelist):
 #     print('hello world')
 #     return "Hello world!"
 
+@app.route('/query', methods=['POST'])
+def search_query():
+    query = json.loads(request.form['query'])
+    print(query)
+    return "success"
+
 @app.route('/locked', methods=['POST'])
 def lock_session():
     from pymongo import MongoClient
