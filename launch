@@ -1,0 +1,11 @@
+#!/bin/zsh
+echo 'starting MongoDB'
+mongod --config /usr/local/etc/mongod.conf --fork
+echo 'starting server'
+npm run serve
+'changing to server directory'
+cd server
+'activating python environment'
+source env/bin/activate
+'starting flask server'
+flask run
