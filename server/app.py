@@ -65,9 +65,26 @@ def allowed_file(filename, extension_whitelist):
 
 @app.route('/query', methods=['POST'])
 def search_query():
+    import filter_dataframe
+    import pandas as pd
     query = json.loads(request.form['query'])
+    url = json.loads(request.form['url'])
+    db_entry = db.visualizations.find_one({"_id": ObjectId(url)}, {'_id': False})
+    df = pd.DataFrame.from_dict(db_entry['transformed_dataframe'])
+    print('df: ')
+    print(df)
+    filtered_df = filter_dataframe.main(query, df)
+    print(url)
+    print("db_entry['transformed_dataframe']: ", pd.DataFrame.from_dict(db_entry['transformed_dataframe']))
+    print("filtered_df: ", filtered_df)
+    print(pd.DataFrame.to_dict(filtered_df))
+    db.visualizations.update_one({'_id': ObjectId(url)}, {'$set': {'transformed_dataframe': list(pd.DataFrame.to_dict(filtered_df))}})
     print(query)
-    return "success"
+    print('#####')
+    print('db_entry: ', db_entry)
+    print('#####')
+    print('new_vis', db.visualizations.find_one({"_id": ObjectId(url)}, {'_id': False}))
+    return Response(dumps({'db_entry_id': url}), mimetype="application/json")
 
 @app.route('/locked', methods=['POST'])
 def lock_session():
@@ -100,17 +117,19 @@ def add_plugin():
     metadata['filename'] = plugin_name
     db_plugin_entry_id = db.plugins.insert_one(metadata).inserted_id
     if metadata['db_entry_id'] == '':
-        db_entry = {}
-        db_entry['plugins_id'] = [db_plugin_entry_id]
+        import copy
+        db_entry = copy.deepcopy(DB_ENTRY_MOCKUP)
+        db_entry['plugins_id'].append(db_plugin_entry_id)
+        db_entry['locked'] = False
         db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
         print('db_entry_id empty url:', db_entry_id)
     else:
         db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
         plugins_id = db_entry['plugins_id']
         plugins_id.append(db_plugin_entry_id)
-        vis_links = visualize.route(db.plugins, pd.DataFrame.from_dict(db_entry['transformed_dataframe']), db_entry['cat_amount'], plugins_id) # CHANGE: Right now every new visualization creates a new MongoDB entry
-        db.visualizations.update_one({'_id': ObjectId(metadata['db_entry_id'])}, {'$push': {'plugins_id': db_plugin_entry_id}, '$set': {'vis_links': vis_links}})
-        db_entry_id = db_entry['_id']
+        db.visualizations.update_one({'_id': ObjectId(metadata['db_entry_id'])}, {'$push': {'plugins_id': db_plugin_entry_id}})
+        print("metadata['db_entry']", metadata['db_entry_id'])
+        db_entry_id = ObjectId(metadata['db_entry_id'])
         print('db_entry_id filled id: ', db_entry_id)
     print('db_plugins_id: ', db_plugin_entry_id)
     return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
