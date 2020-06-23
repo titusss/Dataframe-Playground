@@ -3,32 +3,69 @@
     <b-form @submit="onSubmit" inline>
       <b-card
         bg-variant="light"
-        v-for="form_block in query"
-        v-bind:key="form_block"
+        v-for="(form_block_array, index) in query"
+        v-bind:key="index"
         class="block-wrapper"
       >
-        <div class="form-block" v-for="form in form_block" v-bind:key="form.id">
-          <label v-if="form.label" :for="form.id">{{form.label}}</label>
-          <b-form-select
-            v-if="form.type === 'b-form-select'"
-            :options="form.options"
-            :value="null"
-            :id="form.id"
-            v-model="form.selected"
-            size="sm"
-            class="mb-2 mr-sm-2 mb-sm-0"
-            required
-          ></b-form-select>
-          <b-form-input
-            v-if="form.type === 'b-form-input'"
-            :id="form.id"
-            v-model="form.selected"
-            size="sm"
-            class="mb-2 mr-sm-2 mb-sm-0"
-            required
-          ></b-form-input>
+        <div class="form" v-for="form_block in form_block_array" v-bind:key="form_block">
+          <div class="form-block" v-for="form in form_block" v-bind:key="form.id">
+            <label v-if="form.label" :for="form.id">{{form.label}}</label>
+            <b-form-select
+              v-if="form.type === 'b-form-select'"
+              :options="form.options"
+              :value="null"
+              :id="form.id"
+              v-model="form.selected"
+              size="sm"
+              class="mb-2 mr-sm-2 mb-sm-0"
+              required
+            ></b-form-select>
+            <b-form-input
+              v-if="form.type === 'b-form-input'"
+              :id="form.id"
+              v-model="form.selected"
+              size="sm"
+              class="mb-2 mr-sm-2 mb-sm-0"
+              required
+            ></b-form-input>
+          </div>
         </div>
-        <b-button size="sm" variant="link" v-on:click="remove_query_block(form_block.id)">
+        <b-dropdown
+          v-if="form_block_array[form_block_array.length-1]['logic']"
+          size="sm"
+          variant="link"
+          pill
+          id="add-dropdown"
+          text="Add..."
+          class="m-md-2 rounded"
+          no-caret
+          toggle-class="text-decoration-none"
+        >
+          <template v-slot:button-content>
+            <b-icon icon="plus-circle"></b-icon>
+          </template>
+          <b-dropdown-item v-on:click="add_inline_query_block('and', form_block_array)">and</b-dropdown-item>
+          <b-dropdown-item v-on:click="add_inline_query_block('or', form_block_array)">or</b-dropdown-item>
+        </b-dropdown>
+        <b-dropdown
+          v-if="form_block_array[form_block_array.length-1]['logic'] === false"
+          size="sm"
+          variant="link"
+          pill
+          id="add-dropdown"
+          text="Add..."
+          class="m-md-2 rounded"
+          no-caret
+          toggle-class="text-decoration-none"
+        >
+          <template v-slot:button-content>
+            <b-icon icon="plus-circle"></b-icon>
+          </template>
+          <b-dropdown-item v-on:click="add_inline_query_block('all_values', form_block_array)">All values...</b-dropdown-item>
+          <b-dropdown-item v-on:click="add_inline_query_block('values_in_column', form_block_array)">Values in column...</b-dropdown-item>
+          <b-dropdown-item v-on:click="add_inline_query_block('values_in_row', form_block_array)">Values in row...</b-dropdown-item>
+        </b-dropdown>
+        <b-button size="sm" variant="link" v-on:click="remove_query_block(form_block_array)">
           <b-icon icon="trash"></b-icon>
         </b-button>
       </b-card>
@@ -45,32 +82,52 @@
         size="sm"
         variant="link"
         pill
-        id="add-dropdown"
+        id="add-query-dropdown"
         text="Add..."
         class="m-md-2 rounded"
         no-caret
         toggle-class="text-decoration-none"
       >
         <template v-slot:button-content>
-          <b-icon icon="plus-circle"></b-icon> Add
+          <b-icon icon="plus-circle-fill"></b-icon> Add Query
         </template>
-        <b-dropdown-item v-on:click="add_query_block('all_values')">All values...</b-dropdown-item>
-        <b-dropdown-item v-on:click="add_query_block('values_in_column')">Values in column...</b-dropdown-item>
-        <b-dropdown-item v-on:click="add_query_block('values_in_row')">Values in row...</b-dropdown-item>
+        <b-dropdown-group id="dropdown-group-numeric" header="Numeric operations">
+        <b-dropdown-item v-on:click="add_query_block('all_values')">All values</b-dropdown-item>
+        <b-dropdown-item v-on:click="add_query_block('values_in_column')">Values in column</b-dropdown-item>
+        <b-dropdown-item v-on:click="add_query_block('values_in_row')">Values in row</b-dropdown-item>
+        </b-dropdown-group>
         <b-dropdown-divider></b-dropdown-divider>
-        <b-dropdown-item v-on:click="add_query_block('and')">and</b-dropdown-item>
-        <b-dropdown-item v-on:click="add_query_block('or')">or</b-dropdown-item>
+        <b-dropdown-group id="dropdown-group-numeric" header="Genome annotation">
+        <b-dropdown-item v-on:click="add_query_block('gene_relevant')">Gene relevant in...</b-dropdown-item>
+        </b-dropdown-group>
+      </b-dropdown>
+      <b-dropdown
+        size="sm"
+        variant="link"
+        pill
+        id="load-query-dropdown"
+        text="Add..."
+        class="m-md-2 rounded"
+        no-caret
+        toggle-class="text-decoration-none"
+      >
+        <template v-slot:button-content>
+          <b-icon icon="intersect"></b-icon> Load Filter
+        </template>
+        <b-dropdown-group id="dropdown-group-numeric" header="Genome Annotation">
+        <b-dropdown-item v-on:click="add_query_block('all_values')">Filter gastro genes</b-dropdown-item>
+        <b-dropdown-item v-on:click="add_query_block('values_in_column')">Filter pathogenic</b-dropdown-item>
+        </b-dropdown-group>
+        <b-dropdown-divider></b-dropdown-divider>
+        <b-dropdown-group id="dropdown-group-numeric" header="Data Cleanup">
+          <b-dropdown-item v-on:click="add_query_preset('all_values')">Remove faulty data</b-dropdown-item>
+          <b-dropdown-item v-on:click="add_query_block('all_values')">Remove strings</b-dropdown-item>
+        </b-dropdown-group>
       </b-dropdown>
       <div class="submit-button-parent">
-      <b-button
-        type="submit"
-        variant="primary"
-        pill
-        size="sm"
-        class="submit-button"
-      >
-        <b-icon icon="search"></b-icon> Filter Data
-      </b-button>
+        <b-button type="submit" variant="primary" pill size="sm" class="submit-button">
+          <b-icon icon="search"></b-icon> Filter Data
+        </b-button>
       </div>
     </b-form>
   </div>
@@ -81,23 +138,49 @@ import axios from "axios";
 export default {
   name: "search_query",
   methods: {
+    add_query_preset(preset) {
+      let added_preset = this.form_blocks[preset];
+      added_preset["id"] = this.id;
+      added_preset["logic"] = true;
+      added_preset["logical_operator"]["selected"] = "!= not"
+      added_preset["value"]["selected"] = "NaN, Null, undefined, 0, null"
+      console.log(added_preset);
+      this.query.push([added_preset]);
+      this.id++;
+    },
     add_query_block(block) {
       let added_block = this.form_blocks[block];
       added_block["id"] = this.id;
-      this.query.push(added_block);
+      added_block["logic"] = true;
+      this.query.push([added_block]);
       console.log(this.query);
       this.id++;
     },
-    remove_query_block(block_id) {
-      this.query.splice(
-        this.query.findIndex(item => item.id === block_id),
-        1
-      );
+    add_inline_query_block(block, form) {
+      let added_block = this.form_blocks[block];
+      if (block === "or" || block === "and") {
+        added_block["logic"] = false;
+      } else {
+        added_block["logic"] = true;
+      }
+      console.log(this.query[0]);
+      console.log(this.query.indexOf(form));
+      this.query[this.query.indexOf(form)].push(added_block);
+      console.log(this.query);
+      this.id++;
+    },
+    remove_query_block(block_array) {
+      console.log(block_array);
+      const index = this.query.indexOf(block_array);
+      if (index > -1) {
+        this.query.splice(index, 1);
+      }
     },
     post_query() {
       const path = "http://0.0.0.0:5000/query";
       var data = new FormData();
       data.append("query", JSON.stringify(this.query));
+      data.append("url", JSON.stringify(this.$route.query.config));
       let self = this;
       // self.$parent.$bvModal.hide('bv_modal_addData')
       axios
@@ -106,7 +189,7 @@ export default {
           this.$nextTick(() => {
             console.log("after next tick res: ", res);
             console.log(JSON.stringify(res));
-            self.$emit("dataframe_change", res);
+            self.$emit("dataframe_filtered", res);
             this.show_loading_overlay = false;
           });
         })
@@ -131,6 +214,7 @@ export default {
             type: "b-form-select",
             options: [
               "< less than",
+              "> more than",
               ">= more or equal to",
               "<= less or equal to",
               "= equal to",
@@ -146,7 +230,7 @@ export default {
           }
         },
         and: {
-          and_form: {
+          and: {
             options: [{ text: "and" }, "or"],
             type: "b-form-select",
             id: "and",
@@ -154,7 +238,7 @@ export default {
           }
         },
         or: {
-          or_form: {
+          or: {
             options: [{ text: "or" }, "and"],
             type: "b-form-select",
             id: "or",
@@ -224,6 +308,14 @@ export default {
             id: "values_in_row_value",
             selected: null
           }
+        },
+        gene_relevant: {
+          search: {
+            label: "Gene relevant in",
+            type: "b-form-input",
+            id: "gene_relevant_search",
+            selected: null
+          }
         }
       },
       query: []
@@ -261,5 +353,8 @@ button {
 .submit-button-parent {
   flex: 1;
   text-align: right;
+}
+.form {
+  display: inline-flex;
 }
 </style>
