@@ -14,8 +14,8 @@ def csv_to_tsv(df, cat_amount):
     file_path = "uploads/output_matrix.txt"
     print('cat_aount: ', cat_amount)
     # Append category title string before values for all cat columns.
-    dataframe[dataframe.columns[0:cat_amount]] = dataframe.columns[0:cat_amount] + \
-        ': ' + dataframe[dataframe.columns[0:cat_amount]].astype(str)
+    # dataframe[dataframe.columns[0:cat_amount]] = dataframe.columns[0:cat_amount] + \
+    #     ': ' + dataframe[dataframe.columns[0:cat_amount]].astype(str)
     # Remove the category titles from first row.
     for i in range(cat_amount):
         dataframe = dataframe.rename(columns={dataframe.columns[i]: ''})
