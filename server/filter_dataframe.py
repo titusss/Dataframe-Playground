@@ -9,9 +9,6 @@ COMPARISON_OPERATORS = {
     '!= not': '!='
 }
 
-
-query:  [[{'logical_operator': {'label': 'Values are', 'type': 'b-form-select', 'options': ['< less than', '> more than', '>= more or equal to', '<= less or equal to', '= equal to', '!= not'], 'id': 'all_values_logical-operator', 'selected': '!= not'}, 'value': {'type': 'b-form-input', 'id': 'all_values_value', 'selected': 'NaN, Null, undefined, 0, null'}, 'id': 21, 'logic': True}]]
-
 def value_filter(query, df):
     df.set_index(df.columns[0], inplace=True)
     print('df_index: ', df)
@@ -25,6 +22,8 @@ def value_filter(query, df):
     print(query["value"]["selected"])
     df_filtered = eval('df[df[selection]'+ COMPARISON_OPERATORS[query["logical_operator"]["selected"]] + query["value"]["selected"]+']') # DANGER DANGER DANGER!!! ADD EXCEPTIONS AND WHITELISTS TO EVAL()!!!!
     df_filtered.fillna(0, inplace=True)
+    df.reset_index(inplace=True)
+    print('df_filtered: ', df_filtered)
     return df_filtered
 
 def main(query, df):

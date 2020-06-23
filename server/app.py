@@ -77,14 +77,13 @@ def search_query():
     print(url)
     print("db_entry['transformed_dataframe']: ", pd.DataFrame.from_dict(db_entry['transformed_dataframe']))
     print("filtered_df: ", filtered_df)
-    print(pd.DataFrame.to_dict(filtered_df))
-    db.visualizations.update_one({'_id': ObjectId(url)}, {'$set': {'transformed_dataframe': list(pd.DataFrame.to_dict(filtered_df))}})
+    db.visualizations.update_one({'_id': ObjectId(url)}, {'$set': {'transformed_dataframe': filtered_df.to_dict('records'), 'vis_links': []}})
     print(query)
     print('#####')
     print('db_entry: ', db_entry)
     print('#####')
     print('new_vis', db.visualizations.find_one({"_id": ObjectId(url)}, {'_id': False}))
-    return Response(dumps({'db_entry_id': url}), mimetype="application/json")
+    return Response(dumps({'db_entry_id': ObjectId(url)}), mimetype="application/json")
 
 @app.route('/locked', methods=['POST'])
 def lock_session():
