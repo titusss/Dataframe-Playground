@@ -154,7 +154,8 @@ export default {
       console.log(this.config)
       console.log(res.data.db_entry_id["$oid"])
       if(this.config._id == res.data.db_entry_id["$oid"]) {
-        this.$router.go()
+        // this.$router.go()
+        this.load_config()
       }
       else {
         this.$router.push({ path: '/', query: { config: res.data.db_entry_id["$oid"]}})

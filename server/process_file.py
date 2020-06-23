@@ -46,10 +46,11 @@ def remove_matrix(mockup_db_entry, metadata, db, remove_id):
     db_entry['active_matrices'] = [[i for i in nested if i['id'] != remove_id] for nested in db_entry['active_matrices']] # remove entries matching the remove_id
     db_entry['active_matrices'] = [j for j in db_entry['active_matrices'] if j != []] # remove empty subarrays
     db_entry['active_matrices'] = correct_matrice_positions(db_entry['active_matrices'])
+    db_entry['vis_links'] = []
     if len(sum(db_entry['active_matrices'], []))>0:
         db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
         db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
-        db_entry['vis_links'] = visualize.route(db.plugins, pd.DataFrame.from_dict(db_entry['transformed_dataframe']), metadata['cat_amount'], db_entry['plugins_id']) # CHANGE: Right now every new visualization creates a new MongoDB entry
+        # db_entry['vis_links'] = visualize.route(db.plugins, pd.DataFrame.from_dict(db_entry['transformed_dataframe']), metadata['cat_amount'], db_entry['plugins_id']) # CHANGE: Right now every new visualization creates a new MongoDB entry
         db_entry['cat_amount'] = metadata['cat_amount']
         db_entry_id = insert_update_entry(db_entry, db.visualizations, metadata)
     else:
@@ -70,6 +71,7 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
         db_entry = new_db_entry(df, metadata, pre_configured_plugins)
     db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
     db_entry['cat_amount'] = metadata['cat_amount']
+    db_entry['vis_links'] = []
     if metadata['db_entry_id'] == '': # Enter new DB entry when creating a new visualization
         db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
     else: # Update existing DB entry when modifying an existing visualization
@@ -91,7 +93,6 @@ def new_db_entry(df, metadata, pre_configured_plugins):
     db_entry = {}
     db_entry['locked'] = False
     db_entry['active_matrices'] = [[]]
-    db_entry['vis_links'] = []
     db_entry['plugins_id'] = pre_configured_plugins
     db_entry['transformed_dataframe'] = df.to_dict('records')
     db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
