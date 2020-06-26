@@ -21,7 +21,7 @@ def value_filter(query, df):
     print(COMPARISON_OPERATORS[query["logical_operator"]["selected"]])
     print(query["value"]["selected"])
     df_filtered = eval('df[df[selection]'+ COMPARISON_OPERATORS[query["logical_operator"]["selected"]] + query["value"]["selected"]+']') # DANGER DANGER DANGER!!! ADD EXCEPTIONS AND WHITELISTS TO EVAL()!!!!
-    df_filtered.fillna(0, inplace=True)
+    df_filtered.fillna('undefined', inplace=True)
     df.reset_index(inplace=True)
     print('df_filtered: ', df_filtered)
     return df_filtered
