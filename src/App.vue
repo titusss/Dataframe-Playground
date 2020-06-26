@@ -26,7 +26,10 @@
           <search_query/>
         </div>
         <div>
-          <visualization v-bind:vis_link="this.active_vis_link"/>
+          <visualization v-bind:vis_link="this.active_vis_link" v-if="this.active_vis_link"/>
+        </div>
+        <div class="html_dataframe">
+          <dataframe v-bind:dataframe="this.config.transformed_dataframe"/>
         </div>
       </div>
       <div class="menu"></div>
@@ -55,6 +58,7 @@ import addDataButton from './components/addDataButton'
 import search_query from './components/search_query'
 import axios from 'axios'
 import toolbar from './components/toolbar'
+import dataframe from './components/dataframe'
 export default {
   name: 'App',
   components: {
@@ -64,7 +68,8 @@ export default {
     add_plugin,
     addDataButton,
     search_query,
-    toolbar
+    toolbar,
+    dataframe
   },
   data() {
     return {
