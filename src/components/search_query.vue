@@ -28,6 +28,16 @@
               class="mb-2 mr-sm-2 mb-sm-0"
               required
             ></b-form-input>
+            <input_autocomplete
+              v-if="form.type === 'input-autocomplete'"
+              :id="form.id"
+              v-model="form.selected"
+              size="sm"
+              class="mb-2 mr-sm-2 mb-sm-0"
+              :suggestions="cities" 
+              :selection.sync="complete_value"
+              required
+            ></input_autocomplete>
           </div>
         </div>
         <b-dropdown
@@ -61,7 +71,7 @@
           <template v-slot:button-content>
             <b-icon icon="plus-circle"></b-icon>
           </template>
-          <b-dropdown-item v-on:click="add_inline_query_block('all_values', form_block_array)">All values...</b-dropdown-item>
+          <b-dropdown-item v-on:click="add_inline_query_block('change_values', form_block_array)">Change values...</b-dropdown-item>
           <b-dropdown-item v-on:click="add_inline_query_block('values_in_column', form_block_array)">Values in column...</b-dropdown-item>
           <b-dropdown-item v-on:click="add_inline_query_block('values_in_row', form_block_array)">Values in row...</b-dropdown-item>
         </b-dropdown>
@@ -92,9 +102,9 @@
           <b-icon icon="plus-circle-fill"></b-icon> Add Query
         </template>
         <b-dropdown-group id="dropdown-group-numeric" header="Numeric operations">
-        <b-dropdown-item v-on:click="add_query_block('all_values')">All values</b-dropdown-item>
-        <b-dropdown-item v-on:click="add_query_block('values_in_column')">Values in column</b-dropdown-item>
-        <b-dropdown-item v-on:click="add_query_block('values_in_row')">Values in row</b-dropdown-item>
+        <b-dropdown-item v-on:click="add_query_block('change_values')">Change values</b-dropdown-item>
+        <b-dropdown-item v-on:click="add_query_block('values_in_column')">Remove columns</b-dropdown-item>
+        <b-dropdown-item v-on:click="add_query_block('values_in_row')">Remove rows</b-dropdown-item>
         </b-dropdown-group>
         <b-dropdown-divider></b-dropdown-divider>
         <b-dropdown-group id="dropdown-group-numeric" header="Genome annotation">
@@ -115,13 +125,13 @@
           <b-icon icon="intersect"></b-icon> Load Filter
         </template>
         <b-dropdown-group id="dropdown-group-numeric" header="Genome Annotation">
-        <b-dropdown-item v-on:click="add_query_block('all_values')">Filter gastro genes</b-dropdown-item>
+        <b-dropdown-item v-on:click="add_query_block('change_values')">Filter gastro genes</b-dropdown-item>
         <b-dropdown-item v-on:click="add_query_block('values_in_column')">Filter pathogenic</b-dropdown-item>
         </b-dropdown-group>
         <b-dropdown-divider></b-dropdown-divider>
         <b-dropdown-group id="dropdown-group-numeric" header="Data Cleanup">
-          <b-dropdown-item v-on:click="add_query_preset('all_values')">Remove faulty data</b-dropdown-item>
-          <b-dropdown-item v-on:click="add_query_block('all_values')">Remove strings</b-dropdown-item>
+          <b-dropdown-item v-on:click="add_query_preset('change_values')">Remove faulty data</b-dropdown-item>
+          <b-dropdown-item v-on:click="add_query_block('change_values')">Remove strings</b-dropdown-item>
         </b-dropdown-group>
       </b-dropdown>
       <div class="submit-button-parent">
@@ -135,8 +145,12 @@
 
 <script>
 import axios from "axios";
+import input_autocomplete from "./input_autocomplete";
 export default {
   name: "search_query",
+  components: {
+    input_autocomplete
+  },
   methods: {
     add_query_preset(preset) {
       let added_preset = this.form_blocks[preset];
@@ -204,13 +218,18 @@ export default {
   },
   data() {
     return {
+      cities : [
+            'Bangalore','Chennai','Cochin',
+            'Delhi','Kolkata','Mumbai', 'Gastro intake'
+        ],
+      complete_value: '',
       id: 0,
       query_form_data: {},
       test: true,
       form_blocks: {
-        all_values: {
+        change_values: {
           logical_operator: {
-            label: "Values are",
+            label: "Change values that are",
             type: "b-form-select",
             options: [
               "< less than",
@@ -220,12 +239,18 @@ export default {
               "= equal to",
               "!= not"
             ],
-            id: "all_values_logical-operator",
+            id: "change_values_logical-operator",
             selected: null
           },
-          value: {
+          current_value: {
             type: "b-form-input",
-            id: "all_values_value",
+            id: "change_values_current-value",
+            selected: null
+          },
+          target_value: {
+            label: "to",
+            type: "b-form-input",
+            id: "change_values_target-value",
             selected: null
           }
         },
@@ -247,7 +272,7 @@ export default {
         },
         values_in_column: {
           column: {
-            label: "Values in column",
+            label: "Remove columns",
             type: "b-form-select",
             options: [
               { text: "SP Tex (Biological replicate 1)" },
@@ -257,33 +282,15 @@ export default {
             ],
             id: "values_in_column_column",
             selected: null
-          },
-          logical_operator: {
-            label: "are",
-            type: "b-form-select",
-            options: [
-              "< less than",
-              ">= more or equal to",
-              "<= less or equal to",
-              "= equal to",
-              "!= not"
-            ],
-            id: "values_in_column_logical-operator",
-            selected: null
-          },
-          value: {
-            type: "b-form-input",
-            id: "values_in_column_value",
-            selected: null
           }
         },
         values_in_row: {
           row: {
-            label: "Values in row",
+            label: "Remove rows, where values of column",
             type: "b-form-select",
             options: [
               { text: "SP Tex (Biological replicate 1)" },
-              "One",
+              "Any column",
               "Two",
               "Three"
             ],
@@ -312,7 +319,7 @@ export default {
         gene_relevant: {
           search: {
             label: "Gene relevant in",
-            type: "b-form-input",
+            type: "input-autocomplete",
             id: "gene_relevant_search",
             selected: null
           }
