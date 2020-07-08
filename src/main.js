@@ -5,13 +5,11 @@ import App from './App.vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import router from './router'
-import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
-
+import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
 
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
-Vue.component('vue-bootstrap-typeahead', VueBootstrapTypeahead)
-
+Vue.component('vue-typeahead-bootstrap', VueTypeaheadBootstrap)
 Vue.config.productionTip = false
 
 new Vue({

@@ -11,7 +11,6 @@ COMPARISON_OPERATORS = {
 
 def value_filter(query, df):
     df.set_index(df.columns[0], inplace=True)
-    print('df_index: ', df)
     try:
         selection = query['column']
     except KeyError:
@@ -26,14 +25,38 @@ def value_filter(query, df):
     print('df_filtered: ', df_filtered)
     return df_filtered
 
+def keyword_filter(query, df, annotation_id):
+    import json
+    print(query)
+    go_name = query['search']['selected']
+    with open('static/salmonella_annotations.json') as json_file:
+        salmonella_annotations = json.load(json_file)
+
+    df_locus = df[df.columns[0]].tolist()
+    # print('df_locus: ', df_locus)
+    filtered_locus = []
+
+    for salmonella_locus in salmonella_annotations:
+        if salmonella_locus in df_locus:
+            if go_name in salmonella_annotations[salmonella_locus][annotation_id]:
+                filtered_locus.append(salmonella_locus)
+    print('filtered_locus: ', '#', filtered_locus)
+    print(df.columns[0])
+    df_filtered = df[df[df.columns[0]].isin(filtered_locus)]
+    print('######')
+    print(df_filtered)
+    return df_filtered
+
+
 def main(query, df):
     for array in query:
-        print('array')
-        print(array)
         for block in array:
-            print('block')
-            print(block)
-            if block['logical_operator']!='':
+            try:
+                print(block['logical_operator'])
                 df_filtered = value_filter(block, df)
-                print(df_filtered)
+            except KeyError:
+                if block['search']!='':
+                    print('###### SEARCH')
+                    print('block: ', block)
+                    df_filtered = keyword_filter(block, df, "test")
     return df_filtered
