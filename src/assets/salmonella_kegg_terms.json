@@ -1,0 +1,1852 @@
+{
+  "items": [
+    {
+      "id": "map05204",
+      "name": "Chemical carcinogenesis"
+    },
+    {
+      "id": "map02024",
+      "name": "Quorum sensing"
+    },
+    {
+      "id": "map01503",
+      "name": "Cationic antimicrobial peptide (CAMP) resistance"
+    },
+    {
+      "id": "map01120",
+      "name": "Microbial metabolism in diverse environments"
+    },
+    {
+      "id": "ko05205",
+      "name": "Proteoglycans in cancer"
+    },
+    {
+      "id": "map02020",
+      "name": "Two-component system"
+    },
+    {
+      "id": "map00622",
+      "name": "Xylene degradation"
+    },
+    {
+      "id": "ko00920",
+      "name": "Sulfur metabolism"
+    },
+    {
+      "id": "map00565",
+      "name": "Ether lipid metabolism"
+    },
+    {
+      "id": "map00950",
+      "name": "Isoquinoline alkaloid biosynthesis"
+    },
+    {
+      "id": "ko04211",
+      "name": "Longevity regulating pathway"
+    },
+    {
+      "id": "ko00600",
+      "name": "Sphingolipid metabolism"
+    },
+    {
+      "id": "map00380",
+      "name": "Tryptophan metabolism"
+    },
+    {
+      "id": "ko05219",
+      "name": "Bladder cancer"
+    },
+    {
+      "id": "ko05016",
+      "name": "Huntington disease"
+    },
+    {
+      "id": "map00960",
+      "name": "Tropane, piperidine and pyridine alkaloid biosynthesis"
+    },
+    {
+      "id": "map04212",
+      "name": "Longevity regulating pathway - worm"
+    },
+    {
+      "id": "map00030",
+      "name": "Pentose phosphate pathway"
+    },
+    {
+      "id": "ko05014",
+      "name": "Amyotrophic lateral sclerosis (ALS)"
+    },
+    {
+      "id": "map00770",
+      "name": "Pantothenate and CoA biosynthesis"
+    },
+    {
+      "id": "map00670",
+      "name": "One carbon pool by folate"
+    },
+    {
+      "id": "ko04146",
+      "name": "Peroxisome"
+    },
+    {
+      "id": "map00401",
+      "name": "Novobiocin biosynthesis"
+    },
+    {
+      "id": "map04964",
+      "name": "Proximal tubule bicarbonate reclamation"
+    },
+    {
+      "id": "ko04152",
+      "name": "AMPK signaling pathway"
+    },
+    {
+      "id": "ko00625",
+      "name": "Chloroalkane and chloroalkene degradation"
+    },
+    {
+      "id": "map00981",
+      "name": "Insect hormone biosynthesis"
+    },
+    {
+      "id": "map00980",
+      "name": "Metabolism of xenobiotics by cytochrome P450"
+    },
+    {
+      "id": "map01053",
+      "name": "Biosynthesis of siderophore group nonribosomal peptides"
+    },
+    {
+      "id": "ko03008",
+      "name": "Ribosome biogenesis in eukaryotes"
+    },
+    {
+      "id": "ko02010",
+      "name": "ABC transporters"
+    },
+    {
+      "id": "map00600",
+      "name": "Sphingolipid metabolism"
+    },
+    {
+      "id": "ko00592",
+      "name": "alpha-Linolenic acid metabolism"
+    },
+    {
+      "id": "map00071",
+      "name": "Fatty acid degradation"
+    },
+    {
+      "id": "map04930",
+      "name": "Type II diabetes mellitus"
+    },
+    {
+      "id": "ko00480",
+      "name": "Glutathione metabolism"
+    },
+    {
+      "id": "ko05110",
+      "name": "Vibrio cholerae infection"
+    },
+    {
+      "id": "map00460",
+      "name": "Cyanoamino acid metabolism"
+    },
+    {
+      "id": "map04910",
+      "name": "Insulin signaling pathway"
+    },
+    {
+      "id": "map03070",
+      "name": "Bacterial secretion system"
+    },
+    {
+      "id": "map04152",
+      "name": "AMPK signaling pathway"
+    },
+    {
+      "id": "map01230",
+      "name": "Biosynthesis of amino acids"
+    },
+    {
+      "id": "map00405",
+      "name": "Phenazine biosynthesis"
+    },
+    {
+      "id": "ko00071",
+      "name": "Fatty acid degradation"
+    },
+    {
+      "id": "map00261",
+      "name": "Monobactam biosynthesis"
+    },
+    {
+      "id": "ko05231",
+      "name": "Choline metabolism in cancer"
+    },
+    {
+      "id": "map00270",
+      "name": "Cysteine and methionine metabolism"
+    },
+    {
+      "id": "map01523",
+      "name": "Antifolate resistance"
+    },
+    {
+      "id": "ko00401",
+      "name": "Novobiocin biosynthesis"
+    },
+    {
+      "id": "map00627",
+      "name": "Aminobenzoate degradation"
+    },
+    {
+      "id": "ko00630",
+      "name": "Glyoxylate and dicarboxylate metabolism"
+    },
+    {
+      "id": "ko04978",
+      "name": "Mineral absorption"
+    },
+    {
+      "id": "ko05012",
+      "name": "Parkinson disease"
+    },
+    {
+      "id": "ko00981",
+      "name": "Insect hormone biosynthesis"
+    },
+    {
+      "id": "map00603",
+      "name": "Glycosphingolipid biosynthesis - globo and isoglobo series"
+    },
+    {
+      "id": "ko00562",
+      "name": "Inositol phosphate metabolism"
+    },
+    {
+      "id": "map00525",
+      "name": "Acarbose and validamycin biosynthesis"
+    },
+    {
+      "id": "map05120",
+      "name": "Epithelial cell signaling in Helicobacter pylori infection"
+    },
+    {
+      "id": "map00791",
+      "name": "Atrazine degradation"
+    },
+    {
+      "id": "map00500",
+      "name": "Starch and sucrose metabolism"
+    },
+    {
+      "id": "ko00590",
+      "name": "Arachidonic acid metabolism"
+    },
+    {
+      "id": "ko03060",
+      "name": "Protein export"
+    },
+    {
+      "id": "ko00626",
+      "name": "Naphthalene degradation"
+    },
+    {
+      "id": "ko00900",
+      "name": "Terpenoid backbone biosynthesis"
+    },
+    {
+      "id": "map04070",
+      "name": "Phosphatidylinositol signaling system"
+    },
+    {
+      "id": "map00430",
+      "name": "Taurine and hypotaurine metabolism"
+    },
+    {
+      "id": "ko01055",
+      "name": "Biosynthesis of vancomycin group antibiotics"
+    },
+    {
+      "id": "ko00350",
+      "name": "Tyrosine metabolism"
+    },
+    {
+      "id": "ko05418",
+      "name": "Fluid shear stress and atherosclerosis"
+    },
+    {
+      "id": "ko00130",
+      "name": "Ubiquinone and other terpenoid-quinone biosynthesis"
+    },
+    {
+      "id": "map04915",
+      "name": "Estrogen signaling pathway"
+    },
+    {
+      "id": "map04922",
+      "name": "Glucagon signaling pathway"
+    },
+    {
+      "id": "map00052",
+      "name": "Galactose metabolism"
+    },
+    {
+      "id": "map00480",
+      "name": "Glutathione metabolism"
+    },
+    {
+      "id": "ko01051",
+      "name": "Biosynthesis of ansamycins"
+    },
+    {
+      "id": "ko04141",
+      "name": "Protein processing in endoplasmic reticulum"
+    },
+    {
+      "id": "ko00473",
+      "name": "D-Alanine metabolism"
+    },
+    {
+      "id": "ko00525",
+      "name": "Acarbose and validamycin biosynthesis"
+    },
+    {
+      "id": "map00910",
+      "name": "Nitrogen metabolism"
+    },
+    {
+      "id": "ko03320",
+      "name": "PPAR signaling pathway"
+    },
+    {
+      "id": "ko00660",
+      "name": "C5-Branched dibasic acid metabolism"
+    },
+    {
+      "id": "ko00903",
+      "name": "Limonene and pinene degradation"
+    },
+    {
+      "id": "map00903",
+      "name": "Limonene and pinene degradation"
+    },
+    {
+      "id": "ko04217",
+      "name": "Necroptosis"
+    },
+    {
+      "id": "map05231",
+      "name": "Choline metabolism in cancer"
+    },
+    {
+      "id": "ko04659",
+      "name": "Th17 cell differentiation"
+    },
+    {
+      "id": "ko01220",
+      "name": "Degradation of aromatic compounds"
+    },
+    {
+      "id": "ko00627",
+      "name": "Aminobenzoate degradation"
+    },
+    {
+      "id": "map00400",
+      "name": "Phenylalanine, tyrosine and tryptophan biosynthesis"
+    },
+    {
+      "id": "map05418",
+      "name": "Fluid shear stress and atherosclerosis"
+    },
+    {
+      "id": "ko00220",
+      "name": "Arginine biosynthesis"
+    },
+    {
+      "id": "map03320",
+      "name": "PPAR signaling pathway"
+    },
+    {
+      "id": "ko01130",
+      "name": ""
+    },
+    {
+      "id": "ko04917",
+      "name": "Prolactin signaling pathway"
+    },
+    {
+      "id": "ko00550",
+      "name": "Peptidoglycan biosynthesis"
+    },
+    {
+      "id": "map00720",
+      "name": "Carbon fixation pathways in prokaryotes"
+    },
+    {
+      "id": "ko00240",
+      "name": "Pyrimidine metabolism"
+    },
+    {
+      "id": "map00660",
+      "name": "C5-Branched dibasic acid metabolism"
+    },
+    {
+      "id": "map00300",
+      "name": "Lysine biosynthesis"
+    },
+    {
+      "id": "ko01523",
+      "name": "Antifolate resistance"
+    },
+    {
+      "id": "ko05152",
+      "name": "Tuberculosis"
+    },
+    {
+      "id": "map00624",
+      "name": "Polycyclic aromatic hydrocarbon degradation"
+    },
+    {
+      "id": "ko00040",
+      "name": "Pentose and glucuronate interconversions"
+    },
+    {
+      "id": "map00540",
+      "name": "Lipopolysaccharide biosynthesis"
+    },
+    {
+      "id": "map00640",
+      "name": "Propanoate metabolism"
+    },
+    {
+      "id": "ko00140",
+      "name": "Steroid hormone biosynthesis"
+    },
+    {
+      "id": "ko00430",
+      "name": "Taurine and hypotaurine metabolism"
+    },
+    {
+      "id": "map04920",
+      "name": "Adipocytokine signaling pathway"
+    },
+    {
+      "id": "map00680",
+      "name": "Methane metabolism"
+    },
+    {
+      "id": "map04113",
+      "name": "Meiosis - yeast"
+    },
+    {
+      "id": "ko05142",
+      "name": "Chagas disease (American trypanosomiasis)"
+    },
+    {
+      "id": "map05134",
+      "name": "Legionellosis"
+    },
+    {
+      "id": "ko04930",
+      "name": "Type II diabetes mellitus"
+    },
+    {
+      "id": "map05165",
+      "name": "Human papillomavirus infection"
+    },
+    {
+      "id": "ko04013",
+      "name": "MAPK signaling pathway - fly"
+    },
+    {
+      "id": "ko00195",
+      "name": "Photosynthesis"
+    },
+    {
+      "id": "map05200",
+      "name": "Pathways in cancer"
+    },
+    {
+      "id": "ko02020",
+      "name": "Two-component system"
+    },
+    {
+      "id": "map05014",
+      "name": "Amyotrophic lateral sclerosis (ALS)"
+    },
+    {
+      "id": "map04011",
+      "name": "MAPK signaling pathway - yeast"
+    },
+    {
+      "id": "ko00791",
+      "name": "Atrazine degradation"
+    },
+    {
+      "id": "ko00121",
+      "name": "Secondary bile acid biosynthesis"
+    },
+    {
+      "id": "ko00980",
+      "name": "Metabolism of xenobiotics by cytochrome P450"
+    },
+    {
+      "id": "map05111",
+      "name": "Biofilm formation - Vibrio cholerae"
+    },
+    {
+      "id": "ko00333",
+      "name": "Prodigiosin biosynthesis"
+    },
+    {
+      "id": "map00240",
+      "name": "Pyrimidine metabolism"
+    },
+    {
+      "id": "ko03420",
+      "name": "Nucleotide excision repair"
+    },
+    {
+      "id": "map01501",
+      "name": "beta-Lactam resistance"
+    },
+    {
+      "id": "ko00950",
+      "name": "Isoquinoline alkaloid biosynthesis"
+    },
+    {
+      "id": "map00592",
+      "name": "alpha-Linolenic acid metabolism"
+    },
+    {
+      "id": "map00020",
+      "name": "Citrate cycle (TCA cycle)"
+    },
+    {
+      "id": "ko01100",
+      "name": "Metabolic pathways"
+    },
+    {
+      "id": "map00591",
+      "name": "Linoleic acid metabolism"
+    },
+    {
+      "id": "map05131",
+      "name": "Shigellosis"
+    },
+    {
+      "id": "ko00960",
+      "name": "Tropane, piperidine and pyridine alkaloid biosynthesis"
+    },
+    {
+      "id": "map04621",
+      "name": "NOD-like receptor signaling pathway"
+    },
+    {
+      "id": "map00072",
+      "name": "Synthesis and degradation of ketone bodies"
+    },
+    {
+      "id": "ko02026",
+      "name": "Biofilm formation - Escherichia coli"
+    },
+    {
+      "id": "map00281",
+      "name": "Geraniol degradation"
+    },
+    {
+      "id": "ko00230",
+      "name": "Purine metabolism"
+    },
+    {
+      "id": "ko04914",
+      "name": "Progesterone-mediated oocyte maturation"
+    },
+    {
+      "id": "map04146",
+      "name": "Peroxisome"
+    },
+    {
+      "id": "ko00300",
+      "name": "Lysine biosynthesis"
+    },
+    {
+      "id": "ko04918",
+      "name": "Thyroid hormone synthesis"
+    },
+    {
+      "id": "ko02040",
+      "name": "Flagellar assembly"
+    },
+    {
+      "id": "map00472",
+      "name": "D-Arginine and D-ornithine metabolism"
+    },
+    {
+      "id": "map04213",
+      "name": "Longevity regulating pathway - multiple species"
+    },
+    {
+      "id": "map00361",
+      "name": "Chlorocyclohexane and chlorobenzene degradation"
+    },
+    {
+      "id": "ko00720",
+      "name": "Carbon fixation pathways in prokaryotes"
+    },
+    {
+      "id": "ko00966",
+      "name": "Glucosinolate biosynthesis"
+    },
+    {
+      "id": "map05100",
+      "name": "Bacterial invasion of epithelial cells"
+    },
+    {
+      "id": "ko01053",
+      "name": "Biosynthesis of siderophore group nonribosomal peptides"
+    },
+    {
+      "id": "ko00380",
+      "name": "Tryptophan metabolism"
+    },
+    {
+      "id": "ko00643",
+      "name": "Styrene degradation"
+    },
+    {
+      "id": "map00362",
+      "name": "Benzoate degradation"
+    },
+    {
+      "id": "map03008",
+      "name": "Ribosome biogenesis in eukaryotes"
+    },
+    {
+      "id": "map00965",
+      "name": "Betalain biosynthesis"
+    },
+    {
+      "id": "ko04066",
+      "name": "HIF-1 signaling pathway"
+    },
+    {
+      "id": "map05340",
+      "name": "Primary immunodeficiency"
+    },
+    {
+      "id": "ko05203",
+      "name": "Viral carcinogenesis"
+    },
+    {
+      "id": "map04917",
+      "name": "Prolactin signaling pathway"
+    },
+    {
+      "id": "map00364",
+      "name": "Fluorobenzoate degradation"
+    },
+    {
+      "id": "ko00072",
+      "name": "Synthesis and degradation of ketone bodies"
+    },
+    {
+      "id": "ko03070",
+      "name": "Bacterial secretion system"
+    },
+    {
+      "id": "map01200",
+      "name": "Carbon metabolism"
+    },
+    {
+      "id": "map01524",
+      "name": "Platinum drug resistance"
+    },
+    {
+      "id": "ko00770",
+      "name": "Pantothenate and CoA biosynthesis"
+    },
+    {
+      "id": "map04068",
+      "name": "FoxO signaling pathway"
+    },
+    {
+      "id": "map01055",
+      "name": "Biosynthesis of vancomycin group antibiotics"
+    },
+    {
+      "id": "ko01210",
+      "name": "2-Oxocarboxylic acid metabolism"
+    },
+    {
+      "id": "ko05206",
+      "name": "MicroRNAs in cancer"
+    },
+    {
+      "id": "ko05211",
+      "name": "Renal cell carcinoma"
+    },
+    {
+      "id": "map04931",
+      "name": "Insulin resistance"
+    },
+    {
+      "id": "map03060",
+      "name": "Protein export"
+    },
+    {
+      "id": "ko05165",
+      "name": "Human papillomavirus infection"
+    },
+    {
+      "id": "map04122",
+      "name": "Sulfur relay system"
+    },
+    {
+      "id": "ko04940",
+      "name": "Type I diabetes mellitus"
+    },
+    {
+      "id": "ko04612",
+      "name": "Antigen processing and presentation"
+    },
+    {
+      "id": "ko05322",
+      "name": "Systemic lupus erythematosus"
+    },
+    {
+      "id": "ko00020",
+      "name": "Citrate cycle (TCA cycle)"
+    },
+    {
+      "id": "map02040",
+      "name": "Flagellar assembly"
+    },
+    {
+      "id": "ko05020",
+      "name": "Prion diseases"
+    },
+    {
+      "id": "ko00120",
+      "name": "Primary bile acid biosynthesis"
+    },
+    {
+      "id": "ko00623",
+      "name": "Toluene degradation"
+    },
+    {
+      "id": "ko00561",
+      "name": "Glycerolipid metabolism"
+    },
+    {
+      "id": "ko05340",
+      "name": "Primary immunodeficiency"
+    },
+    {
+      "id": "ko00440",
+      "name": "Phosphonate and phosphinate metabolism"
+    },
+    {
+      "id": "ko00340",
+      "name": "Histidine metabolism"
+    },
+    {
+      "id": "map00140",
+      "name": "Steroid hormone biosynthesis"
+    },
+    {
+      "id": "ko04915",
+      "name": "Estrogen signaling pathway"
+    },
+    {
+      "id": "ko00460",
+      "name": "Cyanoamino acid metabolism"
+    },
+    {
+      "id": "map00440",
+      "name": "Phosphonate and phosphinate metabolism"
+    },
+    {
+      "id": "ko04934",
+      "name": "Cushing syndrome"
+    },
+    {
+      "id": "map05206",
+      "name": "MicroRNAs in cancer"
+    },
+    {
+      "id": "map05150",
+      "name": "Staphylococcus aureus infection"
+    },
+    {
+      "id": "ko00531",
+      "name": "Glycosaminoglycan degradation"
+    },
+    {
+      "id": "ko00250",
+      "name": "Alanine, aspartate and glutamate metabolism"
+    },
+    {
+      "id": "map04724",
+      "name": "Glutamatergic synapse"
+    },
+    {
+      "id": "ko00624",
+      "name": "Polycyclic aromatic hydrocarbon degradation"
+    },
+    {
+      "id": "ko02025",
+      "name": "Biofilm formation - Pseudomonas aeruginosa"
+    },
+    {
+      "id": "ko05100",
+      "name": "Bacterial invasion of epithelial cells"
+    },
+    {
+      "id": "map00010",
+      "name": "Glycolysis / Gluconeogenesis"
+    },
+    {
+      "id": "map04141",
+      "name": "Protein processing in endoplasmic reticulum"
+    },
+    {
+      "id": "ko04212",
+      "name": "Longevity regulating pathway - worm"
+    },
+    {
+      "id": "map00121",
+      "name": "Secondary bile acid biosynthesis"
+    },
+    {
+      "id": "ko00790",
+      "name": "Folate biosynthesis"
+    },
+    {
+      "id": "map00230",
+      "name": "Purine metabolism"
+    },
+    {
+      "id": "ko00730",
+      "name": "Thiamine metabolism"
+    },
+    {
+      "id": "ko00540",
+      "name": "Lipopolysaccharide biosynthesis"
+    },
+    {
+      "id": "ko04213",
+      "name": "Longevity regulating pathway - multiple species"
+    },
+    {
+      "id": "map00625",
+      "name": "Chloroalkane and chloroalkene degradation"
+    },
+    {
+      "id": "ko00472",
+      "name": "D-Arginine and D-ornithine metabolism"
+    },
+    {
+      "id": "ko04626",
+      "name": "Plant-pathogen interaction"
+    },
+    {
+      "id": "ko04016",
+      "name": "MAPK signaling pathway - plant"
+    },
+    {
+      "id": "map00410",
+      "name": "beta-Alanine metabolism"
+    },
+    {
+      "id": "map00561",
+      "name": "Glycerolipid metabolism"
+    },
+    {
+      "id": "ko00965",
+      "name": "Betalain biosynthesis"
+    },
+    {
+      "id": "map03020",
+      "name": "RNA polymerase"
+    },
+    {
+      "id": "map00740",
+      "name": "Riboflavin metabolism"
+    },
+    {
+      "id": "map05132",
+      "name": "Salmonella infection"
+    },
+    {
+      "id": "map05203",
+      "name": "Viral carcinogenesis"
+    },
+    {
+      "id": "ko00620",
+      "name": "Pyruvate metabolism"
+    },
+    {
+      "id": "ko02030",
+      "name": "Bacterial chemotaxis"
+    },
+    {
+      "id": "map00232",
+      "name": "Caffeine metabolism"
+    },
+    {
+      "id": "ko05132",
+      "name": "Salmonella infection"
+    },
+    {
+      "id": "ko01040",
+      "name": "Biosynthesis of unsaturated fatty acids"
+    },
+    {
+      "id": "ko03013",
+      "name": "RNA transport"
+    },
+    {
+      "id": "ko00740",
+      "name": "Riboflavin metabolism"
+    },
+    {
+      "id": "ko02060",
+      "name": "Phosphotransferase system (PTS)"
+    },
+    {
+      "id": "ko00520",
+      "name": "Amino sugar and nucleotide sugar metabolism"
+    },
+    {
+      "id": "map04940",
+      "name": "Type I diabetes mellitus"
+    },
+    {
+      "id": "ko00603",
+      "name": "Glycosphingolipid biosynthesis - globo and isoglobo series"
+    },
+    {
+      "id": "ko00053",
+      "name": "Ascorbate and aldarate metabolism"
+    },
+    {
+      "id": "ko02024",
+      "name": "Quorum sensing"
+    },
+    {
+      "id": "map00550",
+      "name": "Peptidoglycan biosynthesis"
+    },
+    {
+      "id": "map04214",
+      "name": "Apoptosis - fly"
+    },
+    {
+      "id": "ko04011",
+      "name": "MAPK signaling pathway - yeast"
+    },
+    {
+      "id": "ko00908",
+      "name": "Zeatin biosynthesis"
+    },
+    {
+      "id": "map04210",
+      "name": "Apoptosis"
+    },
+    {
+      "id": "ko04113",
+      "name": "Meiosis - yeast"
+    },
+    {
+      "id": "ko04216",
+      "name": "Ferroptosis"
+    },
+    {
+      "id": "ko00471",
+      "name": "D-Glutamine and D-glutamate metabolism"
+    },
+    {
+      "id": "ko04142",
+      "name": "Lysosome"
+    },
+    {
+      "id": "map02060",
+      "name": "Phosphotransferase system (PTS)"
+    },
+    {
+      "id": "map00983",
+      "name": "Drug metabolism - other enzymes"
+    },
+    {
+      "id": "ko00785",
+      "name": "Lipoic acid metabolism"
+    },
+    {
+      "id": "map00120",
+      "name": "Primary bile acid biosynthesis"
+    },
+    {
+      "id": "map00531",
+      "name": "Glycosaminoglycan degradation"
+    },
+    {
+      "id": "map00982",
+      "name": "Drug metabolism - cytochrome P450"
+    },
+    {
+      "id": "ko00982",
+      "name": "Drug metabolism - cytochrome P450"
+    },
+    {
+      "id": "map04217",
+      "name": "Necroptosis"
+    },
+    {
+      "id": "ko00524",
+      "name": "Neomycin, kanamycin and gentamicin biosynthesis"
+    },
+    {
+      "id": "map01100",
+      "name": "Metabolic pathways"
+    },
+    {
+      "id": "map00040",
+      "name": "Pentose and glucuronate interconversions"
+    },
+    {
+      "id": "ko04112",
+      "name": "Cell cycle - Caulobacter"
+    },
+    {
+      "id": "ko00400",
+      "name": "Phenylalanine, tyrosine and tryptophan biosynthesis"
+    },
+    {
+      "id": "ko00261",
+      "name": "Monobactam biosynthesis"
+    },
+    {
+      "id": "map00524",
+      "name": "Neomycin, kanamycin and gentamicin biosynthesis"
+    },
+    {
+      "id": "ko01230",
+      "name": "Biosynthesis of amino acids"
+    },
+    {
+      "id": "map00860",
+      "name": "Porphyrin and chlorophyll metabolism"
+    },
+    {
+      "id": "ko00010",
+      "name": "Glycolysis / Gluconeogenesis"
+    },
+    {
+      "id": "map03410",
+      "name": "Base excision repair"
+    },
+    {
+      "id": "ko04920",
+      "name": "Adipocytokine signaling pathway"
+    },
+    {
+      "id": "map00642",
+      "name": "Ethylbenzene degradation"
+    },
+    {
+      "id": "map00350",
+      "name": "Tyrosine metabolism"
+    },
+    {
+      "id": "map01054",
+      "name": "Nonribosomal peptide structures"
+    },
+    {
+      "id": "map01130",
+      "name": ""
+    },
+    {
+      "id": "ko05010",
+      "name": "Alzheimer disease"
+    },
+    {
+      "id": "map04978",
+      "name": "Mineral absorption"
+    },
+    {
+      "id": "ko00360",
+      "name": "Phenylalanine metabolism"
+    },
+    {
+      "id": "map00940",
+      "name": "Phenylpropanoid biosynthesis"
+    },
+    {
+      "id": "map02030",
+      "name": "Bacterial chemotaxis"
+    },
+    {
+      "id": "map04072",
+      "name": "Phospholipase D signaling pathway"
+    },
+    {
+      "id": "ko04910",
+      "name": "Insulin signaling pathway"
+    },
+    {
+      "id": "ko03030",
+      "name": "DNA replication"
+    },
+    {
+      "id": "map03010",
+      "name": "Ribosome"
+    },
+    {
+      "id": "map00966",
+      "name": "Glucosinolate biosynthesis"
+    },
+    {
+      "id": "map00633",
+      "name": "Nitrotoluene degradation"
+    },
+    {
+      "id": "ko01524",
+      "name": "Platinum drug resistance"
+    },
+    {
+      "id": "ko00633",
+      "name": "Nitrotoluene degradation"
+    },
+    {
+      "id": "map01210",
+      "name": "2-Oxocarboxylic acid metabolism"
+    },
+    {
+      "id": "map04657",
+      "name": "IL-17 signaling pathway"
+    },
+    {
+      "id": "ko04724",
+      "name": "Glutamatergic synapse"
+    },
+    {
+      "id": "ko00260",
+      "name": "Glycine, serine and threonine metabolism"
+    },
+    {
+      "id": "map00930",
+      "name": "Caprolactam degradation"
+    },
+    {
+      "id": "ko04070",
+      "name": "Phosphatidylinositol signaling system"
+    },
+    {
+      "id": "map05230",
+      "name": "Central carbon metabolism in cancer"
+    },
+    {
+      "id": "map00333",
+      "name": "Prodigiosin biosynthesis"
+    },
+    {
+      "id": "map00511",
+      "name": "Other glycan degradation"
+    },
+    {
+      "id": "map00643",
+      "name": "Styrene degradation"
+    },
+    {
+      "id": "map00564",
+      "name": "Glycerophospholipid metabolism"
+    },
+    {
+      "id": "ko01120",
+      "name": "Microbial metabolism in diverse environments"
+    },
+    {
+      "id": "map04973",
+      "name": "Carbohydrate digestion and absorption"
+    },
+    {
+      "id": "map00750",
+      "name": "Vitamin B6 metabolism"
+    },
+    {
+      "id": "ko00364",
+      "name": "Fluorobenzoate degradation"
+    },
+    {
+      "id": "ko00650",
+      "name": "Butanoate metabolism"
+    },
+    {
+      "id": "map00310",
+      "name": "Lysine degradation"
+    },
+    {
+      "id": "ko00332",
+      "name": "Carbapenem biosynthesis"
+    },
+    {
+      "id": "ko00280",
+      "name": "Valine, leucine and isoleucine degradation"
+    },
+    {
+      "id": "map05016",
+      "name": "Huntington disease"
+    },
+    {
+      "id": "ko04621",
+      "name": "NOD-like receptor signaling pathway"
+    },
+    {
+      "id": "map00520",
+      "name": "Amino sugar and nucleotide sugar metabolism"
+    },
+    {
+      "id": "ko04657",
+      "name": "IL-17 signaling pathway"
+    },
+    {
+      "id": "map04112",
+      "name": "Cell cycle - Caulobacter"
+    },
+    {
+      "id": "map00290",
+      "name": "Valine, leucine and isoleucine biosynthesis"
+    },
+    {
+      "id": "map02010",
+      "name": "ABC transporters"
+    },
+    {
+      "id": "ko01212",
+      "name": "Fatty acid metabolism"
+    },
+    {
+      "id": "ko00232",
+      "name": "Caffeine metabolism"
+    },
+    {
+      "id": "map03030",
+      "name": "DNA replication"
+    },
+    {
+      "id": "ko00970",
+      "name": "Aminoacyl-tRNA biosynthesis"
+    },
+    {
+      "id": "map05143",
+      "name": "African trypanosomiasis"
+    },
+    {
+      "id": "map00471",
+      "name": "D-Glutamine and D-glutamate metabolism"
+    },
+    {
+      "id": "ko00061",
+      "name": "Fatty acid biosynthesis"
+    },
+    {
+      "id": "map01051",
+      "name": "Biosynthesis of ansamycins"
+    },
+    {
+      "id": "ko03440",
+      "name": "Homologous recombination"
+    },
+    {
+      "id": "ko01200",
+      "name": "Carbon metabolism"
+    },
+    {
+      "id": "map04714",
+      "name": "Thermogenesis"
+    },
+    {
+      "id": "map03018",
+      "name": "RNA degradation"
+    },
+    {
+      "id": "ko00051",
+      "name": "Fructose and mannose metabolism"
+    },
+    {
+      "id": "map04151",
+      "name": "PI3K-Akt signaling pathway"
+    },
+    {
+      "id": "map00360",
+      "name": "Phenylalanine metabolism"
+    },
+    {
+      "id": "ko03020",
+      "name": "RNA polymerase"
+    },
+    {
+      "id": "ko03010",
+      "name": "Ribosome"
+    },
+    {
+      "id": "ko05200",
+      "name": "Pathways in cancer"
+    },
+    {
+      "id": "ko00983",
+      "name": "Drug metabolism - other enzymes"
+    },
+    {
+      "id": "ko00930",
+      "name": "Caprolactam degradation"
+    },
+    {
+      "id": "map00920",
+      "name": "Sulfur metabolism"
+    },
+    {
+      "id": "map00590",
+      "name": "Arachidonic acid metabolism"
+    },
+    {
+      "id": "map00760",
+      "name": "Nicotinate and nicotinamide metabolism"
+    },
+    {
+      "id": "map04142",
+      "name": "Lysosome"
+    },
+    {
+      "id": "ko04973",
+      "name": "Carbohydrate digestion and absorption"
+    },
+    {
+      "id": "map00521",
+      "name": "Streptomycin biosynthesis"
+    },
+    {
+      "id": "map00623",
+      "name": "Toluene degradation"
+    },
+    {
+      "id": "map05219",
+      "name": "Bladder cancer"
+    },
+    {
+      "id": "ko00190",
+      "name": "Oxidative phosphorylation"
+    },
+    {
+      "id": "map00473",
+      "name": "D-Alanine metabolism"
+    },
+    {
+      "id": "map01220",
+      "name": "Degradation of aromatic compounds"
+    },
+    {
+      "id": "ko00405",
+      "name": "Phenazine biosynthesis"
+    },
+    {
+      "id": "map00332",
+      "name": "Carbapenem biosynthesis"
+    },
+    {
+      "id": "ko00052",
+      "name": "Galactose metabolism"
+    },
+    {
+      "id": "map05012",
+      "name": "Parkinson disease"
+    },
+    {
+      "id": "map05110",
+      "name": "Vibrio cholerae infection"
+    },
+    {
+      "id": "map01040",
+      "name": "Biosynthesis of unsaturated fatty acids"
+    },
+    {
+      "id": "map04016",
+      "name": "MAPK signaling pathway - plant"
+    },
+    {
+      "id": "ko03430",
+      "name": "Mismatch repair"
+    },
+    {
+      "id": "map00900",
+      "name": "Terpenoid backbone biosynthesis"
+    },
+    {
+      "id": "ko00910",
+      "name": "Nitrogen metabolism"
+    },
+    {
+      "id": "map02026",
+      "name": "Biofilm formation - Escherichia coli"
+    },
+    {
+      "id": "map04727",
+      "name": "GABAergic synapse"
+    },
+    {
+      "id": "map00630",
+      "name": "Glyoxylate and dicarboxylate metabolism"
+    },
+    {
+      "id": "map03430",
+      "name": "Mismatch repair"
+    },
+    {
+      "id": "map05211",
+      "name": "Renal cell carcinoma"
+    },
+    {
+      "id": "ko01503",
+      "name": "Cationic antimicrobial peptide (CAMP) resistance"
+    },
+    {
+      "id": "map00053",
+      "name": "Ascorbate and aldarate metabolism"
+    },
+    {
+      "id": "map00970",
+      "name": "Aminoacyl-tRNA biosynthesis"
+    },
+    {
+      "id": "ko05111",
+      "name": "Biofilm formation - Vibrio cholerae"
+    },
+    {
+      "id": "ko05215",
+      "name": "Prostate cancer"
+    },
+    {
+      "id": "map04914",
+      "name": "Progesterone-mediated oocyte maturation"
+    },
+    {
+      "id": "ko04068",
+      "name": "FoxO signaling pathway"
+    },
+    {
+      "id": "ko03410",
+      "name": "Base excision repair"
+    },
+    {
+      "id": "ko03018",
+      "name": "RNA degradation"
+    },
+    {
+      "id": "map00730",
+      "name": "Thiamine metabolism"
+    },
+    {
+      "id": "ko05133",
+      "name": "Pertussis"
+    },
+    {
+      "id": "ko00710",
+      "name": "Carbon fixation in photosynthetic organisms"
+    },
+    {
+      "id": "map03440",
+      "name": "Homologous recombination"
+    },
+    {
+      "id": "ko04210",
+      "name": "Apoptosis"
+    },
+    {
+      "id": "ko05120",
+      "name": "Epithelial cell signaling in Helicobacter pylori infection"
+    },
+    {
+      "id": "map00250",
+      "name": "Alanine, aspartate and glutamate metabolism"
+    },
+    {
+      "id": "ko00450",
+      "name": "Selenocompound metabolism"
+    },
+    {
+      "id": "ko04072",
+      "name": "Phospholipase D signaling pathway"
+    },
+    {
+      "id": "map01212",
+      "name": "Fatty acid metabolism"
+    },
+    {
+      "id": "map04612",
+      "name": "Antigen processing and presentation"
+    },
+    {
+      "id": "ko05230",
+      "name": "Central carbon metabolism in cancer"
+    },
+    {
+      "id": "ko04151",
+      "name": "PI3K-Akt signaling pathway"
+    },
+    {
+      "id": "map00280",
+      "name": "Valine, leucine and isoleucine degradation"
+    },
+    {
+      "id": "ko00521",
+      "name": "Streptomycin biosynthesis"
+    },
+    {
+      "id": "ko00281",
+      "name": "Geraniol degradation"
+    },
+    {
+      "id": "map05215",
+      "name": "Prostate cancer"
+    },
+    {
+      "id": "ko01110",
+      "name": "Biosynthesis of secondary metabolites"
+    },
+    {
+      "id": "map05225",
+      "name": "Hepatocellular carcinoma"
+    },
+    {
+      "id": "ko00410",
+      "name": "beta-Alanine metabolism"
+    },
+    {
+      "id": "map02025",
+      "name": "Biofilm formation - Pseudomonas aeruginosa"
+    },
+    {
+      "id": "map00620",
+      "name": "Pyruvate metabolism"
+    },
+    {
+      "id": "map03420",
+      "name": "Nucleotide excision repair"
+    },
+    {
+      "id": "map05020",
+      "name": "Prion diseases"
+    },
+    {
+      "id": "map01110",
+      "name": "Biosynthesis of secondary metabolites"
+    },
+    {
+      "id": "ko05131",
+      "name": "Shigellosis"
+    },
+    {
+      "id": "ko00860",
+      "name": "Porphyrin and chlorophyll metabolism"
+    },
+    {
+      "id": "ko00591",
+      "name": "Linoleic acid metabolism"
+    },
+    {
+      "id": "map00785",
+      "name": "Lipoic acid metabolism"
+    },
+    {
+      "id": "ko04714",
+      "name": "Thermogenesis"
+    },
+    {
+      "id": "ko00750",
+      "name": "Vitamin B6 metabolism"
+    },
+    {
+      "id": "map00523",
+      "name": "Polyketide sugar unit biosynthesis"
+    },
+    {
+      "id": "ko01501",
+      "name": "beta-Lactam resistance"
+    },
+    {
+      "id": "ko00500",
+      "name": "Starch and sucrose metabolism"
+    },
+    {
+      "id": "ko00564",
+      "name": "Glycerophospholipid metabolism"
+    },
+    {
+      "id": "map04216",
+      "name": "Ferroptosis"
+    },
+    {
+      "id": "map00061",
+      "name": "Fatty acid biosynthesis"
+    },
+    {
+      "id": "map00330",
+      "name": "Arginine and proline metabolism"
+    },
+    {
+      "id": "map00710",
+      "name": "Carbon fixation in photosynthetic organisms"
+    },
+    {
+      "id": "map00340",
+      "name": "Histidine metabolism"
+    },
+    {
+      "id": "map05010",
+      "name": "Alzheimer disease"
+    },
+    {
+      "id": "ko05225",
+      "name": "Hepatocellular carcinoma"
+    },
+    {
+      "id": "ko04727",
+      "name": "GABAergic synapse"
+    },
+    {
+      "id": "ko01054",
+      "name": "Nonribosomal peptide structures"
+    },
+    {
+      "id": "ko00511",
+      "name": "Other glycan degradation"
+    },
+    {
+      "id": "map00780",
+      "name": "Biotin metabolism"
+    },
+    {
+      "id": "map05152",
+      "name": "Tuberculosis"
+    },
+    {
+      "id": "ko01502",
+      "name": "Vancomycin resistance"
+    },
+    {
+      "id": "ko04922",
+      "name": "Glucagon signaling pathway"
+    },
+    {
+      "id": "map00051",
+      "name": "Fructose and mannose metabolism"
+    },
+    {
+      "id": "ko00622",
+      "name": "Xylene degradation"
+    },
+    {
+      "id": "map05205",
+      "name": "Proteoglycans in cancer"
+    },
+    {
+      "id": "ko00642",
+      "name": "Ethylbenzene degradation"
+    },
+    {
+      "id": "ko00330",
+      "name": "Arginine and proline metabolism"
+    },
+    {
+      "id": "map00220",
+      "name": "Arginine biosynthesis"
+    },
+    {
+      "id": "map04066",
+      "name": "HIF-1 signaling pathway"
+    },
+    {
+      "id": "map05322",
+      "name": "Systemic lupus erythematosus"
+    },
+    {
+      "id": "ko00030",
+      "name": "Pentose phosphate pathway"
+    },
+    {
+      "id": "ko00760",
+      "name": "Nicotinate and nicotinamide metabolism"
+    },
+    {
+      "id": "ko00362",
+      "name": "Benzoate degradation"
+    },
+    {
+      "id": "ko04122",
+      "name": "Sulfur relay system"
+    },
+    {
+      "id": "map05142",
+      "name": "Chagas disease (American trypanosomiasis)"
+    },
+    {
+      "id": "map04934",
+      "name": "Cushing syndrome"
+    },
+    {
+      "id": "map00190",
+      "name": "Oxidative phosphorylation"
+    },
+    {
+      "id": "ko04964",
+      "name": "Proximal tubule bicarbonate reclamation"
+    },
+    {
+      "id": "ko05143",
+      "name": "African trypanosomiasis"
+    },
+    {
+      "id": "map01502",
+      "name": "Vancomycin resistance"
+    },
+    {
+      "id": "ko00361",
+      "name": "Chlorocyclohexane and chlorobenzene degradation"
+    },
+    {
+      "id": "map03013",
+      "name": "RNA transport"
+    },
+    {
+      "id": "map00130",
+      "name": "Ubiquinone and other terpenoid-quinone biosynthesis"
+    },
+    {
+      "id": "map00830",
+      "name": "Retinol metabolism"
+    },
+    {
+      "id": "ko00680",
+      "name": "Methane metabolism"
+    },
+    {
+      "id": "map04918",
+      "name": ""
+    },
+    {
+      "id": "ko04214",
+      "name": "Apoptosis - fly"
+    },
+    {
+      "id": "ko05150",
+      "name": "Staphylococcus aureus infection"
+    },
+    {
+      "id": "ko00523",
+      "name": "Polyketide sugar unit biosynthesis"
+    },
+    {
+      "id": "map00626",
+      "name": "Naphthalene degradation"
+    },
+    {
+      "id": "map04013",
+      "name": "MAPK signaling pathway - fly"
+    },
+    {
+      "id": "ko00270",
+      "name": "Cysteine and methionine metabolism"
+    },
+    {
+      "id": "map04211",
+      "name": "Longevity regulating pathway"
+    },
+    {
+      "id": "map00908",
+      "name": "Zeatin biosynthesis"
+    },
+    {
+      "id": "ko00640",
+      "name": "Propanoate metabolism"
+    },
+    {
+      "id": "ko00940",
+      "name": "Phenylpropanoid biosynthesis"
+    },
+    {
+      "id": "map00650",
+      "name": "Butanoate metabolism"
+    },
+    {
+      "id": "ko05204",
+      "name": "Chemical carcinogenesis"
+    },
+    {
+      "id": "map00195",
+      "name": "Photosynthesis"
+    },
+    {
+      "id": "map05133",
+      "name": "Pertussis"
+    },
+    {
+      "id": "ko04931",
+      "name": "Insulin resistance"
+    },
+    {
+      "id": "ko00830",
+      "name": "Retinol metabolism"
+    },
+    {
+      "id": "map00790",
+      "name": "Folate biosynthesis"
+    },
+    {
+      "id": "ko00780",
+      "name": "Biotin metabolism"
+    },
+    {
+      "id": "ko00565",
+      "name": "Ether lipid metabolism"
+    },
+    {
+      "id": "map00260",
+      "name": "Glycine, serine and threonine metabolism"
+    },
+    {
+      "id": "ko00290",
+      "name": "Valine, leucine and isoleucine biosynthesis"
+    },
+    {
+      "id": "ko00670",
+      "name": "One carbon pool by folate"
+    },
+    {
+      "id": "map04659",
+      "name": "Th17 cell differentiation"
+    },
+    {
+      "id": "ko05134",
+      "name": "Legionellosis"
+    },
+    {
+      "id": "ko00310",
+      "name": "Lysine degradation"
+    },
+    {
+      "id": "map00562",
+      "name": "Inositol phosphate metabolism"
+    },
+    {
+      "id": "map00450",
+      "name": "Selenocompound metabolism"
+    },
+    {
+      "id": "map04626",
+      "name": "Plant-pathogen interaction"
+    }
+  ]
+}
