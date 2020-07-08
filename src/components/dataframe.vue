@@ -48,9 +48,15 @@
           ></b-pagination>
         </div>
       </div>
-
+      <div class="filter-toggle">
+        <label class="switch switch-label">
+          <input type="checkbox" v-model="filtered_visible" value="accepted" unchecked-value="not_accepted"/>
+          <span class="slider round"></span>
+        </label>
+        <div class="filter-toggle-text">Filtered table is visible? {{ filtered_visible }}</div>
+      </div>
       <!-- User Interface controls -->
-      <div class="table-wrapper">
+      <div class="table-wrapper" v-if="!filtered_visible">
         <b-table
           id="dataframe-table"
           ref="selectableTable"
@@ -71,6 +77,27 @@
           <template v-slot:cell(GeneID)="data">{{data.value}}</template>
         </b-table>
       </div>
+      <div class="table-wrapper" v-if="filtered_visible">
+        <b-table
+          id="dataframe-filtered-table"
+          ref="selectableTable"
+          hover
+          small
+          selectable
+          :select-mode="range"
+          :current-page="currentPage"
+          :per-page="perPage"
+          :filter="filter"
+          :filterIncludedFields="filterOn"
+          :items="dataframe_filtered"
+          :fields="dataframe_filtered_headers"
+          head-variant="light"
+          @filtered="onFiltered"
+        >
+          <template v-slot:cell()="data">{{data.value}}</template>
+          <template v-slot:cell(GeneID)="data">{{data.value}}</template>
+        </b-table>
+      </div>
     </b-card>
   </div>
 </template>
@@ -78,7 +105,8 @@
 <script>
 export default {
   props: {
-    dataframe: Array
+    dataframe: Array,
+    dataframe_filtered: Array
   },
   data() {
     return {
@@ -88,7 +116,8 @@ export default {
       perPage: 20,
       pageOptions: [20, 50, 100, 1000],
       filter: null,
-      filterOn: []
+      filterOn: [],
+      filtered_visible: "accepted"
     };
   },
   methods: {
@@ -100,7 +129,6 @@ export default {
   },
   created() {
     for (let header in this.dataframe[0]) {
-      console.log(header);
       let entry = {};
       entry["key"] = header;
       entry["sortable"] = true;
@@ -143,5 +171,77 @@ label {
 }
 .pagination {
   width: min-content;
+}
+.switch-label {
+  width: 42px !important;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 26px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #007bff;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #007bff;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+.filter-toggle {
+  display: flex;
+}
+.filter-toggle-text {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-left: 5px;
 }
 </style>

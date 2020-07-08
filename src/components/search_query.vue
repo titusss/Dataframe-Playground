@@ -1,5 +1,6 @@
 <template>
   <div>
+    <loading v-if="loading" style="position: absolute;z-index: 100;top: 0;left: 0;width: 100vw;"/>
     <b-form @submit="onSubmit" inline>
       <b-card
         bg-variant="light"
@@ -26,16 +27,18 @@
               v-model="form.selected"
               size="sm"
               class="mb-2 mr-sm-2 mb-sm-0"
+              :style="form.style"
               required
             ></b-form-input>
             <input_autocomplete
               v-if="form.type === 'input-autocomplete'"
               :id="form.id"
               v-model="form.selected"
-              size="sm"
+              v-bind:term_id="form.selected"
+              v-on:update:term_id="form.selected = $event"
+              v-bind:terms_list="form.source.items"
+              v-bind:terms_key="form.source.key"
               class="mb-2 mr-sm-2 mb-sm-0"
-              :suggestions="cities" 
-              :selection.sync="complete_value"
               required
             ></input_autocomplete>
           </div>
@@ -80,14 +83,6 @@
         </b-button>
       </b-card>
 
-      <!-- <div v-for="block in blocks" v-bind:key="block.id" class="block-wrapper">
-        <b-card bg-variant="light">
-          <component class="component-inline" v-bind:is="block.name" v-bind.sync="form"></component>
-        </b-card>
-        <b-button size="sm" variant="link" v-on:click="remove_query_block(block.id)">
-          <b-icon icon="trash"></b-icon>
-        </b-button>
-      </div>-->
       <b-dropdown
         size="sm"
         variant="link"
@@ -101,14 +96,20 @@
         <template v-slot:button-content>
           <b-icon icon="plus-circle-fill"></b-icon> Add Query
         </template>
+        <b-dropdown-group id="dropdown-group-numeric" header="Filter">
+        <b-dropdown-item v-on:click="add_query_block('filter_values')">Change values</b-dropdown-item>
+        </b-dropdown-group>
         <b-dropdown-group id="dropdown-group-numeric" header="Numeric operations">
         <b-dropdown-item v-on:click="add_query_block('change_values')">Change values</b-dropdown-item>
         <b-dropdown-item v-on:click="add_query_block('values_in_column')">Remove columns</b-dropdown-item>
         <b-dropdown-item v-on:click="add_query_block('values_in_row')">Remove rows</b-dropdown-item>
         </b-dropdown-group>
         <b-dropdown-divider></b-dropdown-divider>
-        <b-dropdown-group id="dropdown-group-numeric" header="Genome annotation">
-        <b-dropdown-item v-on:click="add_query_block('gene_relevant')">Gene relevant in...</b-dropdown-item>
+        <b-dropdown-group id="dropdown-group-numeric" header="Genome annotations">
+        <b-dropdown-item v-on:click="add_query_block('go_term')">GO Annotations</b-dropdown-item>
+        <!-- <b-dropdown-item v-on:click="add_query_block('go_namespace')">GO Namespace</b-dropdown-item> -->
+        <b-dropdown-item v-on:click="add_query_block('kegg_pathway')">KEGG Pathways</b-dropdown-item>
+        <b-dropdown-item v-on:click="add_query_block('cog_category')">COG Categories</b-dropdown-item>
         </b-dropdown-group>
       </b-dropdown>
       <b-dropdown
@@ -126,7 +127,7 @@
         </template>
         <b-dropdown-group id="dropdown-group-numeric" header="Genome Annotation">
         <b-dropdown-item v-on:click="add_query_block('change_values')">Filter gastro genes</b-dropdown-item>
-        <b-dropdown-item v-on:click="add_query_block('values_in_column')">Filter pathogenic</b-dropdown-item>
+        <b-dropdown-item v-on:click="add_query_preset('filter_spi1')">Filter SPI-1</b-dropdown-item>
         </b-dropdown-group>
         <b-dropdown-divider></b-dropdown-divider>
         <b-dropdown-group id="dropdown-group-numeric" header="Data Cleanup">
@@ -136,6 +137,7 @@
       </b-dropdown>
       <div class="submit-button-parent">
         <b-button type="submit" variant="primary" pill size="sm" class="submit-button">
+          <!-- <b-spinner label="Loading..." class="search-spinner" v-if="loading"></b-spinner> -->
           <b-icon icon="search"></b-icon> Filter Data
         </b-button>
       </div>
@@ -146,19 +148,23 @@
 <script>
 import axios from "axios";
 import input_autocomplete from "./input_autocomplete";
+import loading from "./loading";
+import salmonella_go_terms from "../assets/salmonella_go_terms_name_namespace.json";
+import salmonella_kegg_terms from "../assets/salmonella_kegg_terms.json";
+import salmonella_cog_categories from "../assets/salmonella_cog_categories.json";
 export default {
   name: "search_query",
   components: {
-    input_autocomplete
+    input_autocomplete,
+    loading
   },
   methods: {
     add_query_preset(preset) {
-      let added_preset = this.form_blocks[preset];
+      let added_preset = this.form_blocks[this.form_presets[preset]['block']];
       added_preset["id"] = this.id;
       added_preset["logic"] = true;
-      added_preset["logical_operator"]["selected"] = "!= not"
-      added_preset["value"]["selected"] = "NaN, Null, undefined, 0, null"
-      console.log(added_preset);
+      added_preset["values_anywhere"]["selected"] = "test";
+      console.log(added_preset)
       this.query.push([added_preset]);
       this.id++;
     },
@@ -167,7 +173,6 @@ export default {
       added_block["id"] = this.id;
       added_block["logic"] = true;
       this.query.push([added_block]);
-      console.log(this.query);
       this.id++;
     },
     add_inline_query_block(block, form) {
@@ -177,14 +182,10 @@ export default {
       } else {
         added_block["logic"] = true;
       }
-      console.log(this.query[0]);
-      console.log(this.query.indexOf(form));
       this.query[this.query.indexOf(form)].push(added_block);
-      console.log(this.query);
       this.id++;
     },
     remove_query_block(block_array) {
-      console.log(block_array);
       const index = this.query.indexOf(block_array);
       if (index > -1) {
         this.query.splice(index, 1);
@@ -201,10 +202,8 @@ export default {
         .post(path, data)
         .then(res => {
           this.$nextTick(() => {
-            console.log("after next tick res: ", res);
-            console.log(JSON.stringify(res));
             self.$emit("dataframe_filtered", res);
-            this.show_loading_overlay = false;
+            this.loading = false;
           });
         })
         .catch(error => {
@@ -212,21 +211,43 @@ export default {
         });
     },
     onSubmit(evt) {
+      this.loading = true;
       evt.preventDefault();
       this.post_query();
     }
   },
+  created() {
+    this.form_blocks.go_term.search.source.items = this.salmonella_go_terms.items,
+    this.form_blocks.go_namespace.search.source.items = this.salmonella_go_terms.items,
+    this.form_blocks.kegg_pathway.search.source.items = this.salmonella_kegg_terms.items
+    this.form_blocks.cog_category.search.source.items = this.salmonella_cog_categories.items
+    console.log(this.form_blocks.go_term.search.source)
+    console.log('test')
+  },
   data() {
     return {
-      cities : [
-            'Bangalore','Chennai','Cochin',
-            'Delhi','Kolkata','Mumbai', 'Gastro intake'
-        ],
-      complete_value: '',
+      loading: false,
       id: 0,
-      query_form_data: {},
-      test: true,
+      salmonella_go_terms,
+      salmonella_kegg_terms,
+      salmonella_cog_categories,
+      form_presets: {
+        filter_spi1: {
+          block: "filter_values",
+          selected: {
+            values_anywhere: "YkgS"
+          }
+        }
+      },
       form_blocks: {
+        filter_values: {
+          values_anywhere: {
+            label: "Show rows that have values: ",
+            type: "b-form-input",
+            id: "filter_values",
+            selected: null
+          }
+        },
         change_values: {
           logical_operator: {
             label: "Change values that are",
@@ -316,11 +337,51 @@ export default {
             selected: null
           }
         },
-        gene_relevant: {
+        go_term: {
           search: {
-            label: "Gene relevant in",
+            label: "Show genes associated with GO annotation:",
             type: "input-autocomplete",
-            id: "gene_relevant_search",
+            id: "go_term_search",
+            source: {
+              items: undefined,
+              key: 'name'
+            },
+            selected: null
+          }
+        },
+         go_namespace: {
+          search: {
+            label: "Show genes associated with GO namespace:",
+            type: "input-autocomplete",
+            id: "go_namespace_search",
+            source: {
+              items: undefined,
+              key: 'namespace'
+            },
+            selected: null
+          }
+        },
+        kegg_pathway: {
+          search: {
+            label: "Show genes associated with KEGG pathway:",
+            type: "input-autocomplete",
+            id: "kegg_pathway_search",
+            source: {
+              items: undefined,
+              key: 'name'
+            },
+            selected: null
+          }
+        },
+        cog_category: {
+          search: {
+            label: "Show genes associated with the COG category:",
+            type: "input-autocomplete",
+            id: "cog_category_search",
+            source: {
+              items: undefined,
+              key: 'name'
+            },
             selected: null
           }
         }
@@ -364,4 +425,12 @@ button {
 .form {
   display: inline-flex;
 }
+/* .search-spinner {
+  width: 1em;
+  height: 1em;
+}
+.spinner-border {
+  border: 0.15em solid currentColor;
+  border-right-color: transparent;
+} */
 </style>
