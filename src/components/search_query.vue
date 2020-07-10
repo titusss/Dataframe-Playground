@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loading v-if="loading" style="position: absolute;z-index: 100;top: 0;left: 0;width: 100vw;"/>
+    <loading v-if="loading" style="position: absolute;z-index: 100;top: 0;left: 0;width: 100vw;" />
     <b-form @submit="onSubmit" inline>
       <b-card
         bg-variant="light"
@@ -9,7 +9,7 @@
         class="block-wrapper"
       >
         <div class="form" v-for="form_block in form_block_array" v-bind:key="form_block">
-          <div class="form-block" v-for="form in form_block" v-bind:key="form.id">
+          <div class="form-block" v-for="form in form_block.forms" v-bind:key="form.id">
             <label v-if="form.label" :for="form.id">{{form.label}}</label>
             <b-form-select
               v-if="form.type === 'b-form-select'"
@@ -74,9 +74,15 @@
           <template v-slot:button-content>
             <b-icon icon="plus-circle"></b-icon>
           </template>
-          <b-dropdown-item v-on:click="add_inline_query_block('change_values', form_block_array)">Change values...</b-dropdown-item>
-          <b-dropdown-item v-on:click="add_inline_query_block('values_in_column', form_block_array)">Values in column...</b-dropdown-item>
-          <b-dropdown-item v-on:click="add_inline_query_block('values_in_row', form_block_array)">Values in row...</b-dropdown-item>
+          <b-dropdown-item
+            v-on:click="add_inline_query_block('change_values', form_block_array)"
+          >Change values...</b-dropdown-item>
+          <b-dropdown-item
+            v-on:click="add_inline_query_block('values_in_column', form_block_array)"
+          >Values in column...</b-dropdown-item>
+          <b-dropdown-item
+            v-on:click="add_inline_query_block('values_in_row', form_block_array)"
+          >Values in row...</b-dropdown-item>
         </b-dropdown>
         <b-button size="sm" variant="link" v-on:click="remove_query_block(form_block_array)">
           <b-icon icon="trash"></b-icon>
@@ -94,22 +100,20 @@
         toggle-class="text-decoration-none"
       >
         <template v-slot:button-content>
-          <b-icon icon="plus-circle-fill"></b-icon> Add Query
+          <b-icon icon="plus-circle-fill"></b-icon>Add Query
         </template>
-        <b-dropdown-group id="dropdown-group-numeric" header="Filter">
-        <b-dropdown-item v-on:click="add_query_block('filter_values')">Change values</b-dropdown-item>
-        </b-dropdown-group>
-        <b-dropdown-group id="dropdown-group-numeric" header="Numeric operations">
-        <b-dropdown-item v-on:click="add_query_block('change_values')">Change values</b-dropdown-item>
-        <b-dropdown-item v-on:click="add_query_block('values_in_column')">Remove columns</b-dropdown-item>
-        <b-dropdown-item v-on:click="add_query_block('values_in_row')">Remove rows</b-dropdown-item>
-        </b-dropdown-group>
-        <b-dropdown-divider></b-dropdown-divider>
-        <b-dropdown-group id="dropdown-group-numeric" header="Genome annotations">
-        <b-dropdown-item v-on:click="add_query_block('go_term')">GO Annotations</b-dropdown-item>
-        <!-- <b-dropdown-item v-on:click="add_query_block('go_namespace')">GO Namespace</b-dropdown-item> -->
-        <b-dropdown-item v-on:click="add_query_block('kegg_pathway')">KEGG Pathways</b-dropdown-item>
-        <b-dropdown-item v-on:click="add_query_block('cog_category')">COG Categories</b-dropdown-item>
+        <b-dropdown-group
+          v-for="(filter_template_group, index) in filter_templates.items"
+          :key="index"
+          :header="index"
+          id="dropdown-group-numeric"
+        >
+          <b-dropdown-item
+            v-for="(template, index) in filter_template_group"
+            :key="index"
+            v-on:click="add_query_block(template)"
+          >{{index}}</b-dropdown-item>
+          <b-dropdown-divider></b-dropdown-divider>
         </b-dropdown-group>
       </b-dropdown>
       <b-dropdown
@@ -123,22 +127,26 @@
         toggle-class="text-decoration-none"
       >
         <template v-slot:button-content>
-          <b-icon icon="intersect"></b-icon> Load Filter
+          <b-icon icon="intersect"></b-icon>Load Filter
         </template>
-        <b-dropdown-group id="dropdown-group-numeric" header="Genome Annotation">
-        <b-dropdown-item v-on:click="add_query_block('change_values')">Filter gastro genes</b-dropdown-item>
-        <b-dropdown-item v-on:click="add_query_preset('filter_spi1')">Filter SPI-1</b-dropdown-item>
-        </b-dropdown-group>
-        <b-dropdown-divider></b-dropdown-divider>
-        <b-dropdown-group id="dropdown-group-numeric" header="Data Cleanup">
-          <b-dropdown-item v-on:click="add_query_preset('change_values')">Remove faulty data</b-dropdown-item>
-          <b-dropdown-item v-on:click="add_query_block('change_values')">Remove strings</b-dropdown-item>
+        <b-dropdown-group
+          v-for="(filter_preset_group, index) in filter_presets.items"
+          :key="index"
+          :header="index"
+          id="dropdown-group-numeric"
+        >
+          <b-dropdown-item
+            v-for="(preset, index) in filter_preset_group"
+            :key="index"
+            v-on:click="add_query_block(preset)"
+          >{{index}}</b-dropdown-item>
+          <b-dropdown-divider></b-dropdown-divider>
         </b-dropdown-group>
       </b-dropdown>
       <div class="submit-button-parent">
         <b-button type="submit" variant="primary" pill size="sm" class="submit-button">
           <!-- <b-spinner label="Loading..." class="search-spinner" v-if="loading"></b-spinner> -->
-          <b-icon icon="search"></b-icon> Filter Data
+          <b-icon icon="search"></b-icon>Filter Data
         </b-button>
       </div>
     </b-form>
@@ -149,9 +157,11 @@
 import axios from "axios";
 import input_autocomplete from "./input_autocomplete";
 import loading from "./loading";
-import salmonella_go_terms from "../assets/salmonella_go_terms_name_namespace.json";
-import salmonella_kegg_terms from "../assets/salmonella_kegg_terms.json";
-import salmonella_cog_categories from "../assets/salmonella_cog_categories.json";
+import salmonella_go_terms from "../assets/salmonella/filter_values/salmonella_go_terms_name_namespace.json";
+import salmonella_kegg_terms from "../assets/salmonella/filter_values/salmonella_kegg_terms.json";
+import salmonella_cog_categories from "../assets/salmonella/filter_values/salmonella_cog_categories.json";
+import filter_presets from "../assets/salmonella/salmonella_filter_presets.json";
+import filter_templates from "../assets/json/filter_templates.json";
 export default {
   name: "search_query",
   components: {
@@ -159,32 +169,36 @@ export default {
     loading
   },
   methods: {
-    add_query_preset(preset) {
-      let added_preset = this.form_blocks[this.form_presets[preset]['block']];
-      added_preset["id"] = this.id;
-      added_preset["logic"] = true;
-      added_preset["values_anywhere"]["selected"] = "test";
-      console.log(added_preset)
-      this.query.push([added_preset]);
-      this.id++;
+    deep_copy(input) {
+      let output, value, key;
+      if (typeof input !== "object" || input === null) {
+        return input;
+      }
+      output = Array.isArray(input) ? [] : {};
+      for (key in input) {
+        value = input[key];
+        output[key] = this.deep_copy(value);
+      }
+      return output;
     },
     add_query_block(block) {
-      let added_block = this.form_blocks[block];
+      let added_block = {};
+      added_block["forms"] = this.deep_copy(block);
       added_block["id"] = this.id;
       added_block["logic"] = true;
       this.query.push([added_block]);
       this.id++;
     },
-    add_inline_query_block(block, form) {
-      let added_block = this.form_blocks[block];
-      if (block === "or" || block === "and") {
-        added_block["logic"] = false;
-      } else {
-        added_block["logic"] = true;
-      }
-      this.query[this.query.indexOf(form)].push(added_block);
-      this.id++;
-    },
+    // add_inline_query_block(block, form) {
+    //   let added_block = this.form_blocks[block];
+    //   if (block === "or" || block === "and") {
+    //     added_block["logic"] = false;
+    //   } else {
+    //     added_block["logic"] = true;
+    //   }
+    //   this.query[this.query.indexOf(form)].push(added_block);
+    //   this.id++;
+    // },
     remove_query_block(block_array) {
       const index = this.query.indexOf(block_array);
       if (index > -1) {
@@ -214,15 +228,24 @@ export default {
       this.loading = true;
       evt.preventDefault();
       this.post_query();
+    },
+    load_autocomplete_json() {
+      this.filter_templates.items["Filter by annotation"][
+        "COG Category"
+      ].search.source.items = this.salmonella_cog_categories.items;
+      this.filter_templates.items["Filter by annotation"][
+        "GO Term"
+      ].search.source.items = this.salmonella_go_terms.items;
+      this.filter_templates.items["Filter by annotation"][
+        "GO Namespace"
+      ].search.source.items = this.salmonella_go_terms.items;
+      this.filter_templates.items["Filter by annotation"][
+        "KEGG Pathway"
+      ].search.source.items = this.salmonella_kegg_terms.items;
     }
   },
   created() {
-    this.form_blocks.go_term.search.source.items = this.salmonella_go_terms.items,
-    this.form_blocks.go_namespace.search.source.items = this.salmonella_go_terms.items,
-    this.form_blocks.kegg_pathway.search.source.items = this.salmonella_kegg_terms.items
-    this.form_blocks.cog_category.search.source.items = this.salmonella_cog_categories.items
-    console.log(this.form_blocks.go_term.search.source)
-    console.log('test')
+    this.load_autocomplete_json();
   },
   data() {
     return {
@@ -231,162 +254,9 @@ export default {
       salmonella_go_terms,
       salmonella_kegg_terms,
       salmonella_cog_categories,
-      form_presets: {
-        filter_spi1: {
-          block: "filter_values",
-          selected: {
-            values_anywhere: "YkgS"
-          }
-        }
-      },
-      form_blocks: {
-        filter_values: {
-          values_anywhere: {
-            label: "Show rows that have values: ",
-            type: "b-form-input",
-            id: "filter_values",
-            selected: null
-          }
-        },
-        change_values: {
-          logical_operator: {
-            label: "Change values that are",
-            type: "b-form-select",
-            options: [
-              "< less than",
-              "> more than",
-              ">= more or equal to",
-              "<= less or equal to",
-              "= equal to",
-              "!= not"
-            ],
-            id: "change_values_logical-operator",
-            selected: null
-          },
-          current_value: {
-            type: "b-form-input",
-            id: "change_values_current-value",
-            selected: null
-          },
-          target_value: {
-            label: "to",
-            type: "b-form-input",
-            id: "change_values_target-value",
-            selected: null
-          }
-        },
-        and: {
-          and: {
-            options: [{ text: "and" }, "or"],
-            type: "b-form-select",
-            id: "and",
-            selected: null
-          }
-        },
-        or: {
-          or: {
-            options: [{ text: "or" }, "and"],
-            type: "b-form-select",
-            id: "or",
-            selected: null
-          }
-        },
-        values_in_column: {
-          column: {
-            label: "Remove columns",
-            type: "b-form-select",
-            options: [
-              { text: "SP Tex (Biological replicate 1)" },
-              "One",
-              "Two",
-              "Three"
-            ],
-            id: "values_in_column_column",
-            selected: null
-          }
-        },
-        values_in_row: {
-          row: {
-            label: "Remove rows, where values of column",
-            type: "b-form-select",
-            options: [
-              { text: "SP Tex (Biological replicate 1)" },
-              "Any column",
-              "Two",
-              "Three"
-            ],
-            id: "values_in_row_row",
-            selected: null
-          },
-          logical_operator: {
-            label: "are",
-            type: "b-form-select",
-            options: [
-              "< less than",
-              ">= more or equal to",
-              "<= less or equal to",
-              "= equal to",
-              "!= not"
-            ],
-            id: "values_in_row_logical-operator",
-            selected: null
-          },
-          value: {
-            type: "b-form-input",
-            id: "values_in_row_value",
-            selected: null
-          }
-        },
-        go_term: {
-          search: {
-            label: "Show genes associated with GO annotation:",
-            type: "input-autocomplete",
-            id: "go_term_search",
-            source: {
-              items: undefined,
-              key: 'name'
-            },
-            selected: null
-          }
-        },
-         go_namespace: {
-          search: {
-            label: "Show genes associated with GO namespace:",
-            type: "input-autocomplete",
-            id: "go_namespace_search",
-            source: {
-              items: undefined,
-              key: 'namespace'
-            },
-            selected: null
-          }
-        },
-        kegg_pathway: {
-          search: {
-            label: "Show genes associated with KEGG pathway:",
-            type: "input-autocomplete",
-            id: "kegg_pathway_search",
-            source: {
-              items: undefined,
-              key: 'name'
-            },
-            selected: null
-          }
-        },
-        cog_category: {
-          search: {
-            label: "Show genes associated with the COG category:",
-            type: "input-autocomplete",
-            id: "cog_category_search",
-            source: {
-              items: undefined,
-              key: 'name'
-            },
-            selected: null
-          }
-        }
-      },
-      query: []
+      filter_presets,
+      filter_templates,
+      query: [],
     };
   }
 };
