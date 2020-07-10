@@ -2,58 +2,46 @@
   <div>
     <b-card>
       <div class="table-options">
-        <div class="form-group-item">
-          <b-form-group
-            label="Filter"
-            label-cols-sm="3"
-            label-align-sm="right"
-            label-size="sm"
-            label-for="filterInput"
-            class="mb-0"
-          >
-            <b-input-group size="sm">
-              <b-form-input
-                v-model="filter"
-                type="search"
-                id="filterInput"
-                placeholder="Type to Search"
-              ></b-form-input>
-            </b-input-group>
-          </b-form-group>
-        </div>
-
-        <div class="form-group-item">
-          <b-form-group
-            label="Per page"
-            label-cols-sm="6"
-            label-cols-md="4"
-            label-cols-lg="3"
-            label-align-sm="right"
-            label-size="sm"
-            label-for="perPageSelect"
-            class="mb-0"
-          >
-            <b-form-select v-model="perPage" id="perPageSelect" size="sm" :options="pageOptions"></b-form-select>
-          </b-form-group>
-        </div>
-
-        <div class="form-group-item">
+        <b-form-group label="Filter" label-size="sm" label-for="filterInput" class="inline-element">
+          <b-form-input
+            v-model="filter"
+            type="search"
+            id="filterInput"
+            size="sm"
+            placeholder="Type to Search"
+            class="inline-element"
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group
+          label="Per page"
+          label-size="sm"
+          label-for="perPageSelect"
+          class="inline-element"
+        >
+          <b-form-select v-model="perPage" id="perPageSelect" size="sm" :options="pageOptions" class="inline-element"></b-form-select>
+        </b-form-group>
+        <b-form-group class="inline-element">
           <b-pagination
             v-model="currentPage"
             :total-rows="totalRows"
             :per-page="perPage"
             align="fill"
             size="sm"
-            class="my-0"
           ></b-pagination>
-        </div>
-      </div>
-      <div class="filter-toggle">
-        <label class="switch switch-label">
-          <input type="checkbox" v-model="filtered_visible" value="accepted" unchecked-value="not_accepted"/>
-          <span class="slider round"></span>
-        </label>
-        <div class="filter-toggle-text">Filtered table is visible? {{ filtered_visible }}</div>
+        </b-form-group>
+        <b-form-group class="inline-element" id="toggle-filtered">
+          <span class="col-form-label-sm">Show filtered</span>
+            <label class="switch switch-label bv-no-focus-ring">
+              <input
+                type="checkbox"
+                v-model="filtered_visible"
+                value="accepted"
+                unchecked-value="not_accepted"
+              />
+              <span class="slider round"></span>
+            </label>
+            <!-- <div class="filter-toggle-text">Filtered table is visible? {{ filtered_visible }}</div> -->
+        </b-form-group>
       </div>
       <!-- User Interface controls -->
       <div class="table-wrapper" v-if="!filtered_visible">
@@ -160,14 +148,9 @@ table {
 }
 .table-options {
   display: grid;
-  grid-template-columns: repeat(3, auto);
+  grid-template-columns: auto auto auto 1fr;
   grid-column-gap: 30px;
-  margin-bottom: 1rem;
-}
-label {
-  display: inline-flex !important;
-  flex: none !important;
-  width: auto !important;
+  align-items: center;
 }
 .pagination {
   width: min-content;
@@ -182,6 +165,22 @@ label {
   height: 26px;
 }
 
+.inline-element>* {
+  display: inline-block !important;
+}
+.form-group {
+  display: inline-flex;
+  margin-bottom: 0;
+}
+#toggle-filtered {
+  text-align: right;
+}
+label, ul {
+  margin-bottom: .5rem !important;
+}
+.bv-no-focus-ring {
+  margin-left: 10px;
+}
 /* Hide default HTML checkbox */
 .switch input {
   opacity: 0;
