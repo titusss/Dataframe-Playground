@@ -3,7 +3,7 @@
     "Filter": {
       "Filter values": {
         "logical_operator": {
-          "label": "Show rows with values that are ",
+          "label": "Show rows with values that are",
           "type": "b-form-select",
           "options": [
             "= equal to",
