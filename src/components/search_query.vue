@@ -111,7 +111,7 @@
           <b-dropdown-item
             v-for="(template, index) in filter_template_group"
             :key="index"
-            v-on:click="add_query_block(template)"
+            v-on:click="add_query_block(template, index)"
           >{{index}}</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
         </b-dropdown-group>
@@ -138,7 +138,7 @@
           <b-dropdown-item
             v-for="(preset, index) in filter_preset_group"
             :key="index"
-            v-on:click="add_query_block(preset)"
+            v-on:click="add_query_block(preset, index)"
           >{{index}}</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
         </b-dropdown-group>
@@ -181,13 +181,29 @@ export default {
       }
       return output;
     },
-    add_query_block(block) {
+    add_query_block(block, index) {
       let added_block = {};
       added_block["forms"] = this.deep_copy(block);
       added_block["id"] = this.id;
       added_block["logic"] = true;
+      added_block["block_name"] = index;
       this.query.push([added_block]);
       this.id++;
+    },
+    restructure_query() {
+      let structured_query = []
+      for (let array in this.query) {
+        for (let sub_array in this.query[array]) {
+          let structured_query_block = {}
+          structured_query_block["name"] = this.query[array][sub_array]["block_name"]
+          structured_query_block["forms"] = {}
+          for (let form in this.query[array][sub_array]["forms"]) {
+            structured_query_block["forms"][form] = this.query[array][sub_array]["forms"][form]["selected"]
+          }
+          structured_query.push(structured_query_block)
+        }
+      }
+      return structured_query
     },
     // add_inline_query_block(block, form) {
     //   let added_block = this.form_blocks[block];
@@ -208,8 +224,12 @@ export default {
     post_query() {
       const path = "http://0.0.0.0:5000/query";
       var data = new FormData();
-      data.append("query", JSON.stringify(this.query));
+      var structured_query = this.restructure_query();
+      console.log(structured_query)
+      data.append("query", JSON.stringify(structured_query));
       data.append("url", JSON.stringify(this.$route.query.config));
+      console.log(this.query)
+      console.log(data)
       let self = this;
       // self.$parent.$bvModal.hide('bv_modal_addData')
       axios
@@ -256,7 +276,7 @@ export default {
       salmonella_cog_categories,
       filter_presets,
       filter_templates,
-      query: [],
+      query: []
     };
   }
 };
