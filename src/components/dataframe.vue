@@ -35,8 +35,8 @@
               <input
                 type="checkbox"
                 v-model="filtered_visible"
-                value="accepted"
-                unchecked-value="not_accepted"
+                value=false
+                unchecked-value=true
               />
               <span class="slider round"></span>
             </label>
@@ -105,7 +105,7 @@ export default {
       pageOptions: [20, 50, 100, 1000],
       filter: null,
       filterOn: [],
-      filtered_visible: "accepted"
+      filtered_visible: false
     };
   },
   methods: {
@@ -121,6 +121,11 @@ export default {
       entry["key"] = header;
       entry["sortable"] = true;
       this.dataframe_headers.push(entry);
+    }
+    console.log('haaaaaaaha')
+    console.log(this.dataframe_filtered)
+    if(this.dataframe_filtered.length() > 0) {
+      this.filtered_visible = true;
     }
   },
   mounted() {
