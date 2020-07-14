@@ -10,6 +10,7 @@
       :serializer="term => term[terms_key]"
       @hit="term_name_selected($event)"
       :state="false"
+      size="sm"
     />
     <!-- <b-form-input id="input-invalid" :state="false" placeholder="Invalid input"></b-form-input> -->
   </div>
