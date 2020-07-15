@@ -1,12 +1,12 @@
 import pandas as pd
-
+import operator
 COMPARISON_OPERATORS = {
-    '< less than': '<',
-    '> more than': '>',
-    '>= more or equal to': '>=',
-    '<= less or equal to': '<=',
-    '= equal to': '==',
-    '!= not': '!='
+    '< less than': operator.lt,
+    '> more than': operator.gt,
+    '>= more or equal to': operator.ge,
+    '<= less or equal to': operator.le,
+    '= equal to': operator.eq,
+    '!= not': operator.ne
 }
 
 def value_filter(query, df):
@@ -48,15 +48,49 @@ def keyword_filter(query, df, annotation_id):
     return df_filtered
 
 
+
+
+
 def main(query, df):
-    for array in query:
-        for block in array:
-            try:
-                print(block['logical_operator'])
-                df_filtered = value_filter(block, df)
-            except KeyError:
-                if block['search']!='':
-                    print('###### SEARCH')
-                    print('block: ', block)
-                    df_filtered = keyword_filter(block, df, "test")
+    for block in query:
+        df = filter_for(block["forms"], df)
+    return df
+
+
+def filter_for(form, df):
+    try:
+        comparison_operator = COMPARISON_OPERATORS[form["logical_operator"]]
+    except KeyError:
+        comparison_operator = operator.eq
+    try:
+        filter_area = form["filter_area"]
+    except KeyError:
+        filter_area = list(df.columns)
+    filter_value = float(form["filter_value"])
+    df_filtered = df[comparison_operator(df[filter_area], filter_value)]
+    print(df_filtered)
     return df_filtered
+
+    
+    
+    # except KeyError:
+    #     filter_annotation = forms["filter_annotation"]
+    #     filter_source = "go_name"
+    #     filter_value = 
+
+
+    # df_filtered = eval('df[df[selection]'+ COMPARISON_OPERATORS[forms["logical_operator"]] + forms["value"]["selected"]+']') # DANGER DANGER DANGER!!! ADD EXCEPTIONS AND WHITELISTS TO EVAL()!!!!
+
+
+# def main(query, df):
+#     for array in query:
+#         for block in array:
+#             try:
+#                 print(block['logical_operator'])
+#                 df_filtered = value_filter(block, df)
+#             except KeyError:
+#                 if block['search']!='':
+#                     print('###### SEARCH')
+#                     print('block: ', block)
+#                     df_filtered = keyword_filter(block, df, "test")
+#     return df_filtered

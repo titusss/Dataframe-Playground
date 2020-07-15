@@ -252,16 +252,16 @@ export default {
     load_autocomplete_json() {
       this.filter_templates.items["Filter by annotation"][
         "COG Category"
-      ].search.source.items = this.salmonella_cog_categories.items;
+      ].filter_annotation.source.items = this.salmonella_cog_categories.items;
       this.filter_templates.items["Filter by annotation"][
         "GO Term"
-      ].search.source.items = this.salmonella_go_terms.items;
+      ].filter_annotation.source.items = this.salmonella_go_terms.items;
       this.filter_templates.items["Filter by annotation"][
         "GO Namespace"
-      ].search.source.items = this.salmonella_go_terms.items;
+      ].filter_annotation.source.items = this.salmonella_go_terms.items;
       this.filter_templates.items["Filter by annotation"][
         "KEGG Pathway"
-      ].search.source.items = this.salmonella_kegg_terms.items;
+      ].filter_annotation.source.items = this.salmonella_kegg_terms.items;
     }
   },
   created() {
