@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import operator
 COMPARISON_OPERATORS = {
     '< less than': operator.lt,
@@ -58,6 +59,7 @@ def main(query, df):
 
 
 def filter_for(form, df):
+    df_numeric = df.select_dtypes(include=[np.number])
     try:
         comparison_operator = COMPARISON_OPERATORS[form["logical_operator"]]
     except KeyError:
@@ -65,11 +67,10 @@ def filter_for(form, df):
     try:
         filter_area = form["filter_area"]
     except KeyError:
-        filter_area = list(df.columns)
+        filter_area = list(df_numeric.columns)
     filter_value = float(form["filter_value"])
-    df_filtered = df[comparison_operator(df[filter_area], filter_value)]
-    print(df_filtered)
-    return df_filtered
+    df = df[comparison_operator(df[filter_area].values, filter_value)]
+    return df
 
     
     

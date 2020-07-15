@@ -17,7 +17,8 @@ def convert_to_df(input_file, extension, decimal_character):
         df = pd.read_csv(input_file, sep='\t')
     elif extension == "string":
         from io import StringIO
-        df = pd.read_csv(StringIO(input_file), sep='\t', decimal=decimal_character, dtype=float)
+        df = pd.read_csv(StringIO(input_file), sep='\t', decimal=decimal_character, error_bad_lines=False)
+        df.columns = pd.to_numeric(df.columns,errors='ignore')
     else:
         print("Error: No valid extension. Please upload .xlsx (Excel), .csv, or .txt (TSV).")
         return "Error"
