@@ -126,6 +126,7 @@ export default {
         plugins_id: [],
         locked: false,
         transformation: '',
+        decimal_character: ',',
         source: {
           file: null,
           database: null,

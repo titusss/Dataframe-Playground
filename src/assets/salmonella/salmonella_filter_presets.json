@@ -2,7 +2,7 @@
   "items": {
     "Gene Type": {
       "Filter sORF": {
-        "values_anywhere": {
+        "filter_value": {
           "label": "Show sORF's: ",
           "type": "b-form-input",
           "id": "filter_values",
@@ -12,7 +12,7 @@
     },
     "Genome Annotation": {
       "Filter SPI1": {
-        "values_anywhere": {
+        "filter_value": {
           "label": "Show genes that are part of SPI1: ",
           "type": "b-form-input",
           "id": "filter_values",
@@ -20,7 +20,7 @@
         }
       },
       "Filter SPI2": {
-        "values_anywhere": {
+        "filter_value": {
           "label": "Show genes that are part of SPI2: ",
           "type": "b-form-input",
           "id": "filter_values",
@@ -28,7 +28,7 @@
         }
       },
       "Filter SPI3": {
-        "values_anywhere": {
+        "filter_value": {
           "label": "Show genes that are part of SPI3: ",
           "type": "b-form-input",
           "id": "filter_values",
@@ -36,7 +36,7 @@
         }
       },
       "Filter SPI4": {
-        "values_anywhere": {
+        "filter_value": {
           "label": "Show genes that are part of SPI4: ",
           "type": "b-form-input",
           "id": "filter_values",
@@ -44,7 +44,7 @@
         }
       },
       "Filter SPI6": {
-        "values_anywhere": {
+        "filter_value": {
           "label": "Show genes that are part of SPI6: ",
           "type": "b-form-input",
           "id": "filter_values",
@@ -52,7 +52,7 @@
         }
       },
       "Filter SPI9": {
-        "values_anywhere": {
+        "filter_value": {
           "label": "Show genes that are part of SPI9: ",
           "type": "b-form-input",
           "id": "filter_values",
@@ -60,7 +60,7 @@
         }
       },
       "Filter SPI12": {
-        "values_anywhere": {
+        "filter_value": {
           "label": "Show genes that are part of SPI12: ",
           "type": "b-form-input",
           "id": "filter_values",
@@ -68,7 +68,7 @@
         }
       },
       "Filter SPI13": {
-        "values_anywhere": {
+        "filter_value": {
           "label": "Show genes that are part of SPI13: ",
           "type": "b-form-input",
           "id": "filter_values",
@@ -76,7 +76,7 @@
         }
       },
       "Filter SPI16": {
-        "values_anywhere": {
+        "filter_value": {
           "label": "Show genes that are part of SPI16: ",
           "type": "b-form-input",
           "id": "filter_values",
@@ -100,7 +100,7 @@
           "id": "change_values_logical-operator",
           "selected": "= equal to"
         },
-        "current_value": {
+        "filter_value": {
           "type": "b-form-input",
           "id": "change_values_current-value",
           "selected": "NaN, undefined"
