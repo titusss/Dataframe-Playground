@@ -16,7 +16,7 @@
           "id": "change_values_logical-operator",
           "selected": null
         },
-        "values_anywhere": {
+        "filter_value": {
           "type": "b-form-input",
           "id": "filter_values",
           "selected": null
@@ -39,7 +39,7 @@
           "id": "change_values_logical-operator",
           "selected": null
         },
-        "current_value": {
+        "filter_value": {
           "type": "b-form-input",
           "id": "change_values_current-value",
           "selected": null
@@ -95,7 +95,7 @@
           "id": "values_in_row_logical-operator",
           "selected": null
         },
-        "value": {
+        "filter_value": {
           "type": "b-form-input",
           "id": "values_in_row_value",
           "selected": null
@@ -104,7 +104,7 @@
     },
     "Filter by annotation": {
       "GO Term": {
-        "search": {
+        "filter_annotation": {
           "label": "Show genes associated with GO annotation:",
           "type": "input-autocomplete",
           "id": "go_term_search",
@@ -116,7 +116,7 @@
         }
       },
       "GO Namespace": {
-        "search": {
+        "filter_annotation": {
           "label": "Show genes associated with GO namespace:",
           "type": "input-autocomplete",
           "id": "go_namespace_search",
@@ -128,7 +128,7 @@
         }
       },
       "KEGG Pathway": {
-        "search": {
+        "filter_annotation": {
           "label": "Show genes associated with KEGG pathway:",
           "type": "input-autocomplete",
           "id": "kegg_pathway_search",
@@ -140,7 +140,7 @@
         }
       },
       "COG Category": {
-        "search": {
+        "filter_annotation": {
           "label": "Show genes associated with the COG category:",
           "type": "input-autocomplete",
           "id": "cog_category_search",
