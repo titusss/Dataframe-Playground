@@ -53,7 +53,9 @@ def keyword_filter(query, df, annotation_id):
 
 
 def main(query, df):
+    print(query)
     for block in query:
+        print('block: ', block)
         df = filter_for(block["forms"], df)
     return df
 
@@ -64,11 +66,14 @@ def filter_for(form, df):
         comparison_operator = COMPARISON_OPERATORS[form["logical_operator"]]
     except KeyError:
         comparison_operator = operator.eq
-    try:
-        filter_area = form["filter_area"]
-    except KeyError:
+    if form["filter_area"] == "all columns":
         filter_area = list(df_numeric.columns)
-    filter_value = float(form["filter_value"])
+    else:
+        filter_area = form["filter_area"]
+    try:
+        filter_value = float(form["filter_value"])
+    except ValueError:
+        filter_value = str(form["filter_value"])
     df = df[comparison_operator(df[filter_area].values, filter_value)]
     return df
 

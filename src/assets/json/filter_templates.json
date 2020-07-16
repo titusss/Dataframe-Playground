@@ -13,20 +13,34 @@
             ">= more or equal to",
             "<= less or equal to"
           ],
-          "id": "change_values_logical-operator",
+          "id": "filter_values_logical-operator",
           "selected": null
         },
         "filter_value": {
           "type": "b-form-input",
-          "id": "filter_values",
+          "id": "filter_values_value",
           "selected": null
+        },
+        "filter_area": {
+          "label": "for ",
+          "type": "b-form-select",
+          "options": ["all columns"],
+          "id": "filter_values_area",
+          "selected": "all columns"
         }
       }
     },
     "Transform values": {
       "Change Values": {
+        "filter_area": {
+          "label": "Change values in ",
+          "type": "b-form-select",
+          "options": ["all columns"],
+          "id": "filter_values_area",
+          "selected": "all columns"
+        },
         "logical_operator": {
-          "label": "Change values that are",
+          "label": "that are",
           "type": "b-form-select",
           "options": [
             "< less than",
@@ -51,53 +65,12 @@
           "selected": null
         }
       },
-      "Remove Columns": {
+      "Hide Column": {
         "column": {
-          "label": "Remove columns",
+          "label": "Hide column",
           "type": "b-form-select",
-          "options": [
-            {
-              "text": "SP Tex (Biological replicate 1)"
-            },
-            "One",
-            "Two",
-            "Three"
-          ],
+          "options": [],
           "id": "values_in_column_column",
-          "selected": null
-        }
-      },
-      "Remove Rows": {
-        "row": {
-          "label": "Remove rows, where values of column",
-          "type": "b-form-select",
-          "options": [
-            {
-              "text": "SP Tex (Biological replicate 1)"
-            },
-            "Any column",
-            "Two",
-            "Three"
-          ],
-          "id": "values_in_row_row",
-          "selected": null
-        },
-        "logical_operator": {
-          "label": "are",
-          "type": "b-form-select",
-          "options": [
-            "< less than",
-            ">= more or equal to",
-            "<= less or equal to",
-            "= equal to",
-            "!= not"
-          ],
-          "id": "values_in_row_logical-operator",
-          "selected": null
-        },
-        "filter_value": {
-          "type": "b-form-input",
-          "id": "values_in_row_value",
           "selected": null
         }
       }
@@ -113,6 +86,13 @@
             "key": "name"
           },
           "selected": null
+        },
+        "filter_area": {
+          "label": "for ",
+          "type": "b-form-select",
+          "options": ["all columns"],
+          "id": "filter_annotation_area",
+          "selected": "all columns"
         }
       },
       "GO Namespace": {
@@ -125,6 +105,13 @@
             "key": "namespace"
           },
           "selected": null
+        },
+        "filter_area": {
+          "label": "for ",
+          "type": "b-form-select",
+          "options": ["all columns"],
+          "id": "filter_annotation_area",
+          "selected": "all columns"
         }
       },
       "KEGG Pathway": {
@@ -137,6 +124,13 @@
             "key": "name"
           },
           "selected": null
+        },
+        "filter_area": {
+          "label": "for ",
+          "type": "b-form-select",
+          "options": ["all columns"],
+          "id": "filter_annotation_area",
+          "selected": "all columns"
         }
       },
       "COG Category": {
@@ -149,6 +143,13 @@
             "key": "name"
           },
           "selected": null
+        },
+        "filter_area": {
+          "label": "for ",
+          "type": "b-form-select",
+          "options": ["all columns"],
+          "id": "filter_annotation_area",
+          "selected": "all columns"
         }
       }
     }
