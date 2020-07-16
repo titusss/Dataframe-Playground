@@ -164,6 +164,9 @@ import filter_presets from "../assets/salmonella/salmonella_filter_presets.json"
 import filter_templates from "../assets/json/filter_templates.json";
 export default {
   name: "search_query",
+  props: {
+    df_categories: Array
+  },
   components: {
     input_autocomplete,
     loading
@@ -262,10 +265,22 @@ export default {
       this.filter_templates.items["Filter by annotation"][
         "KEGG Pathway"
       ].filter_annotation.source.items = this.salmonella_kegg_terms.items;
+    },
+    load_categories_json(query_source) {
+      for (let query_cat in query_source) {
+        for (let query in query_source[query_cat]) {
+          if (typeof query_source[query_cat][query]["filter_area"] !== 'undefined') {
+            query_source[query_cat][query]["filter_area"]["options"] = this.df_categories
+          }
+        }
+      }
     }
   },
   created() {
+    this.df_categories.unshift("all columns");
     this.load_autocomplete_json();
+    this.load_categories_json(this.filter_templates.items);
+    this.load_categories_json(this.filter_presets.items);
   },
   data() {
     return {

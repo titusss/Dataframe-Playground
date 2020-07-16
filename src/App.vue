@@ -48,7 +48,7 @@
             class="field block"
             v-if="this.config.transformed_dataframe.length > 0"
           >
-            <search_query @dataframe_filtered="redirect_to_config" />
+            <search_query @dataframe_filtered="redirect_to_config" v-bind:df_categories="this.config.dataframe_categories"/>
           </div>
           <div>
             <visualization v-bind:vis_link="this.active_vis_link" v-if="this.active_vis_link" />
