@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loading v-if="loading" style="position: absolute;z-index: 100;top: 0;left: 0;width: 100vw;" />
+    <loading v-if="loading" style="position: fixed;z-index: 100;top: 0;left: 0;width: 100vw;" />
     <b-form @submit="onSubmit" inline>
       <b-card
         bg-variant="light"
@@ -9,7 +9,7 @@
         class="block-wrapper"
       >
         <div class="form" v-for="form_block in form_block_array" v-bind:key="form_block">
-          <div class="form-block" v-for="form in form_block.forms" v-bind:key="form.id">
+          <div class="form-block" v-for="form in form_block.forms.items" v-bind:key="form.id">
             <label v-if="form.label" :for="form.id">{{form.label}}</label>
             <b-form-select
               v-if="form.type === 'b-form-select'"
@@ -198,10 +198,12 @@ export default {
       for (let array in this.query) {
         for (let sub_array in this.query[array]) {
           let structured_query_block = {}
+          console.log(this.query[array][sub_array])
           structured_query_block["name"] = this.query[array][sub_array]["block_name"]
+          structured_query_block["properties"] = this.query[array][sub_array]["forms"]["properties"]
           structured_query_block["forms"] = {}
-          for (let form in this.query[array][sub_array]["forms"]) {
-            structured_query_block["forms"][form] = this.query[array][sub_array]["forms"][form]["selected"]
+          for (let form in this.query[array][sub_array]["forms"]["items"]) {
+            structured_query_block["forms"][form] = this.query[array][sub_array]["forms"]["items"][form]["selected"]
           }
           structured_query.push(structured_query_block)
         }
@@ -255,22 +257,22 @@ export default {
     load_autocomplete_json() {
       this.filter_templates.items["Filter by annotation"][
         "COG Category"
-      ].filter_annotation.source.items = this.salmonella_cog_categories.items;
+      ].items.filter_annotation.source.items = this.salmonella_cog_categories.items;
       this.filter_templates.items["Filter by annotation"][
         "GO Term"
-      ].filter_annotation.source.items = this.salmonella_go_terms.items;
+      ].items.filter_annotation.source.items = this.salmonella_go_terms.items;
       this.filter_templates.items["Filter by annotation"][
         "GO Namespace"
-      ].filter_annotation.source.items = this.salmonella_go_terms.items;
+      ].items.filter_annotation.source.items = this.salmonella_go_terms.items;
       this.filter_templates.items["Filter by annotation"][
         "KEGG Pathway"
-      ].filter_annotation.source.items = this.salmonella_kegg_terms.items;
+      ].items.filter_annotation.source.items = this.salmonella_kegg_terms.items;
     },
     load_categories_json(query_source) {
       for (let query_cat in query_source) {
         for (let query in query_source[query_cat]) {
-          if (typeof query_source[query_cat][query]["filter_area"] !== 'undefined') {
-            query_source[query_cat][query]["filter_area"]["options"] = this.df_categories
+          if (typeof query_source[query_cat][query].items["filter_area"] !== 'undefined') {
+            query_source[query_cat][query].items["filter_area"]["options"] = this.df_categories
           }
         }
       }
