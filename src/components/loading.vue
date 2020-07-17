@@ -4,6 +4,8 @@
       :value="loading.bar.value"
       :variant="loading.bar.variant"
       :key="loading.bar.variant"
+      :max="loading.bar.max" 
+      animated
       height="6px"
     ></b-progress>
   </div>
@@ -18,7 +20,8 @@ export default {
         bar: {
           variant: "primary",
           value: 0,
-          timer: null
+          timer: null,
+          max: 100
         }
       }
     };
@@ -26,8 +29,13 @@ export default {
   mounted() {
     console.log("###########");
     this.loading.bar.timer = setInterval(() => {
-      this.loading.bar.value = this.loading.bar.value + 50;
-    }, 1000);
+      if (this.loading.bar.value >= this.loading.bar.max) {
+        clearInterval();
+      }
+      else {
+        this.loading.bar.value = this.loading.bar.value + 50;
+      }
+    }, 800);
   },
   beforeDestroy() {
     console.log(this.loading.bar.timer);
