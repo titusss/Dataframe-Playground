@@ -2,154 +2,212 @@
   "items": {
     "Filter": {
       "Filter values": {
-        "logical_operator": {
-          "label": "Show rows with values that are",
-          "type": "b-form-select",
-          "options": [
-            "= equal to",
-            "!= not",
-            "< less than",
-            "> more than",
-            ">= more or equal to",
-            "<= less or equal to"
-          ],
-          "id": "filter_values_logical-operator",
-          "selected": null
+        "properties": {
+          "type": "filter",
+          "query": "expression"
         },
-        "filter_value": {
-          "type": "b-form-input",
-          "id": "filter_values_value",
-          "selected": null
-        },
-        "filter_area": {
-          "label": "for ",
-          "type": "b-form-select",
-          "options": ["all columns"],
-          "id": "filter_values_area",
-          "selected": "all columns"
+        "items": {
+          "logical_operator": {
+            "label": "Show rows with values that are",
+            "type": "b-form-select",
+            "options": [
+              "= equal to",
+              "!= not",
+              "< less than",
+              "> more than",
+              ">= more or equal to",
+              "<= less or equal to"
+            ],
+            "id": "filter_values_logical-operator",
+            "selected": null
+          },
+          "filter_value": {
+            "type": "b-form-input",
+            "id": "filter_values_value",
+            "selected": null
+          },
+          "filter_area": {
+            "label": "for ",
+            "type": "b-form-select",
+            "options": [
+              "all columns"
+            ],
+            "id": "filter_values_area",
+            "selected": "all columns"
+          }
         }
       }
     },
     "Transform values": {
       "Change Values": {
-        "filter_area": {
-          "label": "Change values in ",
-          "type": "b-form-select",
-          "options": ["all columns"],
-          "id": "filter_values_area",
-          "selected": "all columns"
+        "properties": {
+          "type": "transformation",
+          "query": "expression"
         },
-        "logical_operator": {
-          "label": "that are",
-          "type": "b-form-select",
-          "options": [
-            "< less than",
-            "> more than",
-            ">= more or equal to",
-            "<= less or equal to",
-            "= equal to",
-            "!= not"
-          ],
-          "id": "change_values_logical-operator",
-          "selected": null
-        },
-        "filter_value": {
-          "type": "b-form-input",
-          "id": "change_values_current-value",
-          "selected": null
-        },
-        "target_value": {
-          "label": "to",
-          "type": "b-form-input",
-          "id": "change_values_target-value",
-          "selected": null
+        "items": {
+          "filter_area": {
+            "label": "Change values in ",
+            "type": "b-form-select",
+            "options": [
+              "all columns"
+            ],
+            "id": "filter_values_area",
+            "selected": "all columns"
+          },
+          "logical_operator": {
+            "label": "that are",
+            "type": "b-form-select",
+            "options": [
+              "< less than",
+              "> more than",
+              ">= more or equal to",
+              "<= less or equal to",
+              "= equal to",
+              "!= not"
+            ],
+            "id": "change_values_logical-operator",
+            "selected": null
+          },
+          "filter_value": {
+            "type": "b-form-input",
+            "id": "change_values_current-value",
+            "selected": null
+          },
+          "target_value": {
+            "label": "to",
+            "type": "b-form-input",
+            "id": "change_values_target-value",
+            "selected": null
+          }
         }
       },
       "Hide Column": {
-        "column": {
-          "label": "Hide column",
-          "type": "b-form-select",
-          "options": [],
-          "id": "values_in_column_column",
-          "selected": null
+        "properties": {
+          "type": "filter",
+          "query": "column"
+        },
+        "items": {
+          "column": {
+            "label": "Hide column",
+            "type": "b-form-select",
+            "options": [],
+            "id": "values_in_column_column",
+            "selected": null
+          }
         }
       }
     },
     "Filter by annotation": {
       "GO Term": {
-        "filter_annotation": {
-          "label": "Show genes associated with GO annotation:",
-          "type": "input-autocomplete",
-          "id": "go_term_search",
-          "source": {
-            "items": null,
-            "key": "name"
-          },
-          "selected": null
+        "properties": {
+          "type": "filter",
+          "query": "annotation_code",
+          "code_type": "go_id"
         },
-        "filter_area": {
-          "label": "for ",
-          "type": "b-form-select",
-          "options": ["all columns"],
-          "id": "filter_annotation_area",
-          "selected": "all columns"
+        "items": {
+          "filter_annotation": {
+            "label": "Show genes associated with GO annotation:",
+            "type": "input-autocomplete",
+            "id": "go_term_search",
+            "source": {
+              "items": null,
+              "key": "name"
+            },
+            "selected": null
+          },
+          "filter_area": {
+            "label": "for ",
+            "type": "b-form-select",
+            "options": [
+              "all columns"
+            ],
+            "id": "filter_annotation_area",
+            "selected": "all columns"
+          }
         }
       },
       "GO Namespace": {
-        "filter_annotation": {
-          "label": "Show genes associated with GO namespace:",
-          "type": "input-autocomplete",
-          "id": "go_namespace_search",
-          "source": {
-            "items": null,
-            "key": "namespace"
-          },
-          "selected": null
+        "properties": {
+          "type": "filter",
+          "query": "annotation_code",
+          "code_type": "go_id"
         },
-        "filter_area": {
-          "label": "for ",
-          "type": "b-form-select",
-          "options": ["all columns"],
-          "id": "filter_annotation_area",
-          "selected": "all columns"
+        "items": {
+          "filter_annotation": {
+            "label": "Show genes associated with GO namespace:",
+            "type": "input-autocomplete",
+            "id": "go_namespace_search",
+            "source": {
+              "items": null,
+              "key": "namespace"
+            },
+            "selected": null
+          },
+          "filter_area": {
+            "label": "for ",
+            "type": "b-form-select",
+            "options": [
+              "all columns"
+            ],
+            "id": "filter_annotation_area",
+            "selected": "all columns"
+          }
         }
       },
       "KEGG Pathway": {
-        "filter_annotation": {
-          "label": "Show genes associated with KEGG pathway:",
-          "type": "input-autocomplete",
-          "id": "kegg_pathway_search",
-          "source": {
-            "items": null,
-            "key": "name"
-          },
-          "selected": null
+        "properties": {
+          "type": "filter",
+          "query": "annotation_code",
+          "code_type": "kegg_id"
         },
-        "filter_area": {
-          "label": "for ",
-          "type": "b-form-select",
-          "options": ["all columns"],
-          "id": "filter_annotation_area",
-          "selected": "all columns"
+        "items": {
+          "filter_annotation": {
+            "label": "Show genes associated with KEGG pathway:",
+            "type": "input-autocomplete",
+            "id": "kegg_pathway_search",
+            "source": {
+              "items": null,
+              "key": "name"
+            },
+            "selected": null
+          },
+          "filter_area": {
+            "label": "for ",
+            "type": "b-form-select",
+            "options": [
+              "all columns"
+            ],
+            "id": "filter_annotation_area",
+            "selected": "all columns"
+          }
         }
       },
       "COG Category": {
-        "filter_annotation": {
-          "label": "Show genes associated with the COG category:",
-          "type": "input-autocomplete",
-          "id": "cog_category_search",
-          "source": {
-            "items": null,
-            "key": "name"
-          },
-          "selected": null
+        "properties": {
+          "type": "filter",
+          "query": "annotation_code",
+          "code_type": "cog_cat"
         },
-        "filter_area": {
-          "label": "for ",
-          "type": "b-form-select",
-          "options": ["all columns"],
-          "id": "filter_annotation_area",
-          "selected": "all columns"
+        "items": {
+          "filter_annotation": {
+            "label": "Show genes associated with the COG category:",
+            "type": "input-autocomplete",
+            "id": "cog_category_search",
+            "source": {
+              "items": null,
+              "key": "name"
+            },
+            "selected": null
+          },
+          "filter_area": {
+            "label": "for ",
+            "type": "b-form-select",
+            "options": [
+              "all columns"
+            ],
+            "id": "filter_annotation_area",
+            "selected": "all columns"
+          }
         }
       }
     }
