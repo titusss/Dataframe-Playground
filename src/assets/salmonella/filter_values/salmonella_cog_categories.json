@@ -5,184 +5,92 @@
             "name": "A (RNA processing and modification)"
         },
         {
-            "id": "A",
-            "name": "A"
-        },
-        {
             "id": "B",
             "name": "B (Chromatin Structure and dynamics)"
-        },
-        {
-            "id": "B",
-            "name": "B"
         },
         {
             "id": "C",
             "name": "C (Energy production and conversion)"
         },
         {
-            "id": "C",
-            "name": "C"
-        },
-        {
             "id": "D",
             "name": "D (Cell cycle control and mitosis)"
-        },
-        {
-            "id": "D",
-            "name": "D"
         },
         {
             "id": "E",
             "name": "E (Amino Acid metabolis and transport)"
         },
         {
-            "id": "E",
-            "name": "E"
-        },
-        {
             "id": "F",
             "name": "F (Nucleotide metabolism and transport)"
-        },
-        {
-            "id": "F",
-            "name": "F"
         },
         {
             "id": "G",
             "name": "G (Carbohydrate metabolism and transport)"
         },
         {
-            "id": "G",
-            "name": "G"
-        },
-        {
             "id": "H",
             "name": "H (Coenzyme metabolis)"
-        },
-        {
-            "id": "H",
-            "name": "H"
         },
         {
             "id": "I",
             "name": "I (Lipid metabolism)"
         },
         {
-            "id": "I",
-            "name": "I"
-        },
-        {
             "id": "J",
             "name": "J (Tranlsation)"
-        },
-        {
-            "id": "J",
-            "name": "J"
         },
         {
             "id": "K",
             "name": "K (Transcription)"
         },
         {
-            "id": "K",
-            "name": "K"
-        },
-        {
             "id": "L",
             "name": "L (Replication and repair)"
-        },
-        {
-            "id": "L",
-            "name": "L"
         },
         {
             "id": "M",
             "name": "M (Cell wall/membrane/envelop biogenesis)"
         },
         {
-            "id": "M",
-            "name": "M"
-        },
-        {
             "id": "N",
             "name": "N (Cell motility)"
-        },
-        {
-            "id": "N",
-            "name": "N"
         },
         {
             "id": "O",
             "name": "O (Post-translational modification, protein turnover, chaperone functions)"
         },
         {
-            "id": "O",
-            "name": "O"
-        },
-        {
             "id": "P",
             "name": "P (Inorganic ion transport and metabolism)"
-        },
-        {
-            "id": "P",
-            "name": "P"
         },
         {
             "id": "Q",
             "name": "Q (Secondary Structure)"
         },
         {
-            "id": "Q",
-            "name": "Q"
-        },
-        {
             "id": "T",
             "name": "T (Signal Transduction)"
-        },
-        {
-            "id": "T",
-            "name": "T"
         },
         {
             "id": "U",
             "name": "U (Intracellular trafficing and secretion)"
         },
         {
-            "id": "U",
-            "name": "U"
-        },
-        {
             "id": "Y",
             "name": "Y (Nuclear structure)"
-        },
-        {
-            "id": "Y",
-            "name": "Y"
         },
         {
             "id": "Z",
             "name": "Z (Cytoskeleton)"
         },
         {
-            "id": "Z",
-            "name": "Z"
-        },
-        {
             "id": "R",
             "name": "R (General Functional Prediction only)"
         },
         {
-            "id": "R",
-            "name": "R"
-        },
-        {
             "id": "S",
             "name": "S (Function Unknown)"
-        },
-        {
-            "id": "S",
-            "name": "S"
         }
     ]
 }
