@@ -100,7 +100,7 @@
         toggle-class="text-decoration-none"
       >
         <template v-slot:button-content>
-          <b-icon icon="plus-circle-fill"></b-icon>Add Query
+          <b-icon icon="plus-circle-fill"></b-icon> Add Query
         </template>
         <b-dropdown-group
           v-for="(filter_template_group, index) in filter_templates.items"
@@ -127,7 +127,7 @@
         toggle-class="text-decoration-none"
       >
         <template v-slot:button-content>
-          <b-icon icon="intersect"></b-icon>Load Filter
+          <b-icon icon="intersect"></b-icon> Load Filter
         </template>
         <b-dropdown-group
           v-for="(filter_preset_group, index) in filter_presets.items"
@@ -146,7 +146,7 @@
       <div class="submit-button-parent">
         <b-button type="submit" variant="primary" pill size="sm" class="submit-button">
           <!-- <b-spinner label="Loading..." class="search-spinner" v-if="loading"></b-spinner> -->
-          <b-icon icon="search"></b-icon>Filter Data
+          <b-icon icon="search"></b-icon> Filter Data
         </b-button>
       </div>
     </b-form>
