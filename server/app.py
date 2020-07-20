@@ -63,6 +63,48 @@ def allowed_file(filename, extension_whitelist):
 #     print('hello world')
 #     return "Hello world!"
 
+@app.route('/export', methods=['POST'])
+def export_df():
+    import pandas as pd
+    export_form = json.loads(request.form['export_form'])
+    url = json.loads(request.form['url'])
+    db_entry = db.visualizations.find_one({"_id": ObjectId(url)}, {'_id': False})
+    dataframe_dict = {}
+    try:
+        df_filtered = pd.DataFrame.from_dict(db_entry['filtered_dataframe'])
+        dataframe_dict["filtered"] = {}
+        dataframe_dict["filtered"]["df"] = df_filtered
+        dataframe_dict["filtered"]["name"] = "Filtered Data"
+    except KeyError:
+        pass
+    dataframe_dict["unfiltered"] = {}
+    dataframe_dict["unfiltered"]["df"] = pd.DataFrame.from_dict(db_entry['transformed_dataframe'])
+    dataframe_dict["unfiltered"]["name"] = "Source Data"
+    if export_form["file_type"] == 'excel':
+       res = df_to_excel(dataframe_dict)
+    elif export_form["file_type"] == 'csv':
+        print(export_form['csv_seperator'])
+        res = df_to_csv(dataframe_dict, export_form['csv_seperator'])
+    return res
+
+def df_to_excel(dataframe_dict):
+    from io import BytesIO
+    import pandas as pd
+    output = BytesIO()
+    writer = pd.ExcelWriter(output, engine='xlsxwriter')
+    for dataframe_parent in dataframe_dict:
+        dataframe_dict[dataframe_parent]["df"].to_excel(writer, sheet_name=dataframe_dict[dataframe_parent]["name"], index=False)
+    writer.close()
+    output.seek(0)
+    return Response(output, mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-disposition": "attachment; filename=filename.xlsx"})
+
+def df_to_csv(dataframe_dict, seperator):
+    try:
+        df = dataframe_dict["filtered"]["df"]
+    except KeyError:
+        df = dataframe_dict["unfiltered"]["df"]
+    return Response(df.to_csv(sep=seperator, index=False, encoding='utf-8'), mimetype="text/csv", headers={"Content-disposition": "attachment; filename=filename.csv"})
+
 @app.route('/query', methods=['POST'])
 def search_query():
     import filter_dataframe

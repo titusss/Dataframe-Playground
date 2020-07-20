@@ -8,7 +8,7 @@
         no-auto-hide
       >This URL is now locked and cannot be modified.</b-toast>
     </div>
-    <b-button-toolbar>
+    <b-button-toolbar class="toolbar">
       <b-button-group class="mr-1">
         <b-button
           :disabled="disabled_lock"
@@ -18,7 +18,16 @@
         >
           <b-icon :icon="icon_lock" aria-hidden="false"></b-icon>
         </b-button>
-        <b-dropdown title="Load file" variant="light" toggle-class="text-decoration-none" no-caret>
+        <b-dropdown
+          class="dropdown-export"
+          title="Load file"
+          variant="light"
+          toggle-class="text-decoration-none"
+          no-caret
+          no-flip="true"
+          boundary="viewport"
+          offset="0"
+        >
           <template v-slot:button-content>
             <b-icon icon="cloud-download" aria-hidden="true"></b-icon>
           </template>
@@ -27,7 +36,7 @@
               <h4 class="dropdown-export-link-title">
                 <b-icon-link45deg variant="dark"></b-icon-link45deg>
               </h4>
-              <span class="dropdown-export-title">Share link</span>
+              <span class="dropdown-export-title"> Share link</span>
               <b-form-group class="dropdown-export-link-field">
                 <b-form-input
                   class="dropdown-url-field input-fake-disabled"
@@ -40,14 +49,14 @@
             </div>
           </b-dropdown-form>
           <b-dropdown-divider></b-dropdown-divider>
-          <b-dropdown-item href="#">
+          <b-dropdown-item class="pseudo-link" @click="download_df('excel')">
             <img src="../assets/excel_logo.svg" class="export_menu_icon" />
-            <span class="dropdown-export-title">Download .xls</span>
+            <span class="dropdown-export-title"> Download .xls</span>
           </b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
-          <b-dropdown-item href="#">
+          <b-dropdown-item class="pseudo-link" @click="download_df('csv')">
             <b-icon-table variant="dark"></b-icon-table>
-            <span class="dropdown-export-title">Download .csv</span>
+            <span class="dropdown-export-title"> Download .csv</span>
           </b-dropdown-item>
           <b-dropdown-form>
             <b-form-group
@@ -57,7 +66,7 @@
               label=" CSV Seperator:"
               label-for="dropdown-csv-sep"
             >
-              <b-form-input id="dropdown-csv-sep" class="dropdown-url-field" value=";" size="sm"></b-form-input>
+              <b-form-input id="dropdown-csv-sep" class="dropdown-url-field" size="sm" v-model="export_form.csv_seperator"></b-form-input>
             </b-form-group>
           </b-dropdown-form>
         </b-dropdown>
@@ -80,7 +89,11 @@ export default {
       icon_lock: "unlock",
       button_lock: "light",
       disabled_lock: true,
-      url: null
+      url: null,
+      export_form: {
+        file_type: null,
+        csv_seperator: ';'
+      }
     };
   },
   created() {
@@ -115,6 +128,31 @@ export default {
       url_field.setSelectionRange(0, 99999);
       document.execCommand("copy");
       this.lock_session();
+    },
+    download_df(file_type) {
+      this.export_form.file_type = file_type
+      var payload = new FormData();
+      payload.append("url", JSON.stringify(this.$route.query.config));
+      payload.append("export_form", JSON.stringify(this.export_form));
+      axios({
+        url: "http://0.0.0.0:5000/export",
+        method: "POST",
+        responseType: "blob",
+        data: payload
+      }).then(res => {
+        console.log("response, yay!")
+        var fileURL = window.URL.createObjectURL(new Blob([res.data]));
+        var fileLink = document.createElement("a");
+        fileLink.href = fileURL;
+        if(file_type=='excel') {
+          fileLink.setAttribute("download", "dataframes.xlsx");
+        }
+        else if (file_type=='csv') {
+          fileLink.setAttribute("download", "dataframe.csv");
+        }
+        document.body.appendChild(fileLink);
+        fileLink.click();
+      });
     }
   }
 };
@@ -125,7 +163,7 @@ svg {
   margin: 0;
 }
 .btn-group {
-  margin: 0 auto 0 auto !important;
+  margin: 0 0 0 auto !important;
 }
 .toast-center {
   position: absolute;
@@ -176,5 +214,8 @@ svg {
 }
 .input-fake-disabled {
   pointer-events: none;
+}
+.toolbar {
+  padding-right: 2rem;
 }
 </style>

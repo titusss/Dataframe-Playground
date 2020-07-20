@@ -16,25 +16,26 @@ def main(query, df):
         block_type = block["properties"]["type"]
         if block_type == "filter":
             df = filter_for(block["forms"], block["properties"], df)
+        elif block_type == "transformation":
+            df = transform_to(block["forms"], block["properties"], df)
     return df
 
-def filter_for(form, properties, df):
+def filter_for(forms, properties, df):
     df_numeric = df.select_dtypes(include=[np.number])
     try:
-        comparison_operator = COMPARISON_OPERATORS[form["logical_operator"]]
+        comparison_operator = COMPARISON_OPERATORS[forms["logical_operator"]]
     except KeyError:
         comparison_operator = operator.eq # If no comparison operator is given, set it to "equal (=)"
-    if form["filter_area"] == "all columns":
+    if forms["filter_area"] == "all columns":
         filter_area = list(df_numeric.columns)
     else:
-        filter_area = form["filter_area"]
+        filter_area = forms["filter_area"]
     if properties["query"] == "expression":
         try:
-            filter_value = float(form["filter_value"])
+            filter_value = float(forms["filter_value"])
         except ValueError:
-            filter_value = str(form["filter_value"])
+            filter_value = str(forms["filter_value"])
         df_filtered = df[comparison_operator(df[filter_area].values, filter_value)]
-
     elif properties["query"] == "annotation_code":
         import json
         with open('static/salmonella_annotations.json') as json_file:
@@ -44,7 +45,7 @@ def filter_for(form, properties, df):
         print(properties["code_type"])
         for salmonella_locus in salmonella_annotations:
             try:
-                if salmonella_locus in df_genes and form["filter_annotation"] in list(salmonella_annotations[salmonella_locus][properties["code_type"]]):
+                if salmonella_locus in df_genes and forms["filter_annotation"] in list(salmonella_annotations[salmonella_locus][properties["code_type"]]):
                     filter_value.append(salmonella_locus)
             except TypeError:
                 pass
