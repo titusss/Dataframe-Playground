@@ -96,6 +96,13 @@ export default {
     dataframe: Array,
     dataframe_filtered: Array
   },
+  watch: { 
+    dataframe_filtered: {
+      handler() {
+        this.filtered_visible = true;
+      }
+    }
+  },
   data() {
     return {
       dataframe_headers: [],
