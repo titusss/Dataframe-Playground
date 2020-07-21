@@ -43,7 +43,7 @@
             ></input_autocomplete>
           </div>
         </div>
-        <b-dropdown
+        <!-- <b-dropdown
           v-if="form_block_array[form_block_array.length-1]['logic']"
           size="sm"
           variant="link"
@@ -83,7 +83,7 @@
           <b-dropdown-item
             v-on:click="add_inline_query_block('values_in_row', form_block_array)"
           >Values in row...</b-dropdown-item>
-        </b-dropdown>
+        </b-dropdown>-->
         <b-button size="sm" variant="link" v-on:click="remove_query_block(form_block_array)">
           <b-icon icon="trash"></b-icon>
         </b-button>
@@ -100,7 +100,7 @@
         toggle-class="text-decoration-none"
       >
         <template v-slot:button-content>
-          <b-icon icon="plus-circle-fill"></b-icon> Add Query
+          <b-icon icon="plus-circle-fill"></b-icon>Add Query
         </template>
         <b-dropdown-group
           v-for="(filter_template_group, index) in filter_templates.items"
@@ -127,7 +127,7 @@
         toggle-class="text-decoration-none"
       >
         <template v-slot:button-content>
-          <b-icon icon="intersect"></b-icon> Load Filter
+          <b-icon icon="intersect"></b-icon>Load Filter
         </template>
         <b-dropdown-group
           v-for="(filter_preset_group, index) in filter_presets.items"
@@ -146,7 +146,7 @@
       <div class="submit-button-parent">
         <b-button type="submit" variant="primary" pill size="sm" class="submit-button">
           <!-- <b-spinner label="Loading..." class="search-spinner" v-if="loading"></b-spinner> -->
-          <b-icon icon="search"></b-icon> Filter Data
+          <b-icon icon="search"></b-icon>Filter Data
         </b-button>
       </div>
     </b-form>
@@ -165,7 +165,8 @@ import filter_templates from "../assets/json/filter_templates.json";
 export default {
   name: "search_query",
   props: {
-    df_categories: Array
+    df_categories: Array,
+    server_queries: Array
   },
   components: {
     input_autocomplete,
@@ -184,6 +185,37 @@ export default {
       }
       return output;
     },
+    convert_server_query_blocks() {
+      let block_found = false;
+      for (let i in this.server_queries) {
+        let block_name = this.server_queries[i].name;
+        for (let query_group in this.filter_templates.items) {
+          console.log('i')
+          if (block_name in this.filter_templates.items[query_group] === true) {
+            let block = this.deep_copy(this.filter_templates.items[query_group][block_name]);
+            for (let form in this.server_queries[i].forms) {
+              block.items[form].selected = this.server_queries[i].forms[form]
+            }
+            console.log(this.server_queries[i])
+            console.log(block)
+            this.add_query_block(block, block_name)
+            block_found = true;
+            break;
+          }
+        }
+        if (!block_found) {
+          for (let query_group in this.filter_presets.items) {
+            console.log('yaaay')
+            if (block_name in this.filter_presets.items[query_group] === true) {
+              let block = this.deep_copy(this.filter_presets.items[query_group][block_name]);
+              console.log(block)
+              this.add_query_block(block, block_name)
+              break;
+            }
+          }
+        }
+      }
+    },
     add_query_block(block, index) {
       let added_block = {};
       added_block["forms"] = this.deep_copy(block);
@@ -194,21 +226,27 @@ export default {
       this.id++;
     },
     restructure_query() {
-      let structured_query = []
+      let structured_query = [];
       for (let array in this.query) {
         for (let sub_array in this.query[array]) {
-          let structured_query_block = {}
-          console.log(this.query[array][sub_array])
-          structured_query_block["name"] = this.query[array][sub_array]["block_name"]
-          structured_query_block["properties"] = this.query[array][sub_array]["forms"]["properties"]
-          structured_query_block["forms"] = {}
+          let structured_query_block = {};
+          console.log(this.query[array][sub_array]);
+          structured_query_block["name"] = this.query[array][sub_array][
+            "block_name"
+          ];
+          structured_query_block["properties"] = this.query[array][sub_array][
+            "forms"
+          ]["properties"];
+          structured_query_block["forms"] = {};
           for (let form in this.query[array][sub_array]["forms"]["items"]) {
-            structured_query_block["forms"][form] = this.query[array][sub_array]["forms"]["items"][form]["selected"]
+            structured_query_block["forms"][form] = this.query[array][
+              sub_array
+            ]["forms"]["items"][form]["selected"];
           }
-          structured_query.push(structured_query_block)
+          structured_query.push(structured_query_block);
         }
       }
-      return structured_query
+      return structured_query;
     },
     // add_inline_query_block(block, form) {
     //   let added_block = this.form_blocks[block];
@@ -230,11 +268,11 @@ export default {
       const path = "http://0.0.0.0:5000/query";
       var data = new FormData();
       var structured_query = this.restructure_query();
-      console.log(structured_query)
+      console.log(structured_query);
       data.append("query", JSON.stringify(structured_query));
       data.append("url", JSON.stringify(this.$route.query.config));
-      console.log(this.query)
-      console.log(data)
+      console.log(this.query);
+      console.log(data);
       let self = this;
       // self.$parent.$bvModal.hide('bv_modal_addData')
       axios
@@ -271,8 +309,13 @@ export default {
     load_categories_json(query_source) {
       for (let query_cat in query_source) {
         for (let query in query_source[query_cat]) {
-          if (typeof query_source[query_cat][query].items["filter_area"] !== 'undefined') {
-            query_source[query_cat][query].items["filter_area"]["options"] = this.df_categories
+          if (
+            typeof query_source[query_cat][query].items["filter_area"] !==
+            "undefined"
+          ) {
+            query_source[query_cat][query].items["filter_area"][
+              "options"
+            ] = this.df_categories;
           }
         }
       }
@@ -283,6 +326,7 @@ export default {
     this.load_autocomplete_json();
     this.load_categories_json(this.filter_templates.items);
     this.load_categories_json(this.filter_presets.items);
+    this.convert_server_query_blocks();
   },
   data() {
     return {

@@ -18,67 +18,45 @@
           label-for="perPageSelect"
           class="inline-element"
         >
-          <b-form-select v-model="perPage" id="perPageSelect" size="sm" :options="pageOptions" class="inline-element"></b-form-select>
+          <b-form-select
+            v-model="perPage"
+            id="perPageSelect"
+            size="sm"
+            :options="pageOptions"
+            class="inline-element"
+          ></b-form-select>
         </b-form-group>
         <b-form-group class="inline-element">
           <b-pagination
             v-model="currentPage"
-            :total-rows="totalRows"
             :per-page="perPage"
             align="fill"
             size="sm"
+            :total-rows="totalRows"
           ></b-pagination>
         </b-form-group>
         <b-form-group class="inline-element" id="toggle-filtered">
           <span class="col-form-label-sm">Show filtered</span>
-            <label class="switch switch-label bv-no-focus-ring">
-              <input
-                type="checkbox"
-                v-model="filtered_visible"
-                value=false
-                unchecked-value=true
-              />
-              <span class="slider round"></span>
-            </label>
-            <!-- <div class="filter-toggle-text">Filtered table is visible? {{ filtered_visible }}</div> -->
+          <label class="switch switch-label bv-no-focus-ring">
+            <input type="checkbox" v-model="filtered_visible" value="false" unchecked-value="true" />
+            <span class="slider round"></span>
+          </label>
+          <!-- <div class="filter-toggle-text">Filtered table is visible? {{ filtered_visible }}</div> -->
         </b-form-group>
       </div>
       <!-- User Interface controls -->
-      <div class="table-wrapper" v-if="!filtered_visible">
+      <div class="table-wrapper">
         <b-table
           id="dataframe-table"
           ref="selectableTable"
           hover
           small
-          selectable
-          :select-mode="range"
           :current-page="currentPage"
           :per-page="perPage"
           :filter="filter"
           :filterIncludedFields="filterOn"
-          :items="dataframe"
+          :items="items"
           :fields="dataframe_headers"
-          head-variant="light"
-          @filtered="onFiltered"
-        >
-          <template v-slot:cell()="data">{{data.value}}</template>
-          <template v-slot:cell(GeneID)="data">{{data.value}}</template>
-        </b-table>
-      </div>
-      <div class="table-wrapper" v-if="filtered_visible">
-        <b-table
-          id="dataframe-filtered-table"
-          ref="selectableTable"
-          hover
-          small
-          selectable
-          :select-mode="range"
-          :current-page="currentPage"
-          :per-page="perPage"
-          :filter="filter"
-          :filterIncludedFields="filterOn"
-          :items="dataframe_filtered"
-          :fields="dataframe_filtered_headers"
           head-variant="light"
           @filtered="onFiltered"
         >
@@ -96,10 +74,22 @@ export default {
     dataframe: Array,
     dataframe_filtered: Array
   },
-  watch: { 
+  watch: {
     dataframe_filtered: {
       handler() {
         this.filtered_visible = true;
+      }
+    },
+    filtered_visible: {
+      handler() {
+        if (this.filtered_visible==true) {
+          this.items = this.dataframe_filtered
+          this.totalRows = this.items.length;
+        }
+        else {
+          this.items = this.dataframe
+          this.totalRows = this.items.length;
+        }
       }
     }
   },
@@ -112,8 +102,12 @@ export default {
       pageOptions: [20, 50, 100, 1000],
       filter: null,
       filterOn: [],
-      filtered_visible: false
+      filtered_visible: false,
+      items: this.dataframe
     };
+  },
+  mounted() {
+    this.totalRows = this.items.length;
   },
   methods: {
     onFiltered(filteredItems) {
@@ -123,20 +117,15 @@ export default {
     }
   },
   created() {
-    for (let header in this.dataframe[0]) {
+    for (let header in this.items[0]) {
       let entry = {};
       entry["key"] = header;
       entry["sortable"] = true;
       this.dataframe_headers.push(entry);
     }
-    console.log('haaaaaaaha')
-    console.log(this.dataframe_filtered)
-    if(this.dataframe_filtered.length() > 0) {
+    if (this.dataframe_filtered.length() > 0) {
       this.filtered_visible = true;
     }
-  },
-  mounted() {
-    this.totalRows = this.items.length;
   }
 };
 </script>
@@ -177,7 +166,7 @@ table {
   height: 26px;
 }
 
-.inline-element>* {
+.inline-element > * {
   display: inline-block !important;
 }
 .form-group {
@@ -187,8 +176,9 @@ table {
 #toggle-filtered {
   text-align: right;
 }
-label, ul {
-  margin-bottom: .5rem !important;
+label,
+ul {
+  margin-bottom: 0.5rem !important;
 }
 .bv-no-focus-ring {
   margin-left: 10px;

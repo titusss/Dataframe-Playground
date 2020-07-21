@@ -48,7 +48,7 @@
             class="field block"
             v-if="this.config.transformed_dataframe.length > 0"
           >
-            <search_query @dataframe_filtered="redirect_to_config" v-bind:df_categories="this.config.dataframe_categories"/>
+            <search_query @dataframe_filtered="redirect_to_config" v-bind:df_categories="this.config.dataframe_categories" v-bind:server_queries="this.config.query"/>
           </div>
           <div>
             <visualization v-bind:vis_link="this.active_vis_link" v-if="this.active_vis_link" />
@@ -196,6 +196,7 @@ export default {
     },
     redirect_to_config(res) {
       // this.config = null
+      console.log('res: ', res)
       console.log(this.config);
       console.log(res.data.db_entry_id["$oid"]);
       if (this.config._id == res.data.db_entry_id["$oid"]) {

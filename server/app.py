@@ -12,7 +12,7 @@ from pymongo import MongoClient
 from bson.json_util import loads, dumps, ObjectId
 
 # variables
-UPLOAD_FOLDER = '/static' # NOTE: Change this to /uploads in production
+UPLOAD_FOLDER = '/static'  # NOTE: Change this to /uploads in production
 ALLOWED_EXTENSIONS_MATRIX = {'txt', 'xlsx', 'csv'}
 ALLOWED_EXTENSIONS_ICON = {'svg', 'png', 'jpg', 'jpeg', 'gif'}
 PRE_CONFIGURED_PLUGINS = [ObjectId('5ed6374fdaf88ae74e38f105')]
@@ -48,11 +48,12 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 CORS(app)
 # app.config['CORS_HEADERS'] = 'Content-Type'
-CORS(app, resources={r'/*': {'origins': '*'}}) # enable CORS
+CORS(app, resources={r'/*': {'origins': '*'}})  # enable CORS
 # cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 if __name__ == '__main__':
-    app.run(threaded = True)
+    app.run(threaded=True)
+
 
 def allowed_file(filename, extension_whitelist):
     return '.' in filename and \
@@ -63,12 +64,14 @@ def allowed_file(filename, extension_whitelist):
 #     print('hello world')
 #     return "Hello world!"
 
+
 @app.route('/export', methods=['POST'])
 def export_df():
     import pandas as pd
     export_form = json.loads(request.form['export_form'])
     url = json.loads(request.form['url'])
-    db_entry = db.visualizations.find_one({"_id": ObjectId(url)}, {'_id': False})
+    db_entry = db.visualizations.find_one(
+        {"_id": ObjectId(url)}, {'_id': False})
     dataframe_dict = {}
     try:
         df_filtered = pd.DataFrame.from_dict(db_entry['filtered_dataframe'])
@@ -78,32 +81,48 @@ def export_df():
     except KeyError:
         pass
     dataframe_dict["unfiltered"] = {}
-    dataframe_dict["unfiltered"]["df"] = pd.DataFrame.from_dict(db_entry['transformed_dataframe'])
+    dataframe_dict["unfiltered"]["df"] = pd.DataFrame.from_dict(
+        db_entry['transformed_dataframe'])
     dataframe_dict["unfiltered"]["name"] = "Source Data"
     if export_form["file_type"] == 'excel':
-       res = df_to_excel(dataframe_dict)
+        res = df_to_excel(dataframe_dict)
     elif export_form["file_type"] == 'csv':
-        print(export_form['csv_seperator'])
         res = df_to_csv(dataframe_dict, export_form['csv_seperator'])
     return res
+
 
 def df_to_excel(dataframe_dict):
     from io import BytesIO
     import pandas as pd
     output = BytesIO()
     writer = pd.ExcelWriter(output, engine='xlsxwriter')
+    # Load the filtered, and unfiltered dataframe as excel sheets.
     for dataframe_parent in dataframe_dict:
-        dataframe_dict[dataframe_parent]["df"].to_excel(writer, sheet_name=dataframe_dict[dataframe_parent]["name"], index=False)
+        dataframe_dict[dataframe_parent]["df"].to_excel(
+            writer, sheet_name=dataframe_dict[dataframe_parent]["name"], index=False)
     writer.close()
     output.seek(0)
     return Response(output, mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-disposition": "attachment; filename=filename.xlsx"})
 
+
 def df_to_csv(dataframe_dict, seperator):
+    # CSV doesn't support multi-sheets, so only one dataframe can be exported.
     try:
         df = dataframe_dict["filtered"]["df"]
     except KeyError:
         df = dataframe_dict["unfiltered"]["df"]
     return Response(df.to_csv(sep=seperator, index=False, encoding='utf-8'), mimetype="text/csv", headers={"Content-disposition": "attachment; filename=filename.csv"})
+
+def upload_db_entry(db_entry, mongo_update, url):
+    print(db_entry['locked'])
+    print('####')
+    if 'locked' in db_entry and db_entry['locked'] == True:
+        db_entry['locked'] = False
+        db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
+    else:
+        db_entry_id = ObjectId(url)
+        db.visualizations.update_one({'_id': db_entry_id}, mongo_update)
+    return db_entry_id
 
 @app.route('/query', methods=['POST'])
 def search_query():
@@ -111,20 +130,31 @@ def search_query():
     import pandas as pd
     query = json.loads(request.form['query'])
     url = json.loads(request.form['url'])
-    db_entry = db.visualizations.find_one({"_id": ObjectId(url)}, {'_id': False})
+    db_entry = db.visualizations.find_one(
+        {"_id": ObjectId(url)}, {'_id': False})
     df = pd.DataFrame.from_dict(db_entry['transformed_dataframe'])
     print('query: ', query)
     filtered_df = filter_dataframe.main(query, df)
-    db.visualizations.update_one({'_id': ObjectId(url)}, {'$set': {'filtered_dataframe': filtered_df.to_dict('records'), 'vis_links': []}})
-    return Response(dumps({'db_entry_id': ObjectId(url)}), mimetype="application/json")
+    mongo_update = {
+        '$set': {
+            'filtered_dataframe': filtered_df.to_dict('records'),
+            'vis_links': [],
+            'query': query
+        }
+    }
+    db_entry_id = upload_db_entry(db_entry, mongo_update, url)
+    return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
+
 
 @app.route('/locked', methods=['POST'])
 def lock_session():
     from pymongo import MongoClient
     url = json.loads(request.form['url'])
     print('URL: ', url)
-    db.visualizations.update_one({'_id': ObjectId(url)}, {'$set': {'locked': True}})
+    db.visualizations.update_one({'_id': ObjectId(url)}, {
+                                 '$set': {'locked': True}})
     return "success"
+
 
 @app.route('/visualization', methods=['POST'])
 def make_vis_link():
@@ -132,10 +162,15 @@ def make_vis_link():
     plugin = json.loads(request.form['plugin'])
     url = json.loads(request.form['url'])
     print('url: ', url, 'plugin: ', plugin)
-    db_entry = db.visualizations.find_one({"_id": ObjectId(url)}, {'_id': False})
-    vis_link = visualize.route(db.plugins, pd.DataFrame.from_dict(db_entry['transformed_dataframe']), db_entry['cat_amount'], plugin) # CHANGE: Right now every new visualization creates a new MongoDB entry
-    db.visualizations.update_one({'_id': ObjectId(url)}, {'$push': {'vis_links': vis_link}})
+    db_entry = db.visualizations.find_one(
+        {"_id": ObjectId(url)}, {'_id': False})
+    # CHANGE: Right now every new visualization creates a new MongoDB entry
+    vis_link = visualize.route(db.plugins, pd.DataFrame.from_dict(
+        db_entry['transformed_dataframe']), db_entry['cat_amount'], plugin)
+    db.visualizations.update_one({'_id': ObjectId(url)}, {
+                                 '$push': {'vis_links': vis_link}})
     return "success"
+
 
 @app.route('/plugins', methods=['POST'])
 def add_plugin():
@@ -145,7 +180,8 @@ def add_plugin():
     metadata = json.loads(request.form['form'])
     source, extension = upload_file(request, ALLOWED_EXTENSIONS_ICON, metadata)
     plugin_name = secure_filename(source.filename)
-    source.save(os.path.join("/Users/titusebbecke/Documents/Work/Helmholtz/2020/Experiments/2003_Hiri_VueBootstrap/hzi_vis_03/public/src/assets", plugin_name))
+    source.save(os.path.join(
+        "/Users/titusebbecke/Documents/Work/Helmholtz/2020/Experiments/2003_Hiri_VueBootstrap/hzi_vis_03/public/src/assets", plugin_name))
     metadata['filename'] = plugin_name
     db_plugin_entry_id = db.plugins.insert_one(metadata).inserted_id
     if metadata['db_entry_id'] == '':
@@ -156,15 +192,18 @@ def add_plugin():
         db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
         print('db_entry_id empty url:', db_entry_id)
     else:
-        db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
+        db_entry = db.visualizations.find_one(
+            {"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
         plugins_id = db_entry['plugins_id']
         plugins_id.append(db_plugin_entry_id)
-        db.visualizations.update_one({'_id': ObjectId(metadata['db_entry_id'])}, {'$push': {'plugins_id': db_plugin_entry_id}})
+        db.visualizations.update_one({'_id': ObjectId(metadata['db_entry_id'])}, {
+                                     '$push': {'plugins_id': db_plugin_entry_id}})
         print("metadata['db_entry']", metadata['db_entry_id'])
         db_entry_id = ObjectId(metadata['db_entry_id'])
         print('db_entry_id filled id: ', db_entry_id)
     print('db_plugins_id: ', db_plugin_entry_id)
     return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
+
 
 @app.route('/config', methods=['GET', 'POST'])
 def respond_config():
@@ -177,27 +216,34 @@ def respond_config():
         db_entry = db.visualizations.find_one({"_id": db_entry_id})
         # print(len(bson.BSON.encode(db_entry)))
         db_entry['_id'] = str(db_entry['_id'])
-        db_entry['plugins'] = [plugin for plugin in db.plugins.find({ '_id' : { '$in' : db_entry['plugins_id'] } })]
+        db_entry['plugins'] = [plugin for plugin in db.plugins.find(
+            {'_id': {'$in': db_entry['plugins_id']}})]
         return Response(dumps({'db_entry': db_entry}), mimetype="application/json")
     else:
         print('undefined')
         import copy
         db_entry = copy.deepcopy(DB_ENTRY_MOCKUP)
-        db_entry['plugins'] = [plugin for plugin in db.plugins.find({ '_id' : { '$in' : db_entry['plugins_id'] } })]
+        db_entry['plugins'] = [plugin for plugin in db.plugins.find(
+            {'_id': {'$in': db_entry['plugins_id']}})]
         print(db_entry)
         return Response(dumps({'db_entry': db_entry}), mimetype="application/json")
+
 
 @app.route('/upload', methods=['GET', 'POST'])
 def add_matrix():
     metadata = json.loads(request.form['form'])
-    source, extension = upload_file(request, ALLOWED_EXTENSIONS_MATRIX, metadata)
-    db_entry_id = process_file.add_matrix(source, metadata, extension, db, PRE_CONFIGURED_PLUGINS)
+    source, extension = upload_file(
+        request, ALLOWED_EXTENSIONS_MATRIX, metadata)
+    db_entry_id = process_file.add_matrix(
+        source, metadata, extension, db, PRE_CONFIGURED_PLUGINS)
     return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
+
 
 def respond_data(label, payload):
     response_object = {'status': 'success'}
     response_object[label] = payload
     return response_object
+
 
 def upload_file(request, extension_whitelist, metadata):
     if 'file' in request.files:
@@ -211,27 +257,34 @@ def upload_file(request, extension_whitelist, metadata):
             extension = os.path.splitext(file.filename)[1]
         print(file)
         return file, extension
-    elif metadata['source']['text'] != "null": # If data is pasted text with "Text" as source
+    # If data is pasted text with "Text" as source
+    elif metadata['source']['text'] != "null":
         return metadata['source']['text'], "string"
     return "failure"
+
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+
 @app.route('/matrix/<matrix_id>', methods=['GET', 'POST'])
 def remove_matrix(matrix_id):
     metadata = json.loads(request.form['form'])
     print('###### metadata: ', metadata)
-    db_entry_id = process_file.remove_matrix(DB_ENTRY_MOCKUP, metadata, db, matrix_id)
+    db_entry_id = process_file.remove_matrix(
+        DB_ENTRY_MOCKUP, metadata, db, matrix_id)
     return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
+
 
 def make_preview(input_file, extension, dataList, remove_id):
     MATRIX.clear()
-    MATRICES, DATAFRAME, db_data_id = process_file.process_upload(input_file, extension.lower(), dataList, remove_id)
+    MATRICES, DATAFRAME, db_data_id = process_file.process_upload(
+        input_file, extension.lower(), dataList, remove_id)
     for i in range(len(MATRICES)):
         MATRIX.append(MATRICES[i])
     return DATAFRAME
+
 
 print('ran')
 client.close()
