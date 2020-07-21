@@ -10,6 +10,7 @@ COMPARISON_OPERATORS = {
     '!= not': operator.ne
 }
 
+
 def main(query, df):
     print(query)
     for block in query:
@@ -20,12 +21,14 @@ def main(query, df):
             df = transform_to(block["forms"], block["properties"], df)
     return df
 
+
 def filter_for(forms, properties, df):
     df_numeric = df.select_dtypes(include=[np.number])
     try:
         comparison_operator = COMPARISON_OPERATORS[forms["logical_operator"]]
     except KeyError:
-        comparison_operator = operator.eq # If no comparison operator is given, set it to "equal (=)"
+        # If no comparison operator is given, set it to "equal (=)"
+        comparison_operator = operator.eq
     if forms["filter_area"] == "all columns":
         filter_area = list(df_numeric.columns)
     else:
@@ -33,9 +36,11 @@ def filter_for(forms, properties, df):
     if properties["query"] == "expression":
         try:
             filter_value = float(forms["filter_value"])
+            df_filtered = df[comparison_operator(df[filter_area].values, filter_value)]
         except ValueError:
-            filter_value = str(forms["filter_value"])
-        df_filtered = df[comparison_operator(df[filter_area].values, filter_value)]
+            filter_value = str(forms["filter_value"]).split('; ')
+            print(filter_value)
+            df_filtered = df[df[filter_area].isin(filter_value)]
     elif properties["query"] == "annotation_code":
         import json
         with open('static/salmonella_annotations.json') as json_file:
