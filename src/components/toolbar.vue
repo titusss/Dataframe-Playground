@@ -24,7 +24,6 @@
           variant="light"
           toggle-class="text-decoration-none"
           no-caret
-          no-flip="true"
           boundary="viewport"
           offset="0"
         >
