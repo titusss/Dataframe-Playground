@@ -57,7 +57,7 @@
                   </b-form-group>
                 </b-tab>
                 <b-tab title="Text">
-                  <b-form-group id="input-group-1" description="Paste a tab-seperated table here. Avoid using the dot character ('.') as it will be replaces with an underscore ('_').">
+                  <b-form-group id="input-group-1" description="Paste a tab-seperated table here. Avoid using the dot character ('.') as it will be replaced by an underscore ('_').">
                     <b-form-textarea
                       id="textarea"
                       v-model="form.source.text"

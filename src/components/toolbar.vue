@@ -65,7 +65,7 @@
               label=" CSV Seperator:"
               label-for="dropdown-csv-sep"
             >
-              <b-form-input id="dropdown-csv-sep" class="dropdown-url-field" size="sm" v-model="export_form.csv_seperator"></b-form-input>
+              <b-form-input id="dropdown-csv-sep" class="dropdown-url-field" size="sm" type="text" maxlength="1" v-model="export_form.csv_seperator"></b-form-input>
             </b-form-group>
           </b-dropdown-form>
         </b-dropdown>

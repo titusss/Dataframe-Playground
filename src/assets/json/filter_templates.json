@@ -31,10 +31,10 @@
               "label": "for ",
               "type": "b-form-select",
               "options": [
-                "all columns"
+                "any column"
               ],
               "id": "filter_values_area",
-              "selected": "all columns"
+              "selected": "any column"
             }
           }
         }
@@ -50,10 +50,10 @@
               "label": "Change values in ",
               "type": "b-form-select",
               "options": [
-                "all columns"
+                "any column"
               ],
               "id": "filter_values_area",
-              "selected": "all columns"
+              "selected": "any column"
             },
             "logical_operator": {
               "label": "that are",
@@ -120,10 +120,10 @@
               "label": "for ",
               "type": "b-form-select",
               "options": [
-                "all columns"
+                "any column"
               ],
               "id": "filter_annotation_area",
-              "selected": "all columns"
+              "selected": "any column"
             }
           }
         },
@@ -148,10 +148,10 @@
               "label": "for ",
               "type": "b-form-select",
               "options": [
-                "all columns"
+                "any column"
               ],
               "id": "filter_annotation_area",
-              "selected": "all columns"
+              "selected": "any column"
             }
           }
         },
@@ -176,10 +176,10 @@
               "label": "for ",
               "type": "b-form-select",
               "options": [
-                "all columns"
+                "any column"
               ],
               "id": "filter_annotation_area",
-              "selected": "all columns"
+              "selected": "any column"
             }
           }
         },
@@ -204,10 +204,10 @@
               "label": "for ",
               "type": "b-form-select",
               "options": [
-                "all columns"
+                "any column"
               ],
               "id": "filter_annotation_area",
-              "selected": "all columns"
+              "selected": "any column"
             }
           }
         }
@@ -231,10 +231,10 @@
               "label": "in ",
               "type": "b-form-select",
               "options": [
-                "all columns"
+                "any column"
               ],
               "id": "filter_annotation_area",
-              "selected": "all columns"
+              "selected": "any column"
             }
           }
         }
@@ -256,10 +256,10 @@
               "label": "in ",
               "type": "b-form-select",
               "options": [
-                "all columns"
+                "any column"
               ],
               "id": "filter_annotation_area",
-              "selected": "all columns"
+              "selected": "any column"
             }
           }
         },
@@ -279,10 +279,10 @@
               "label": "in ",
               "type": "b-form-select",
               "options": [
-                "all columns"
+                "any column"
               ],
               "id": "filter_annotation_area",
-              "selected": "all columns"
+              "selected": "any column"
             }
           }
         },
@@ -302,10 +302,10 @@
               "label": "in ",
               "type": "b-form-select",
               "options": [
-                "all columns"
+                "any column"
               ],
               "id": "filter_annotation_area",
-              "selected": "all columns"
+              "selected": "any column"
             }
           }
         },
@@ -325,10 +325,10 @@
               "label": "in ",
               "type": "b-form-select",
               "options": [
-                "all columns"
+                "any column"
               ],
               "id": "filter_annotation_area",
-              "selected": "all columns"
+              "selected": "any column"
             }
           }
         },
@@ -348,10 +348,10 @@
               "label": "in ",
               "type": "b-form-select",
               "options": [
-                "all columns"
+                "any column"
               ],
               "id": "filter_annotation_area",
-              "selected": "all columns"
+              "selected": "any column"
             }
           }
         },
@@ -371,10 +371,10 @@
               "label": "in ",
               "type": "b-form-select",
               "options": [
-                "all columns"
+                "any column"
               ],
               "id": "filter_annotation_area",
-              "selected": "all columns"
+              "selected": "any column"
             }
           }
         },
@@ -394,10 +394,10 @@
               "label": "in ",
               "type": "b-form-select",
               "options": [
-                "all columns"
+                "any column"
               ],
               "id": "filter_annotation_area",
-              "selected": "all columns"
+              "selected": "any column"
             }
           }
         },
@@ -417,10 +417,10 @@
               "label": "in ",
               "type": "b-form-select",
               "options": [
-                "all columns"
+                "any column"
               ],
               "id": "filter_annotation_area",
-              "selected": "all columns"
+              "selected": "any column"
             }
           }
         },
@@ -440,10 +440,10 @@
               "label": "in ",
               "type": "b-form-select",
               "options": [
-                "all columns"
+                "any column"
               ],
               "id": "filter_annotation_area",
-              "selected": "all columns"
+              "selected": "any column"
             }
           }
         }
