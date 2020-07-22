@@ -30,10 +30,6 @@ export default {
       last_valid: ""
     };
   },
-  created() {
-    console.log(this.terms_list)
-    console.log(this.terms_key)
-  },
   methods: {
     term_name_selected(event) {
       console.log(this.query);
