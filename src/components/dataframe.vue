@@ -77,6 +77,7 @@ export default {
   watch: {
     dataframe_filtered: {
       handler() {
+        this.items = this.dataframe_filtered
         this.filtered_visible = true;
       }
     },
@@ -123,7 +124,7 @@ export default {
       entry["sortable"] = true;
       this.dataframe_headers.push(entry);
     }
-    if (this.dataframe_filtered.length() > 0) {
+    if (this.dataframe_filtered.length > 0) {
       this.filtered_visible = true;
     }
   }

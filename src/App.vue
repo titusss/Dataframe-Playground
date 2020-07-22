@@ -7,7 +7,9 @@
     <!-- <b-progress v-if="loading.state" :value="loading.bar.value" :variant="loading.bar.variant" :key="loading.bar.variant" height="6px"></b-progress> -->
     <!-- <div class="loading" v-if="loading"><b-spinner label="Spinning"></b-spinner><span>Loading ...</span></div> -->
     <div>
-      <toolbar :locked="config.locked" />
+      <div v-if="loading.state === false">
+        <toolbar :locked="config.locked" />
+      </div>
       <div class="grid_container">
         <!-- <div class="header">
         <b-button variant="secondary" size="sm"><b-icon icon="cloud-download" aria-hidden="true"></b-icon></b-button>
@@ -25,7 +27,7 @@
             <div class="cell_title_sp">
               <h5 class="title">Select the visualization</h5>
             </div>
-            <div class="cell_select_plugin field plugins">
+            <div class="cell_select_plugin field plugins" v-if="config.plugins">
               <plugins
                 @click.native="select_plugin(plugin)"
                 :active_plugin="active_plugin_id"
@@ -107,7 +109,7 @@ export default {
   data() {
     return {
       loading: {
-        state: false,
+        state: true,
         bar: {
           variant: "primary",
           value: 0,
@@ -133,7 +135,6 @@ export default {
       this.active_plugin_id = plugin._id.$oid;
       this.active_vis_link = "";
       console.log(this.active_plugin_id);
-
       if (
         this.config.vis_links.some(
           entry => entry.plugin_id == this.active_plugin_id
@@ -162,8 +163,8 @@ export default {
       });
     },
     load_config() {
-      this.config = null;
       this.loading.state = true;
+      this.config = null;
       const path = "http://0.0.0.0:5000/config";
       var payload = new FormData();
       payload.append("url", JSON.stringify(this.$route.query.config));
