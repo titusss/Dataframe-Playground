@@ -276,8 +276,8 @@ export default {
       axios
         .post(path, data)
         .then(res => {
+          self.$emit("dataframe_filtered", res);
           this.$nextTick(() => {
-            self.$emit("dataframe_filtered", res);
             this.loading = false;
           });
         })
@@ -320,7 +320,7 @@ export default {
     }
   },
   created() {
-    this.df_categories.unshift("all columns");
+    this.df_categories.unshift("any column");
     this.load_autocomplete_json();
     this.load_categories_json(this.filter_templates.items.templates);
     this.load_categories_json(this.filter_templates.items.presets);
