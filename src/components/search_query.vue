@@ -185,33 +185,22 @@ export default {
       }
       return output;
     },
-    convert_server_query_blocks() {
-      let block_found = false;
+    convert_server_query_blocks(templates) {
+      console.log(templates)
       for (let i in this.server_queries) {
         let block_name = this.server_queries[i].name;
-        for (let query_group in this.filter_templates.items) {
-          console.log('i')
-          if (block_name in this.filter_templates.items[query_group] === true) {
-            let block = this.deep_copy(this.filter_templates.items[query_group][block_name]);
+        for (let query_group in templates) {
+          if (block_name in templates[query_group] === true) {
+            let block = this.deep_copy(templates[query_group][block_name]);
             for (let form in this.server_queries[i].forms) {
-              block.items[form].selected = this.server_queries[i].forms[form]
+              block.items[form].selected = this.server_queries[i].forms[form];
+              if (this.server_queries[i].forms.filter_annotation && block.items[form].source) { // Convert annotation id's to annotation name
+                let selected_parent = block.items[form].source.items.find(item => item.id === block.items[form].selected);
+                block.items[form].selected = selected_parent.name;
+              }
             }
-            console.log(this.server_queries[i])
-            console.log(block)
-            this.add_query_block(block, block_name)
-            block_found = true;
+            this.add_query_block(block, block_name);
             break;
-          }
-        }
-        if (!block_found) {
-          for (let query_group in this.filter_presets.items) {
-            console.log('yaaay')
-            if (block_name in this.filter_presets.items[query_group] === true) {
-              let block = this.deep_copy(this.filter_presets.items[query_group][block_name]);
-              console.log(block)
-              this.add_query_block(block, block_name)
-              break;
-            }
           }
         }
       }
@@ -224,6 +213,7 @@ export default {
       added_block["block_name"] = index;
       this.query.push([added_block]);
       this.id++;
+      console.log(this.query)
     },
     restructure_query() {
       let structured_query = [];
@@ -326,7 +316,7 @@ export default {
     this.load_autocomplete_json();
     this.load_categories_json(this.filter_templates.items);
     this.load_categories_json(this.filter_presets.items);
-    this.convert_server_query_blocks();
+    this.convert_server_query_blocks(Object.assign(this.filter_templates.items, this.filter_presets.items));
   },
   data() {
     return {

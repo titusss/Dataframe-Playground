@@ -114,8 +114,6 @@ def df_to_csv(dataframe_dict, seperator):
     return Response(df.to_csv(sep=seperator, index=False, encoding='utf-8'), mimetype="text/csv", headers={"Content-disposition": "attachment; filename=filename.csv"})
 
 def upload_db_entry(db_entry, mongo_update, url):
-    print(db_entry['locked'])
-    print('####')
     if 'locked' in db_entry and db_entry['locked'] == True:
         db_entry['locked'] = False
         db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
