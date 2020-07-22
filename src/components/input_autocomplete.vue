@@ -2,7 +2,7 @@
   <div>
     <vue-typeahead-bootstrap
       v-model="query"
-      showOnFocus="true"
+      :showOnFocus="true"
       v-bind:class="{invalid: invalid, valid: !invalid}"
       class="input-autocomplete"
       id="input-autocomplete-target"

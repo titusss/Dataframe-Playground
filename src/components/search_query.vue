@@ -103,7 +103,7 @@
           <b-icon icon="plus-circle-fill"></b-icon>Add Query
         </template>
         <b-dropdown-group
-          v-for="(filter_template_group, index) in filter_templates.items"
+          v-for="(filter_template_group, index) in filter_templates.items.templates"
           :key="index"
           :header="index"
           id="dropdown-group-numeric"
@@ -130,7 +130,7 @@
           <b-icon icon="intersect"></b-icon>Load Filter
         </template>
         <b-dropdown-group
-          v-for="(filter_preset_group, index) in filter_presets.items"
+          v-for="(filter_preset_group, index) in filter_templates.items.presets"
           :key="index"
           :header="index"
           id="dropdown-group-numeric"
@@ -160,7 +160,6 @@ import loading from "./loading";
 import salmonella_go_terms from "../assets/salmonella/filter_values/salmonella_go_terms_name_namespace.json";
 import salmonella_kegg_terms from "../assets/salmonella/filter_values/salmonella_kegg_terms.json";
 import salmonella_cog_categories from "../assets/salmonella/filter_values/salmonella_cog_categories.json";
-import filter_presets from "../assets/salmonella/salmonella_filter_presets.json";
 import filter_templates from "../assets/json/filter_templates.json";
 export default {
   name: "search_query",
@@ -186,21 +185,30 @@ export default {
       return output;
     },
     convert_server_query_blocks(templates) {
-      console.log(templates)
       for (let i in this.server_queries) {
         let block_name = this.server_queries[i].name;
-        for (let query_group in templates) {
-          if (block_name in templates[query_group] === true) {
-            let block = this.deep_copy(templates[query_group][block_name]);
-            for (let form in this.server_queries[i].forms) {
-              block.items[form].selected = this.server_queries[i].forms[form];
-              if (this.server_queries[i].forms.filter_annotation && block.items[form].source) { // Convert annotation id's to annotation name
-                let selected_parent = block.items[form].source.items.find(item => item.id === block.items[form].selected);
-                block.items[form].selected = selected_parent.name;
+        template_type: for (let type in templates) {
+          for (let query_group in templates[type]) {
+            if (block_name in templates[type][query_group] === true) {
+              let block = this.deep_copy(
+                templates[type][query_group][block_name]
+              );
+              for (let form in this.server_queries[i].forms) {
+                block.items[form].selected = this.server_queries[i].forms[form];
+                if (
+                  this.server_queries[i].forms.filter_annotation &&
+                  block.items[form].source
+                ) {
+                  // Convert annotation id's to annotation name
+                  let selected_parent = block.items[form].source.items.find(
+                    item => item.id === block.items[form].selected
+                  );
+                  block.items[form].selected = selected_parent.name;
+                }
               }
+              this.add_query_block(block, block_name);
+              break template_type;
             }
-            this.add_query_block(block, block_name);
-            break;
           }
         }
       }
@@ -213,7 +221,7 @@ export default {
       added_block["block_name"] = index;
       this.query.push([added_block]);
       this.id++;
-      console.log(this.query)
+      console.log(this.query);
     },
     restructure_query() {
       let structured_query = [];
@@ -283,16 +291,16 @@ export default {
       this.post_query();
     },
     load_autocomplete_json() {
-      this.filter_templates.items["Filter by annotation"][
+      this.filter_templates.items.templates["Filter by annotation"][
         "COG Category"
       ].items.filter_annotation.source.items = this.salmonella_cog_categories.items;
-      this.filter_templates.items["Filter by annotation"][
+      this.filter_templates.items.templates["Filter by annotation"][
         "GO Term"
       ].items.filter_annotation.source.items = this.salmonella_go_terms.items;
-      this.filter_templates.items["Filter by annotation"][
+      this.filter_templates.items.templates["Filter by annotation"][
         "GO Namespace"
       ].items.filter_annotation.source.items = this.salmonella_go_terms.items;
-      this.filter_templates.items["Filter by annotation"][
+      this.filter_templates.items.templates["Filter by annotation"][
         "KEGG Pathway"
       ].items.filter_annotation.source.items = this.salmonella_kegg_terms.items;
     },
@@ -314,9 +322,9 @@ export default {
   created() {
     this.df_categories.unshift("all columns");
     this.load_autocomplete_json();
-    this.load_categories_json(this.filter_templates.items);
-    this.load_categories_json(this.filter_presets.items);
-    this.convert_server_query_blocks(Object.assign(this.filter_templates.items, this.filter_presets.items));
+    this.load_categories_json(this.filter_templates.items.templates);
+    this.load_categories_json(this.filter_templates.items.presets);
+    this.convert_server_query_blocks(this.filter_templates.items);
   },
   data() {
     return {
@@ -325,7 +333,6 @@ export default {
       salmonella_go_terms,
       salmonella_kegg_terms,
       salmonella_cog_categories,
-      filter_presets,
       filter_templates,
       query: []
     };
