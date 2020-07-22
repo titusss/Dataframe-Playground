@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <loading
-      v-if="loading.state"
+      v-show="loading.state"
       style="position: absolute;z-index: 100;top: 0;left: 0;width: 100vw;"
     />
     <!-- <b-progress v-if="loading.state" :value="loading.bar.value" :variant="loading.bar.variant" :key="loading.bar.variant" height="6px"></b-progress> -->
