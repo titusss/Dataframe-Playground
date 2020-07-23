@@ -81,6 +81,12 @@ export default {
         this.filtered_visible = true;
       }
     },
+    dataframe: {
+      handler() {
+        this.items = this.dataframe;
+        this.filtered_visible = false;
+      }
+    },
     filtered_visible: {
       handler() {
         if (this.filtered_visible==true) {
