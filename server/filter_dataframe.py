@@ -36,10 +36,13 @@ def setup_query_parameters(forms, df):
     except KeyError:
         # If no comparison operator is explicity given, set it to "equal (=)"
         comparison_operator = operator.eq
-    if forms["filter_area"] == "any column":
+    try:
+        if forms["filter_area"] == "any column":
+            filter_area = list(df_numeric.columns)
+        else:
+            filter_area = forms["filter_area"]
+    except KeyError:
         filter_area = list(df_numeric.columns)
-    else:
-        filter_area = forms["filter_area"]
     return comparison_operator, filter_area
 
 def filter_for(forms, properties, df, comparison_operator, filter_area):

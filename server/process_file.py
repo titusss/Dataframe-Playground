@@ -88,7 +88,6 @@ def merge_db_entry(db_entry, flattened_am):
         print(flattened_am[i])
     df_merged.fillna(0, inplace=True) # Replace NA values with 0
     db_entry['transformed_dataframe'] = df_merged.to_dict('records')
-    db_entry['dataframe_categories'] = list(df_merged.columns.values.tolist())
     return db_entry
 
 def new_db_entry(df, metadata, pre_configured_plugins):
@@ -97,7 +96,6 @@ def new_db_entry(df, metadata, pre_configured_plugins):
     db_entry['active_matrices'] = [[]]
     db_entry['plugins_id'] = pre_configured_plugins
     db_entry['transformed_dataframe'] = df.to_dict('records')
-    db_entry['dataframe_categories'] = list(df.columns.values.tolist())
     db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
     return db_entry
 
