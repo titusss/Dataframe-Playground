@@ -84,6 +84,7 @@
           v-bind:rect_width="15"
           v-bind:rect_height="15"
           v-bind:gap="20"
+          v-bind:df_categories="df_categories"
           @matrix_activated="onMatrixActivated"
           @transformation_selected="change_transformation"
         />
@@ -101,7 +102,8 @@ import axios from "axios";
 export default {
   name: "addDataForm",
   props: {
-    matrices: Array
+    matrices: Array,
+    df_categories: Array
   },
   components: {
     matrix
