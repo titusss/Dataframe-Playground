@@ -84,7 +84,7 @@
           v-bind:rect_width="15"
           v-bind:rect_height="15"
           v-bind:gap="20"
-          v-bind:df_categories="df_categories"
+          v-bind:df_categories="df_categories[0]"
           @matrix_activated="onMatrixActivated"
           @transformation_selected="change_transformation"
         />
