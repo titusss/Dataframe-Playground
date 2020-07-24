@@ -121,6 +121,7 @@ export default {
       selected: undefined,
       button_enabled: false,
       relative_expression: {
+        type: "relative_expression",
         activated: false,
         options: {
           activated: false,
@@ -136,21 +137,18 @@ export default {
   },
   methods: {
     emit_transformation(current_transformation) {
-
       if (current_transformation.activated == true) {
-        console.log('truuuuueee')
         this.transformation = current_transformation
       }
       else {
         this.transformation = null
       }
-      console.log(this.transformation)
       this.$emit("transformation_selected", this.transformation);
     },
     select_matrix(matrix) {
       // console.log(matrix);
       this.$emit("matrix_activated", matrix);
-      if (Object.prototype.hasOwnProperty.call(matrix, "title")) {
+      if (matrix.isActive == true) {
         this.button_enabled = true;
       } else {
         this.button_enabled = false;
