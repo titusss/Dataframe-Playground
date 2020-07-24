@@ -33,30 +33,70 @@
           v-b-toggle.collapse-differential
           v-b-popover.hover.top="'Merges uploaded data with selected table for differential expression when selected.'"
           title="Differential Expression"
-          :pressed.sync="is_differential"
+          :pressed.sync="relative_expression.activated"
           :disabled="button_enabled == 0"
-          @click="emit_transformation"
+          @click="emit_transformation(relative_expression)"
           size="sm"
           variant="secondary"
         >
           <img src="../assets/differential.svg" class="img_in_btn" />Differential
         </b-button>
-        <b-button v-b-modal.modal_delete @click="on_delete_matrix(selected)" :disabled="button_enabled == 0" size="sm" variant="danger">
+        <b-button
+          v-b-modal.modal_delete
+          @click="on_delete_matrix(selected)"
+          :disabled="button_enabled == 0"
+          size="sm"
+          variant="danger"
+        >
           <img src="../assets/trash.svg" class="img_in_btn" />Remove
         </b-button>
       </b-button-group>
 
       <b-collapse id="collapse-differential" class="mt-2">
-        <b-card>
-          <p class="card-text">Select base column for normalization.</p>
-          <div class>
+        <b-card class="transformation-options">
+          <!-- <p class="card-text">Select base column for normalization.</p> -->
+          <div>
             <b-form>
-              <b-form-select
+              <!-- <b-form-select
                 id="input-3"
                 v-model="form.normalization_column"
-                :options="columns"
+                :options="df_categories"
                 required
-              ></b-form-select>
+              >
+              <b-form-select-option :value="null" disabled>Select a column</b-form-select-option></b-form-select>-->
+              <b-form-checkbox
+                id="checkbox-1"
+                v-model="relative_expression.options.activated"
+                name="checkbox-1"
+                :value="false"
+                :unchecked-value="true"
+                class="log-fc-toggle"
+              >Activate logarithmic fold-change</b-form-checkbox>
+              <div v-if="!relative_expression.options.activated">
+              <label class="mr-sm-2" for="log-input">log Base:</label>
+              <b-form-input
+                id="log-input"
+                v-model="relative_expression.options.value"
+                type="number"
+                max="1001"
+                class="mb-2 mr-sm-2 mb-sm-0 log-input inline"
+                size="sm"
+                placeholder="'2'"
+              ></b-form-input>
+              <div class="log-preview">
+                <b-badge variant="dark" class="log-preview-badge">
+                  <span class="supsub">
+                    <span class="base formula">
+                      log
+                      <sub class="subscript">
+                        <strong class="formula-strong">{{relative_expression.options.value}} </strong>
+                      </sub>
+                      <span class="base formula">(x)</span>
+                    </span>
+                  </span>
+                </b-badge>
+              </div>
+              </div>
             </b-form>
           </div>
         </b-card>
@@ -72,45 +112,44 @@ export default {
     gap: Number,
     rect_width: Number,
     rect_height: Number,
-    matrices: Array
+    matrices: Array,
+    df_categories: Array
   },
   data() {
     return {
       is_hot: false,
       selected: undefined,
       button_enabled: false,
-      is_differential: false,
+      relative_expression: {
+        activated: false,
+        options: {
+          activated: false,
+          value: 2,
+          type: "log-fc"
+        }
+      },
+      transformation: null,
       form: {
         normalization_column: null
-      },
-      columns: [
-        { text: "Select One", value: null },
-        "Mouse 1",
-        "Mouse 2 Cow",
-        "Pig",
-        "Chicken Macrophage",
-        "SPI2",
-        "NO",
-        "SPI2",
-        "H2O2",
-        "SPI2",
-        "-Mg2",
-        "SPI2"
-      ]
+      }
     };
   },
   methods: {
-    emit_transformation() {
-      let transformation = ''
-      if(this.is_differential === true) {
-        transformation = "relative_expression"
+    emit_transformation(current_transformation) {
+
+      if (current_transformation.activated == true) {
+        console.log('truuuuueee')
+        this.transformation = current_transformation
       }
-      console.log(transformation)
-      this.$emit('transformation_selected', transformation)
+      else {
+        this.transformation = null
+      }
+      console.log(this.transformation)
+      this.$emit("transformation_selected", this.transformation);
     },
     select_matrix(matrix) {
-      console.log(matrix);
-      this.$emit('matrix_activated',matrix);
+      // console.log(matrix);
+      this.$emit("matrix_activated", matrix);
       if (Object.prototype.hasOwnProperty.call(matrix, "title")) {
         this.button_enabled = true;
       } else {
@@ -118,7 +157,7 @@ export default {
       }
     },
     on_delete_matrix(deleted_matrix_id) {
-      this.$emit('delete', deleted_matrix_id);
+      this.$emit("delete", deleted_matrix_id);
     }
   }
 };
@@ -177,5 +216,43 @@ svg {
   100% {
     opacity: 100%;
   }
+}
+/* .supsub {
+  font-family: "Nimbus Roman No9 L","Times New Roman",Times,serif;
+} */
+/* .subscript>strong {
+  color: #007bff;
+} */
+.transformation-options {
+  max-width: fit-content;
+  margin: auto;
+}
+.log-preview {
+  font-size: 1.25rem;
+  display: inline-block !important;
+}
+.log-preview-badge {
+  display: inline-block !important;
+}
+.formula {
+  font-weight: 400 !important;
+  font-family: "Times New Roman", Times, serif;
+  font-style: italic;
+}
+.formula-strong {
+  font-weight: 600;
+  font-family: sans-serif;
+  font-style: initial;
+}
+#log-input {
+  max-width: 4rem;
+  display: inline-block;
+}
+.badge_dark {
+  background-color: #343a40 !important;
+}
+.log-fc-toggle {
+  margin-bottom: .5rem;
+  display: block;
 }
 </style>
