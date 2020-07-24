@@ -71,7 +71,7 @@
           <addDataForm
             v-bind:matrices="this.config.preview_matrices"
             v-bind:plugins="this.config.plugins"
-            v-bind:df_categories="Object.keys(this.config.transformed_dataframe[0])"
+            v-bind:df_categories="Object.keys(this.config.transformed_dataframe)"
             @dataframe_change="redirect_to_config"
           />
         </b-modal>

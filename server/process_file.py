@@ -23,7 +23,7 @@ def convert_to_df(input_file, extension, decimal_character):
         print("Error: No valid extension. Please upload .xlsx (Excel), .csv, or .txt (TSV).")
         return "Error"
     df.fillna(0, inplace=True)
-    df.columns = df.columns.str.replace('.', '_')
+    df.columns = df.columns.str.replace('.', '_') # Dot's mess with the df. Replace it with an underscore: _
     return df
 
 def insert_update_entry(entry, collection, metadata):
@@ -66,7 +66,18 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
         db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
         df = convert_to_df(input_file, extension, metadata["decimal_character"])
         db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
-        db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
+        
+        transformation_type = metadata['transformation']['type']
+        print('traaaaaansfooooooormmmm type.')
+        import transform_dataframe
+        print('here')
+        df_old = pd.DataFrame.from_dict(db_entry['transformed_dataframe'])
+        print('there')
+        db_entry['transformed_dataframe'] = transform_dataframe.main(transformation_type, metadata, df_old, df).to_dict('records')
+        print('df_old: ', df_old)
+        print('df_new: ', df)
+        # except TypeError:
+        #     db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
     else: # If you create a new visualization
         df = convert_to_df(input_file, extension, metadata["decimal_character"])
         db_entry = new_db_entry(df, metadata, pre_configured_plugins)
@@ -81,8 +92,6 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
 
 def merge_db_entry(db_entry, flattened_am):
     df_merged = pd.DataFrame.from_dict(flattened_am[0]['dataframe'])
-    print('df_merged: ', df_merged)
-    print('flattened_am: ', flattened_am)
     for i in range(len(flattened_am)): # Looping through
         df_merged = pd.merge(df_merged, pd.DataFrame.from_dict(flattened_am[i]['dataframe']), how='outer')
         print(flattened_am[i])
@@ -99,7 +108,7 @@ def new_db_entry(df, metadata, pre_configured_plugins):
     db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
     return db_entry
 
-def make_active_matrix(metadata, df, active_matrices, dataframe):
+def make_active_matrix(metadata, df, active_matrices, dataframe): # NOTE: Why is there a df and a dataframe argument?
     added_matrix = make_single_matrix(metadata['x'],metadata['y'],max_preview_columns,max_preview_rows,metadata['title'],True, dataframe)
     added_axis = 1
     if added_matrix['y']-1>len(active_matrices): # If new matrix is below current matrices (y-axis)
@@ -114,7 +123,7 @@ def make_active_matrix(metadata, df, active_matrices, dataframe):
     if df.shape[1]<max_preview_columns:
         added_matrix['width'] = df.shape[1]
     try:
-        if metadata['transformation'] == 'relative_expression':
+        if metadata['transformation'] == 'relative_expression': # NOTE: What is this doing here?
             old_matrix = pd.DataFrame.from_dict(active_matrices[added_matrix['y']-2][added_matrix['x']-2]['dataframe'])
             divided_dataframe = old_matrix.div(df)
             divided_dataframe = divided_dataframe.astype(int)

@@ -230,6 +230,7 @@ def respond_config():
 @app.route('/upload', methods=['GET', 'POST'])
 def add_matrix():
     metadata = json.loads(request.form['form'])
+    print('metadata: ', metadata)
     source, extension = upload_file(
         request, ALLOWED_EXTENSIONS_MATRIX, metadata)
     db_entry_id = process_file.add_matrix(
