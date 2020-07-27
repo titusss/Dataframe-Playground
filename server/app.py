@@ -67,28 +67,33 @@ def allowed_file(filename, extension_whitelist):
 
 @app.route('/export', methods=['POST'])
 def export_df():
-    import pandas as pd
-    export_form = json.loads(request.form['export_form'])
-    url = json.loads(request.form['url'])
-    db_entry = db.visualizations.find_one(
-        {"_id": ObjectId(url)}, {'_id': False})
-    dataframe_dict = {}
     try:
-        df_filtered = pd.DataFrame.from_dict(db_entry['filtered_dataframe'])
-        dataframe_dict["filtered"] = {}
-        dataframe_dict["filtered"]["df"] = df_filtered
-        dataframe_dict["filtered"]["name"] = "Filtered Data"
-    except KeyError:
-        pass
-    dataframe_dict["unfiltered"] = {}
-    dataframe_dict["unfiltered"]["df"] = pd.DataFrame.from_dict(
-        db_entry['transformed_dataframe'])
-    dataframe_dict["unfiltered"]["name"] = "Source Data"
-    if export_form["file_type"] == 'excel':
-        res = df_to_excel(dataframe_dict)
-    elif export_form["file_type"] == 'csv':
-        res = df_to_csv(dataframe_dict, export_form['csv_seperator'])
-    return res
+        import pandas as pd
+        export_form = json.loads(request.form['export_form'])
+        url = json.loads(request.form['url'])
+        db_entry = db.visualizations.find_one(
+            {"_id": ObjectId(url)}, {'_id': False})
+        dataframe_dict = {}
+        try:
+            df_filtered = pd.DataFrame.from_dict(db_entry['filtered_dataframe'])
+            dataframe_dict["filtered"] = {}
+            dataframe_dict["filtered"]["df"] = df_filtered
+            dataframe_dict["filtered"]["name"] = "Filtered Data"
+        except KeyError:
+            pass
+        dataframe_dict["unfiltered"] = {}
+        dataframe_dict["unfiltered"]["df"] = pd.DataFrame.from_dict(
+            db_entry['transformed_dataframe'])
+        dataframe_dict["unfiltered"]["name"] = "Source Data"
+        if export_form["file_type"] == 'excel':
+            res = df_to_excel(dataframe_dict)
+        elif export_form["file_type"] == 'csv':
+            res = df_to_csv(dataframe_dict, export_form['csv_seperator'])
+        return res
+    except ValueError:
+        return respond_error("Export Error", "The dataframe could not be converted. Please try to change the download type or check your source data.")
+    else:
+        return respond_error("Unexpected Error", "An unexpected error has occured.")
 
 
 def df_to_excel(dataframe_dict):
@@ -124,34 +129,44 @@ def upload_db_entry(db_entry, mongo_update, url):
 
 @app.route('/query', methods=['POST'])
 def search_query():
-    import filter_dataframe
-    import pandas as pd
-    query = json.loads(request.form['query'])
-    url = json.loads(request.form['url'])
-    db_entry = db.visualizations.find_one(
-        {"_id": ObjectId(url)}, {'_id': False})
-    df = pd.DataFrame.from_dict(db_entry['transformed_dataframe'])
-    print('query: ', query)
-    filtered_df = filter_dataframe.main(query, df)
-    mongo_update = {
-        '$set': {
-            'filtered_dataframe': filtered_df.to_dict('records'),
-            'vis_links': [],
-            'query': query
+    try:
+        import filter_dataframe
+        import pandas as pd
+        query = json.loads(request.form['query'])
+        url = json.loads(request.form['url'])
+        db_entry = db.visualizations.find_one(
+            {"_id": ObjectId(url)}, {'_id': False})
+        df = pd.DataFrame.from_dict(db_entry['transformed_dataframe'])
+        print('query: ', query)
+        filtered_df = filter_dataframe.main(query, df)
+        mongo_update = {
+            '$set': {
+                'filtered_dataframe': filtered_df.to_dict('records'),
+                'vis_links': [],
+                'query': query
+            }
         }
-    }
-    db_entry_id = upload_db_entry(db_entry, mongo_update, url)
-    return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
+        db_entry_id = upload_db_entry(db_entry, mongo_update, url)
+        return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
+    except KeyError:
+        return respond_error("Filter Error", "The dataframe could not be filtered. Please verify your queries.")
+    else:
+        return respond_error("Unexpected Error", "An unexpected error has occured.")
 
 
 @app.route('/locked', methods=['POST'])
 def lock_session():
-    from pymongo import MongoClient
-    url = json.loads(request.form['url'])
-    print('URL: ', url)
-    db.visualizations.update_one({'_id': ObjectId(url)}, {
-                                 '$set': {'locked': True}})
-    return "success"
+    try:
+        from pymongo import MongoClient
+        url = json.loads(request.form['url'])
+        print('URL: ', url)
+        db.visualizations.update_one({'_id': ObjectId(url)}, {
+                                    '$set': {'locked': True}})
+        return "success"
+    except KeyError:
+        return respond_error("Locking Error", "The config could not be locked, because it's corrupted or offline. Please secure your data by downloading it.")
+    else:
+        return respond_error("Unexpected Error", "An unexpected error has occured.")
 
 
 @app.route('/visualization', methods=['POST'])
@@ -206,37 +221,47 @@ def add_plugin():
 @app.route('/config', methods=['GET', 'POST'])
 def respond_config():
     print('responding...')
-    if request.form['url'] != 'undefined':
-        # import bson
-        # from pymongo import MongoClient
-        db_entry_id = ObjectId(loads(request.form['url']))
-        print('Object_ID: ', db_entry_id)
-        db_entry = db.visualizations.find_one({"_id": db_entry_id})
-        # print(len(bson.BSON.encode(db_entry)))
-        db_entry['_id'] = str(db_entry['_id'])
-        db_entry['plugins'] = [plugin for plugin in db.plugins.find(
-            {'_id': {'$in': db_entry['plugins_id']}})]
-        return Response(dumps({'db_entry': db_entry}), mimetype="application/json")
+    try:
+        if request.form['url'] != 'undefined':
+            # import bson
+            # from pymongo import MongoClient
+            db_entry_id = ObjectId(loads(request.form['url']))
+            print('Object_ID: ', db_entry_id)
+            db_entry = db.visualizations.find_one({"_id": db_entry_id})
+            # print(len(bson.BSON.encode(db_entry)))
+            db_entry['_id'] = str(db_entry['_id'])
+            db_entry['plugins'] = [plugin for plugin in db.plugins.find(
+                {'_id': {'$in': db_entry['plugins_id']}})]
+            return Response(dumps({'db_entry': db_entry}), mimetype="application/json")
+        else:
+            print('undefined')
+            import copy
+            db_entry = copy.deepcopy(DB_ENTRY_MOCKUP)
+            db_entry['plugins'] = [plugin for plugin in db.plugins.find(
+                {'_id': {'$in': db_entry['plugins_id']}})]
+            print(db_entry)
+            return Response(dumps({'db_entry': db_entry}), mimetype="application/json")
+    except KeyError:
+        return respond_error("Config Error", "The config could not be loaded, because it's corrupted or offline. Try to go back to the homepage.")
     else:
-        print('undefined')
-        import copy
-        db_entry = copy.deepcopy(DB_ENTRY_MOCKUP)
-        db_entry['plugins'] = [plugin for plugin in db.plugins.find(
-            {'_id': {'$in': db_entry['plugins_id']}})]
-        print(db_entry)
-        return Response(dumps({'db_entry': db_entry}), mimetype="application/json")
+        return respond_error("Unexpected Error", "An unexpected error has occured.")
 
+def respond_error(error_type, error_message):
+    return Response(dumps({'error_type': error_type, 'error_message': error_message}), mimetype="application/json")
 
 @app.route('/upload', methods=['GET', 'POST'])
 def add_matrix():
-    metadata = json.loads(request.form['form'])
-    print('metadata: ', metadata)
-    source, extension = upload_file(
-        request, ALLOWED_EXTENSIONS_MATRIX, metadata)
-    db_entry_id = process_file.add_matrix(
-        source, metadata, extension, db, PRE_CONFIGURED_PLUGINS)
-    return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
-
+    try:
+        metadata = json.loads(request.form['form'])
+        print('metadata: ', metadata)
+        source, extension = upload_file(request, ALLOWED_EXTENSIONS_MATRIX, metadata)
+        db_entry_id = process_file.add_matrix(
+            source, metadata, extension, db, PRE_CONFIGURED_PLUGINS)
+        return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
+    except ValueError:
+        return respond_error("Upload Error", "The dataframe could not be uploaded or merged. Try to adjust your data or change the slot.")
+    else:
+        return respond_error("Unexpected Error", "An unexpected error has occured.")
 
 def respond_data(label, payload):
     response_object = {'status': 'success'}
