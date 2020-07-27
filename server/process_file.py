@@ -66,24 +66,20 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
         db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
         df = convert_to_df(input_file, extension, metadata["decimal_character"])
         db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
-        
-        transformation_type = metadata['transformation']['type']
-        print('traaaaaansfooooooormmmm type.')
-        import transform_dataframe
-        print('here')
-        df_old = pd.DataFrame.from_dict(db_entry['transformed_dataframe'])
-        print('there')
-        db_entry['transformed_dataframe'] = transform_dataframe.main(transformation_type, metadata, df_old, df).to_dict('records')
-        print('df_old: ', df_old)
-        print('df_new: ', df)
-        # except TypeError:
-        #     db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
+        if metadata['transformation'] != '':
+            transformation_type = metadata['transformation']['type']
+            import transform_dataframe
+            df_old = pd.DataFrame.from_dict(db_entry['transformed_dataframe'])
+            db_entry['transformed_dataframe'] = transform_dataframe.main(transformation_type, metadata, df_old, df).to_dict('records')
+        else:
+            db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
     else: # If you create a new visualization
         df = convert_to_df(input_file, extension, metadata["decimal_character"])
         db_entry = new_db_entry(df, metadata, pre_configured_plugins)
     db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
     db_entry['cat_amount'] = metadata['cat_amount']
     db_entry['vis_links'] = []
+    db_entry['filtered_dataframe'] = []
     if metadata['db_entry_id'] == '': # Enter new DB entry when creating a new visualization
         db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
     else: # Update existing DB entry when modifying an existing visualization
