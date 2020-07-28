@@ -218,6 +218,7 @@ export default {
         .post(path, data)
         .then(res => {
           if (res.data.error_type) {
+            this.show_loading_overlay = false;
             self.$emit("error_occured", res.data);
           } else {
             this.$nextTick(() => {
