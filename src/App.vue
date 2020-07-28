@@ -1,5 +1,10 @@
 <template>
   <div id="app">
+    <error_alert
+      :error="error"
+      @error_alert_dismissed="error = null"
+      style="position:fixed;top:10px;width:100vw;z-index:20;"
+    />
     <loading
       v-show="loading.state"
       style="position: absolute;z-index: 100;top: 0;left: 0;width: 100vw;"
@@ -8,7 +13,7 @@
     <!-- <div class="loading" v-if="loading"><b-spinner label="Spinning"></b-spinner><span>Loading ...</span></div> -->
     <div>
       <div v-if="loading.state === false">
-        <toolbar :locked="config.locked" />
+        <toolbar :locked="config.locked" @error_occured="error_occured" />
       </div>
       <div class="grid_container">
         <!-- <div class="header">
@@ -46,11 +51,13 @@
             </div>
           </div>
           <!-- <h5 class="title">Filter queries</h5> -->
-          <div
-            class="field block"
-            v-if="this.config.transformed_dataframe.length > 0"
-          >
-            <search_query @dataframe_filtered="redirect_to_config" v-bind:df_categories="Object.keys(this.config.transformed_dataframe[0])" v-bind:server_queries="this.config.query"/>
+          <div class="field block" v-if="this.config.transformed_dataframe.length > 0">
+            <search_query
+              @dataframe_filtered="redirect_to_config"
+              @error_occured="error_occured"
+              v-bind:df_categories="Object.keys(this.config.transformed_dataframe[0])"
+              v-bind:server_queries="this.config.query"
+            />
           </div>
           <div>
             <visualization v-bind:vis_link="this.active_vis_link" v-if="this.active_vis_link" />
@@ -73,6 +80,7 @@
             v-bind:plugins="this.config.plugins"
             v-bind:df_categories="Object.keys(this.config.transformed_dataframe)"
             @dataframe_change="redirect_to_config"
+            @error_occured="error_occured"
           />
         </b-modal>
         <b-modal id="modal_add_plugin" hide-footer>
@@ -94,6 +102,7 @@ import axios from "axios";
 import toolbar from "./components/toolbar";
 import dataframe from "./components/dataframe";
 import loading from "./components/loading";
+import error_alert from "./components/error_alert";
 export default {
   name: "App",
   components: {
@@ -105,7 +114,8 @@ export default {
     search_query,
     toolbar,
     dataframe,
-    loading
+    loading,
+    error_alert
   },
   data() {
     return {
@@ -119,12 +129,14 @@ export default {
       },
       config: null,
       active_plugin_id: null,
-      active_vis_link: ""
+      active_vis_link: "",
+      error: null
     };
   },
   created() {
     this.load_config();
     console.log(this.config);
+    console.log(this.error);
   },
   watch: {
     $route: "load_config"
@@ -158,9 +170,13 @@ export default {
       payload.append("plugin", JSON.stringify(plugin));
       payload.append("url", JSON.stringify(this.$route.query.config));
       axios.post(path, payload).then(res => {
-        this.config.vis_links.push(res);
-        this.active_vis_link = res.link;
-        this.$router.go();
+        if (res.data.error_type) {
+          this.error_occured(res.data);
+        } else {
+          this.config.vis_links.push(res);
+          this.active_vis_link = res.link;
+          this.$router.go();
+        }
       });
     },
     load_config() {
@@ -172,13 +188,17 @@ export default {
       axios
         .post(path, payload)
         .then(res => {
-          this.config = res.data.db_entry;
-          this.$nextTick(() => {
-            this.loading.state = false;
-            console.log(this.config);
-            console.log(res);
-            console.log(this.config.plugins[0]);
-          });
+          if (res.data.error_type) {
+            this.error_occured(res.data)
+          } else {
+            this.config = res.data.db_entry;
+            this.$nextTick(() => {
+              this.loading.state = false;
+              console.log(this.config);
+              console.log(res);
+              console.log(this.config.plugins[0]);
+            });
+          }
         })
         .catch(error => {
           console.log(error);
@@ -196,9 +216,13 @@ export default {
     show_modal(modal_id) {
       this.$bvModal.show(modal_id);
     },
+    error_occured(error) {
+      this.error = error;
+      console.log(this.error);
+    },
     redirect_to_config(res) {
       // this.config = null
-      console.log('res: ', res)
+      console.log("res: ", res);
       console.log(this.config);
       console.log(res.data.db_entry_id["$oid"]);
       if (this.config._id == res.data.db_entry_id["$oid"]) {
