@@ -156,8 +156,10 @@ def export_df():
         # return res
         return respond_error(ERROR_MESSAGES["export_error"]["expected"]["type"], ERROR_MESSAGES["export_error"]["expected"]["message"])
     except ValueError:
+        print('###### ERROR')
         return respond_error(ERROR_MESSAGES['export_error']['expected']['type'], ERROR_MESSAGES['export_error']['expected']['message'])
     else:
+        print('###### ERROR')
         return respond_error(ERROR_MESSAGES['export_error']['unexpected']['type'], ERROR_MESSAGES['export_error']['unexpected']['message'])
 
 
@@ -216,8 +218,10 @@ def search_query():
         db_entry_id = upload_db_entry(db_entry, mongo_update, url)
         return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
     except KeyError:
-       return respond_error(ERROR_MESSAGES['query_error']['expected']['type'], ERROR_MESSAGES['query_error']['expected']['message'])
+        print('###### ERROR')
+        return respond_error(ERROR_MESSAGES['query_error']['expected']['type'], ERROR_MESSAGES['query_error']['expected']['message'])
     else:
+        print('###### ERROR')
         return respond_error(ERROR_MESSAGES['query_error']['unexpected']['type'], ERROR_MESSAGES['query_error']['unexpected']['message'])
 
 
@@ -231,8 +235,10 @@ def lock_session():
             '$set': {'locked': True}})
         return "success"
     except KeyError:
+        print('###### ERROR')
         return respond_error(ERROR_MESSAGES['locking_error']['expected']['type'], ERROR_MESSAGES['locking_error']['expected']['message'])
     else:
+        print('###### ERROR')
         return respond_error(ERROR_MESSAGES['locking_error']['unexpected']['type'], ERROR_MESSAGES['locking_error']['unexpected']['message'])
 
 
@@ -252,8 +258,10 @@ def make_vis_link():
             '$push': {'vis_links': vis_link}})
         return "success"
     except IndexError:
+        print('###### ERROR')
         return respond_error(ERROR_MESSAGES['visualization_error']['expected']['type'], ERROR_MESSAGES['visualization_error']['expected']['message'])
     else:
+        print('###### ERROR')
         return respond_error(ERROR_MESSAGES['visualization_error']['unexpected']['type'], ERROR_MESSAGES['visualization_error']['unexpected']['message'])
 
 @app.route('/plugins', methods=['POST'])
@@ -313,8 +321,10 @@ def respond_config():
             print(db_entry)
             return Response(dumps({'db_entry': db_entry}), mimetype="application/json")
     except KeyError:
-       return respond_error(ERROR_MESSAGES['config_error']['expected']['type'], ERROR_MESSAGES['config_error']['expected']['message'])
+        print('###### ERROR')
+        return respond_error(ERROR_MESSAGES['config_error']['expected']['type'], ERROR_MESSAGES['config_error']['expected']['message'])
     else:
+        print('###### ERROR')
         return respond_error(ERROR_MESSAGES['config_error']['unexpected']['type'], ERROR_MESSAGES['config_error']['unexpected']['message'])
 
 
@@ -333,8 +343,10 @@ def add_matrix():
             source, metadata, extension, db, PRE_CONFIGURED_PLUGINS)
         return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
     except ValueError:
-       return respond_error(ERROR_MESSAGES['upload_error']['expected']['type'], ERROR_MESSAGES['upload_error']['expected']['message'])
+        print('###### ERROR')
+        return respond_error(ERROR_MESSAGES['upload_error']['expected']['type'], ERROR_MESSAGES['upload_error']['expected']['message'])
     else:
+        print('ERROR')
         return respond_error(ERROR_MESSAGES['upload_error']['unexpected']['type'], ERROR_MESSAGES['upload_error']['unexpected']['message'])
 
 

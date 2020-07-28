@@ -3,7 +3,7 @@
     <error_alert
       :error="error"
       @error_alert_dismissed="error = null"
-      style="position:fixed;top:10px;width:100vw;z-index:20;"
+      style="position:fixed;top:10px;width:100vw;z-index:1060;"
     />
     <loading
       v-show="loading.state"
