@@ -276,10 +276,14 @@ export default {
       axios
         .post(path, data)
         .then(res => {
-          self.$emit("dataframe_filtered", res);
-          this.$nextTick(() => {
-            this.loading = false;
-          });
+          if (res.data.error_type) {
+            self.$emit("error_occured", res.data);
+          } else {
+            self.$emit("dataframe_filtered", res);
+            this.$nextTick(() => {
+              this.loading = false;
+            });
+          }
         })
         .catch(error => {
           console.log(error);

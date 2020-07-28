@@ -35,7 +35,7 @@
               <h4 class="dropdown-export-link-title">
                 <b-icon-link45deg variant="dark"></b-icon-link45deg>
               </h4>
-              <span class="dropdown-export-title"> Share link</span>
+              <span class="dropdown-export-title">Share link</span>
               <b-form-group class="dropdown-export-link-field">
                 <b-form-input
                   class="dropdown-url-field input-fake-disabled"
@@ -50,12 +50,12 @@
           <b-dropdown-divider></b-dropdown-divider>
           <b-dropdown-item class="pseudo-link" @click="download_df('excel')">
             <img src="../assets/excel_logo.svg" class="export_menu_icon" />
-            <span class="dropdown-export-title"> Download .xls</span>
+            <span class="dropdown-export-title">Download .xls</span>
           </b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
           <b-dropdown-item class="pseudo-link" @click="download_df('csv')">
             <b-icon-table variant="dark"></b-icon-table>
-            <span class="dropdown-export-title"> Download .csv</span>
+            <span class="dropdown-export-title">Download .csv</span>
           </b-dropdown-item>
           <b-dropdown-form>
             <b-form-group
@@ -65,7 +65,14 @@
               label=" CSV Seperator:"
               label-for="dropdown-csv-sep"
             >
-              <b-form-input id="dropdown-csv-sep" class="dropdown-url-field" size="sm" type="text" maxlength="1" v-model="export_form.csv_seperator"></b-form-input>
+              <b-form-input
+                id="dropdown-csv-sep"
+                class="dropdown-url-field"
+                size="sm"
+                type="text"
+                maxlength="1"
+                v-model="export_form.csv_seperator"
+              ></b-form-input>
             </b-form-group>
           </b-dropdown-form>
         </b-dropdown>
@@ -91,7 +98,7 @@ export default {
       url: null,
       export_form: {
         file_type: null,
-        csv_seperator: ';'
+        csv_seperator: ";"
       }
     };
   },
@@ -115,10 +122,14 @@ export default {
       var payload = new FormData();
       payload.append("url", JSON.stringify(this.$route.query.config));
       axios.post(path, payload).then(res => {
-        console.log(res);
-        this.button_lock = "dark";
-        this.icon_lock = "lock";
-        this.$bvToast.show("lock-toast");
+        if (res.data.error_type) {
+          this.$emit("error_occured", res.data);
+        } else {
+          console.log(res);
+          this.button_lock = "dark";
+          this.icon_lock = "lock";
+          this.$bvToast.show("lock-toast");
+        }
       });
     },
     url_to_clipboard() {
@@ -129,28 +140,31 @@ export default {
       this.lock_session();
     },
     download_df(file_type) {
-      this.export_form.file_type = file_type
+      this.export_form.file_type = file_type;
       var payload = new FormData();
       payload.append("url", JSON.stringify(this.$route.query.config));
       payload.append("export_form", JSON.stringify(this.export_form));
       axios({
         url: "http://0.0.0.0:5000/export",
         method: "POST",
-        responseType: "blob",
+        // responseType: "blob",
         data: payload
       }).then(res => {
-        console.log("response, yay!")
-        var fileURL = window.URL.createObjectURL(new Blob([res.data]));
-        var fileLink = document.createElement("a");
-        fileLink.href = fileURL;
-        if(file_type=='excel') {
-          fileLink.setAttribute("download", "dataframes.xlsx");
+        console.log("response, yay!");
+        if (res.data.error_type) {
+          this.$emit("error_occured", res.data);
+        } else {
+          var fileURL = window.URL.createObjectURL(new Blob([res.data]));
+          var fileLink = document.createElement("a");
+          fileLink.href = fileURL;
+          if (file_type == "excel") {
+            fileLink.setAttribute("download", "dataframes.xlsx");
+          } else if (file_type == "csv") {
+            fileLink.setAttribute("download", "dataframe.csv");
+          }
+          document.body.appendChild(fileLink);
+          fileLink.click();
         }
-        else if (file_type=='csv') {
-          fileLink.setAttribute("download", "dataframe.csv");
-        }
-        document.body.appendChild(fileLink);
-        fileLink.click();
       });
     }
   }
