@@ -299,6 +299,9 @@ def add_plugin():
     print('db_plugins_id: ', db_plugin_entry_id)
     return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
 
+@app.route('/datasets', methods=['GET'])
+def respond_datasets():
+    db_dataset
 
 @app.route('/config', methods=['GET', 'POST'])
 def respond_config():

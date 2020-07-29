@@ -144,24 +144,27 @@ export default {
   },
   methods: {
     select_plugin(plugin) {
-      this.active_vis_link = "";
-      if (plugin._id.$oid != this.active_plugin_id) {
-        this.active_plugin_id = plugin._id.$oid;
-        let vis_exists = false;
-        for (let i in this.config.vis_links) {
-          console.log(this.config.vis_links);
-          if (this.config.vis_links[i].plugin_id == this.active_plugin_id) {
-            this.active_vis_link = this.config.vis_links[i].link;
-            vis_exists = true;
-            break;
+      if (this.config.active_matrices.length > 0) {
+        console.log(this.config)
+        this.active_vis_link = "";
+        if (plugin._id.$oid != this.active_plugin_id) {
+          this.active_plugin_id = plugin._id.$oid;
+          let vis_exists = false;
+          for (let i in this.config.vis_links) {
+            console.log(this.config.vis_links);
+            if (this.config.vis_links[i].plugin_id == this.active_plugin_id) {
+              this.active_vis_link = this.config.vis_links[i].link;
+              vis_exists = true;
+              break;
+            }
           }
+          if (vis_exists === false) {
+            console.log("doesn't contain");
+            this.generate_vis_link(plugin);
+          }
+        } else {
+          this.active_plugin_id = "";
         }
-        if (vis_exists === false) {
-          console.log("doesn't contain");
-          this.generate_vis_link(plugin);
-        }
-      } else {
-        this.active_plugin_id = "";
       }
     },
     generate_vis_link(plugin) {
