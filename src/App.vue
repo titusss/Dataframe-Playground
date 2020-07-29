@@ -41,6 +41,7 @@
                 :title="plugin.name"
                 :desc="plugin.desc"
                 :img="plugin.filename"
+                :id="plugin._id.$oid"
               />
               <plugins
                 v-on:plugin_clicked="show_modal('modal_add_plugin')"
@@ -143,20 +144,24 @@ export default {
   },
   methods: {
     select_plugin(plugin) {
-      this.active_plugin_id = plugin._id.$oid;
       this.active_vis_link = "";
-      let vis_exists = false
-      for (let i in this.config.vis_links) {
-        console.log(this.config.vis_links)
-        if (this.config.vis_links[i].plugin_id == this.active_plugin_id) {
-          this.active_vis_link = this.config.vis_links[i].link
-          vis_exists = true
-          break;
+      if (plugin._id.$oid != this.active_plugin_id) {
+        this.active_plugin_id = plugin._id.$oid;
+        let vis_exists = false;
+        for (let i in this.config.vis_links) {
+          console.log(this.config.vis_links);
+          if (this.config.vis_links[i].plugin_id == this.active_plugin_id) {
+            this.active_vis_link = this.config.vis_links[i].link;
+            vis_exists = true;
+            break;
+          }
         }
-      }
-      if (vis_exists === false) {
-        console.log("doesn't contain");
-        this.generate_vis_link(plugin);
+        if (vis_exists === false) {
+          console.log("doesn't contain");
+          this.generate_vis_link(plugin);
+        }
+      } else {
+        this.active_plugin_id = "";
       }
     },
     generate_vis_link(plugin) {
@@ -166,16 +171,16 @@ export default {
       payload.append("plugin", JSON.stringify(plugin));
       payload.append("url", JSON.stringify(this.$route.query.config));
       axios.post(path, payload).then(res => {
-        console.log(res)
+        console.log(res);
         if (res.data.error_type) {
           this.error_occured(res.data);
           console.log(res);
         } else {
           // this.config.vis_links.push(res);
           // this.load_config()
-          console.log(res)
-          this.load_config()
-          this.active_vis_link = res.data.vis_link.link
+          console.log(res);
+          this.load_config();
+          this.active_vis_link = res.data.vis_link.link;
         }
         this.loading.state = false;
       });
@@ -228,6 +233,8 @@ export default {
       console.log(res.data.db_entry_id["$oid"]);
       if (this.config._id == res.data.db_entry_id["$oid"]) {
         // this.$router.go()
+        this.active_vis_link = "";
+        this.active_plugin_id = "";
         this.load_config();
       } else {
         this.$router.push({

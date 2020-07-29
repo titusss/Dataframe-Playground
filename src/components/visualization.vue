@@ -17,7 +17,7 @@ export default {
   },
   watch: {
     vis_link: function (newLink, oldLink) {
-        console.log(newLink, oldLink)
+        console.log(newLink, 'aha', oldLink)
     }
   }
 };
