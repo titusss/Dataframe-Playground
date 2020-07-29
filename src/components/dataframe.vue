@@ -77,16 +77,20 @@ export default {
   watch: {
     dataframe_filtered: {
       handler() {
-        this.items = this.dataframe_filtered
+        console.log('ahhhhajjaja')
         this.filtered_visible = true;
+        this.items = this.dataframe_filtered
       }
     },
-    dataframe: {
-      handler() {
-        this.items = this.dataframe;
-        this.filtered_visible = false;
-      }
-    },
+    // dataframe: {
+    //   handler(newDf, oldDf) {
+    //     console.log(newDf)
+    //     console.log(oldDf)
+    //     console.log('ohhhhahahaha')
+    //     this.filtered_visible = false;
+    //     this.items = this.dataframe;
+    //   }
+    // },
     filtered_visible: {
       handler() {
         if (this.filtered_visible==true) {
