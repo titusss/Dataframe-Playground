@@ -27,7 +27,8 @@ export default {
     title: String,
     desc: String,
     img: String,
-    active_plugin: String
+    active_plugin: String,
+    id: String
   },
    data() {
       return {
@@ -37,7 +38,11 @@ export default {
   watch: {
     active_plugin: {
       handler() {
-        if(this.title == this.active_plugin) {
+        console.log(this.active_plugin)
+        console.log('jjjjj')
+        console.log(this.id)
+        if(this.id == this.active_plugin) {
+          console.log('Truuuueeee')
           this.isSelected = true
         }
         else {

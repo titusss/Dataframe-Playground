@@ -48,6 +48,7 @@ def remove_matrix(mockup_db_entry, metadata, db, remove_id):
     db_entry['active_matrices'] = [j for j in db_entry['active_matrices'] if j != []] # remove empty subarrays
     db_entry['active_matrices'] = correct_matrice_positions(db_entry['active_matrices'])
     db_entry['vis_links'] = []
+    db_entry['filtered_dataframe'] = []
     if len(sum(db_entry['active_matrices'], []))>0:
         db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
         db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
