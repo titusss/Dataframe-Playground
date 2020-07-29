@@ -15,7 +15,7 @@ from bson.json_util import loads, dumps, ObjectId
 UPLOAD_FOLDER = '/static'  # NOTE: Change this to /uploads in production
 ALLOWED_EXTENSIONS_MATRIX = {'txt', 'xlsx', 'csv'}
 ALLOWED_EXTENSIONS_ICON = {'svg', 'png', 'jpg', 'jpeg', 'gif'}
-PRE_CONFIGURED_PLUGINS = [ObjectId('5ed6374fdaf88ae74e38f105')]
+PRE_CONFIGURED_PLUGINS = [ObjectId('5ed6374fdaf88ae74e38f105'), ObjectId('5f2049b2fda27751b4c96def')]
 MATRIX = [
     {
         "id": uuid.uuid4().hex,
@@ -256,8 +256,11 @@ def make_vis_link():
             db_entry['transformed_dataframe']), db_entry['cat_amount'], plugin)
         db.visualizations.update_one({'_id': ObjectId(url)}, {
             '$push': {'vis_links': vis_link}})
-        return "success"
-    except IndexError:
+        print(vis_link)
+        print('########')
+        print(Response({'vis_link': vis_link}))
+        return Response(dumps({'vis_link': vis_link}), mimetype="application/json")
+    except (IndexError, TypeError):
         print('###### ERROR')
         return respond_error(ERROR_MESSAGES['visualization_error']['expected']['type'], ERROR_MESSAGES['visualization_error']['expected']['message'])
     else:
@@ -316,6 +319,7 @@ def respond_config():
             print('undefined')
             import copy
             db_entry = copy.deepcopy(DB_ENTRY_MOCKUP)
+
             db_entry['plugins'] = [plugin for plugin in db.plugins.find(
                 {'_id': {'$in': db_entry['plugins_id']}})]
             print(db_entry)
