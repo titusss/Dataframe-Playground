@@ -33,9 +33,9 @@ export default {
         clearInterval();
       }
       else {
-        this.loading.bar.value = this.loading.bar.value + 50;
+        this.loading.bar.value = this.loading.bar.value + 10;
       }
-    }, 800);
+    }, 500);
   },
   beforeDestroy() {
     console.log(this.loading.bar.timer);
