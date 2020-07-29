@@ -60,7 +60,7 @@
             />
           </div>
           <div>
-            <visualization v-bind:vis_link="this.active_vis_link" v-if="this.active_vis_link" />
+            <visualization v-bind:vis_link="this.active_vis_link" v-show="this.active_vis_link" />
           </div>
           <div class="html_dataframe" v-if="config.transformed_dataframe.length > 0">
             <dataframe
@@ -143,40 +143,41 @@ export default {
   },
   methods: {
     select_plugin(plugin) {
-      console.log("ayyyyy");
-      console.log(plugin);
       this.active_plugin_id = plugin._id.$oid;
       this.active_vis_link = "";
-      console.log(this.active_plugin_id);
-      if (
-        this.config.vis_links.some(
-          entry => entry.plugin_id == this.active_plugin_id
-        )
-      ) {
-        console.log("contains");
-        for (let i = 0; i < this.config.vis_links.length; i++) {
-          if (this.config.plugins[i]._id.$oid == this.active_plugin_id) {
-            this.active_vis_link = this.config.vis_links[i].link;
-          }
+      let vis_exists = false
+      for (let i in this.config.vis_links) {
+        console.log(this.config.vis_links)
+        if (this.config.vis_links[i].plugin_id == this.active_plugin_id) {
+          this.active_vis_link = this.config.vis_links[i].link
+          vis_exists = true
+          break;
         }
-      } else {
+      }
+      if (vis_exists === false) {
         console.log("doesn't contain");
         this.generate_vis_link(plugin);
       }
     },
     generate_vis_link(plugin) {
+      this.loading.state = true;
       const path = "http://0.0.0.0:5000/visualization";
       var payload = new FormData();
       payload.append("plugin", JSON.stringify(plugin));
       payload.append("url", JSON.stringify(this.$route.query.config));
       axios.post(path, payload).then(res => {
+        console.log(res)
         if (res.data.error_type) {
           this.error_occured(res.data);
+          console.log(res);
         } else {
-          this.config.vis_links.push(res);
-          this.active_vis_link = res.link;
-          this.$router.go();
+          // this.config.vis_links.push(res);
+          // this.load_config()
+          console.log(res)
+          this.load_config()
+          this.active_vis_link = res.data.vis_link.link
         }
+        this.loading.state = false;
       });
     },
     load_config() {
@@ -189,7 +190,7 @@ export default {
         .post(path, payload)
         .then(res => {
           if (res.data.error_type) {
-            this.error_occured(res.data)
+            this.error_occured(res.data);
           } else {
             this.config = res.data.db_entry;
             this.$nextTick(() => {
