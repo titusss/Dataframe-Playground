@@ -131,30 +131,29 @@ def allowed_file(filename, extension_whitelist):
 @app.route('/export', methods=['POST'])
 def export_df():
     try:
-        # import pandas as pd
-        # export_form = json.loads(request.form['export_form'])
-        # url = json.loads(request.form['url'])
-        # db_entry = db.visualizations.find_one(
-        #     {"_id": ObjectId(url)}, {'_id': False})
-        # dataframe_dict = {}
-        # try:
-        #     df_filtered = pd.DataFrame.from_dict(
-        #         db_entry['filtered_dataframe'])
-        #     dataframe_dict["filtered"] = {}
-        #     dataframe_dict["filtered"]["df"] = df_filtered
-        #     dataframe_dict["filtered"]["name"] = "Filtered Data"
-        # except KeyError:
-        #     pass
-        # dataframe_dict["unfiltered"] = {}
-        # dataframe_dict["unfiltered"]["df"] = pd.DataFrame.from_dict(
-        #     db_entry['transformed_dataframe'])
-        # dataframe_dict["unfiltered"]["name"] = "Source Data"
-        # if export_form["file_type"] == 'excel':
-        #     res = df_to_excel(dataframe_dict)
-        # elif export_form["file_type"] == 'csv':
-        #     res = df_to_csv(dataframe_dict, export_form['csv_seperator'])
-        # return res
-        return respond_error(ERROR_MESSAGES["export_error"]["expected"]["type"], ERROR_MESSAGES["export_error"]["expected"]["message"])
+        import pandas as pd
+        export_form = json.loads(request.form['export_form'])
+        url = json.loads(request.form['url'])
+        db_entry = db.visualizations.find_one(
+            {"_id": ObjectId(url)}, {'_id': False})
+        dataframe_dict = {}
+        try:
+            df_filtered = pd.DataFrame.from_dict(
+                db_entry['filtered_dataframe'])
+            dataframe_dict["filtered"] = {}
+            dataframe_dict["filtered"]["df"] = df_filtered
+            dataframe_dict["filtered"]["name"] = "Filtered Data"
+        except KeyError:
+            pass
+        dataframe_dict["unfiltered"] = {}
+        dataframe_dict["unfiltered"]["df"] = pd.DataFrame.from_dict(
+            db_entry['transformed_dataframe'])
+        dataframe_dict["unfiltered"]["name"] = "Source Data"
+        if export_form["file_type"] == 'excel':
+            res = df_to_excel(dataframe_dict)
+        elif export_form["file_type"] == 'csv':
+            res = df_to_csv(dataframe_dict, export_form['csv_seperator'])
+        return res
     except ValueError:
         print('###### ERROR')
         return respond_error(ERROR_MESSAGES['export_error']['expected']['type'], ERROR_MESSAGES['export_error']['expected']['message'])
