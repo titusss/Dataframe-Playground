@@ -15,7 +15,7 @@ from bson.json_util import loads, dumps, ObjectId
 UPLOAD_FOLDER = '/static'  # NOTE: Change this to /uploads in production
 ALLOWED_EXTENSIONS_MATRIX = {'txt', 'xlsx', 'csv'}
 ALLOWED_EXTENSIONS_ICON = {'svg', 'png', 'jpg', 'jpeg', 'gif'}
-PRE_CONFIGURED_PLUGINS = [ObjectId('5ed6374fdaf88ae74e38f105'), ObjectId('5f2049b2fda27751b4c96def')]
+PRE_CONFIGURED_PLUGINS = [ObjectId('5f284a560831e4a42a30d698'), ObjectId('5f284bc60831e4a42a30d699')]
 MATRIX = [
     {
         "id": uuid.uuid4().hex,
