@@ -1,12 +1,20 @@
 .DS_Store
 node_modules
 /dist
+<<<<<<< HEAD
 /server/env
 
 # local env files
 .env.local
 .env.*.local
 *.env
+=======
+__pycache__/
+
+# local env files
+.venv.local
+.venv.*.local
+>>>>>>> Initial docker backend commit.
 
 # Log files
 npm-debug.log*
@@ -21,6 +29,7 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+<<<<<<< HEAD
 
 ### PYTHON GENERIC ###
 
@@ -162,3 +171,5 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+=======
+>>>>>>> Initial docker backend commit.
