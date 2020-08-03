@@ -10,6 +10,7 @@ colorlover==0.3.0
 cufflinks==0.17.3
 decorator==4.4.2
 defusedxml==0.6.0
+dnspython==2.0.0
 entrypoints==0.3
 Flask==1.0.2
 Flask-Cors==3.0.7
