@@ -260,12 +260,12 @@ export default {
         this.showErrorAlert = true;
       } else {
         const payload = this.form.source.file;
-        this.change_matrix("http://localhost:5000/upload", payload);
+        this.change_matrix("https://hiri-test-service-dks4e6fxka-ew.a.run.app/upload", payload);
         this.$emit("close");
       }
     },
     delete_matrix(deleted_matrix_id) {
-      const path = `http://localhost:5000/matrix/${deleted_matrix_id}`;
+      const path = `https://hiri-test-service-dks4e6fxka-ew.a.run.app/matrix/${deleted_matrix_id}`;
       const payload = null;
       this.change_matrix(path, payload);
     },
