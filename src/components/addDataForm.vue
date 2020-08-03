@@ -1,0 +1,279 @@
+ <!-- Main form for adding data tables/matrices --> 
+ 
+ <template>
+  <div>
+    <b-progress
+      v-if="show_loading_overlay"
+      :value="bar_value"
+      variant="success"
+      striped
+      :animated="animate"
+    ></b-progress>
+    <b-overlay :show="show_loading_overlay" rounded="sm" variant="white">
+      <b-container class="bv-example-row">
+        <b-row>
+          <b-col>
+            <h2>Add Data</h2>
+            <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+              <!-- <b-form-group id="input-group-4" label="Type:" label-for="checkboxes-4">
+            <b-form-radio-group v-model="form.type" id="checkboxes-4" required>
+              <b-form-radio name="table" value="RadioTable">Table</b-form-radio>
+              <b-form-radio name="category" value="RadioCategory">Category</b-form-radio>
+            </b-form-radio-group>
+              </b-form-group>-->
+              <b-form-group id="input-group-2" label="Title:" label-for="input-2">
+                <b-form-input id="input-2" v-model="form.title" required placeholder></b-form-input>
+              </b-form-group>
+              <b-form-group
+                id="group-cat-amount"
+                label="Category columns:"
+                label-for="input-cat-amount"
+                description="Enter the amount of columns with non numeric values. A value of '4' turns the first four columns into categories. Cells with non numeric values can only be categories and should be at the beginning of your table."
+              >
+                <b-form-spinbutton
+                  id="sb-cat-amount"
+                  placeholder="--"
+                  v-model="form.cat_amount"
+                  wrap
+                  min="0"
+                  required
+                ></b-form-spinbutton>
+                <!-- <b-form-input id="input-cat-amount" v-model="form.cat_amount" required placeholder="Number of categories..."></b-form-input> -->
+              </b-form-group>
+              <b-form-group id="input-group-6" label="Source:" label-for="source-card">
+                <b-card no-body id="source-card">
+                  <b-tabs card>
+                    <b-tab title="Upload" active>
+                      <b-form-group
+                        id="input-group-4"
+                        description="Upload a CSV, TSV, or Excel from your machine."
+                      >
+                        <b-form-file
+                          id="upload_form"
+                          role="form"
+                          enctype="multipart/form-data"
+                          v-model="form.source.file"
+                          :state="Boolean(form.source.file)"
+                          placeholder="Choose a file or drop it here..."
+                          drop-placeholder="Drop file here..."
+                          accept=".txt, .xlsx"
+                        ></b-form-file>
+                        <!-- <div class="mt-3">Selected file: {{ form.source.file ? form.source.file.name : '' }}</div> -->
+                      </b-form-group>
+                      <!-- <div class="mt-3">Selected file: {{ form.source.file ? form.source.file.name : '' }}</div> -->
+                    </b-tab>
+                    <b-tab title="Database">
+                      <b-form-group
+                        id="input-group-3"
+                        description="Select a dataset from our global database."
+                      >
+                        <b-form-select id="input-3" v-model="form.source.database" :options="foods"></b-form-select>
+                      </b-form-group>
+                    </b-tab>
+                    <b-tab title="URL">
+                      <b-form-group
+                        id="input-group-1"
+                        description="Enter a valid URL to your dataset."
+                      >
+                        <b-form-input id="input-1" v-model="form.source.url" type="url" placeholder></b-form-input>
+                      </b-form-group>
+                    </b-tab>
+                    <b-tab title="Text">
+                      <b-form-group
+                        id="input-group-1"
+                        description="Paste a tab-seperated table here. Avoid using the dot character ('.') as it will be replaced by an underscore ('_')."
+                      >
+                        <b-form-textarea
+                          id="textarea"
+                          v-model="form.source.text"
+                          placeholder="Tab-seperated table..."
+                          rows="9"
+                          max-rows="18"
+                        ></b-form-textarea>
+                      </b-form-group>
+                    </b-tab>
+                  </b-tabs>
+                </b-card>
+              </b-form-group>
+              <b-alert v-model="showErrorAlert" variant="danger" dismissible>{{sourceErrMsg}}</b-alert>
+              <pre class="mt-3 mb-0">{{ text }}</pre>
+              <b-button type="submit" variant="primary">Add</b-button>
+              <b-button type="reset" variant="danger">Cancel</b-button>
+            </b-form>
+          </b-col>
+          <b-col class="center">
+            <h2>Matrix Preview</h2>
+            <matrix
+              @delete="delete_matrix"
+              v-bind:matrices="matrices"
+              v-bind:rect_width="15"
+              v-bind:rect_height="15"
+              v-bind:gap="20"
+              v-bind:df_categories="df_categories[0]"
+              @matrix_activated="onMatrixActivated"
+              @transformation_selected="change_transformation"
+            />
+          </b-col>
+        </b-row>
+      </b-container>
+    </b-overlay>
+  </div>
+</template>
+
+<script>
+import matrix from "./matrix.vue";
+import axios from "axios";
+
+export default {
+  name: "addDataForm",
+  props: {
+    matrices: Array,
+    df_categories: Array
+  },
+  components: {
+    matrix
+  },
+  data() {
+    return {
+      animate: true,
+      show_loading_overlay: false,
+      sourceErrMsg: "",
+      showErrorAlert: false,
+      matrices_old: [],
+      activeMatrix: null,
+      timer: null,
+      bar_value: 1,
+      form: {
+        title: "",
+        x: null,
+        y: null,
+        type: [],
+        db_entry_id: "",
+        cat_amount: null,
+        plugins_id: [],
+        locked: false,
+        transformation: "",
+        decimal_character: ",",
+        source: {
+          file: null,
+          database: null,
+          url: null,
+          text: null
+        }
+      },
+      text: "",
+      foods: [
+        { text: "Select One", value: null },
+        "Carrots",
+        "Beans",
+        "Tomatoes",
+        "Corn"
+      ],
+      show: true
+    };
+  },
+  created() {
+    console.log(this.plugins);
+    // this.fetch_matrices();
+    console.log("proped matrices: ", this.matrices);
+  },
+  beforeDestroy() {
+    clearInterval(this.timer);
+    this.timer = null;
+  },
+  methods: {
+    change_transformation(obj) {
+      console.log(obj);
+      this.form.transformation = obj;
+      console.log("form: ", this.form);
+    },
+    progress_bar() {
+      console.log("mounted");
+      this.timer = setInterval(() => {
+        this.bar_value = this.bar_value + Math.random() * 40;
+      }, 2000);
+    },
+    // fetch_matrices() {
+    //   const path = "http://192.168.1.31:5000/matrix";
+    //   axios
+    //     .get(path)
+    //     .then(res => {
+    //       this.matrices_old = res.data.matrix;
+    //     })
+    //     .catch(error => {
+    //       console.error(error);
+    //     });
+    // },
+    change_matrix(path, payload) {
+      this.show_loading_overlay = true;
+      if (this.$route.query.config) {
+        this.form.db_entry_id = this.$route.query.config;
+      }
+      var data = new FormData();
+      data.append("file", payload);
+      data.append("form", JSON.stringify(this.form));
+      let self = this;
+      // self.$parent.$bvModal.hide('bv_modal_addData')
+      axios
+        .post(path, data)
+        .then(res => {
+          if (res.data.error_type) {
+            this.show_loading_overlay = false;
+            self.$emit("error_occured", res.data);
+          } else {
+            this.$nextTick(() => {
+              console.log("after next tick res: ", res);
+              console.log(JSON.stringify(res));
+              self.$emit("dataframe_change", res);
+              this.show_loading_overlay = false;
+            });
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    onSubmit(evt) {
+      evt.preventDefault();
+      this.progress_bar();
+      this.validateForm(this.form.source);
+    },
+    onReset(evt) {
+      this.$emit("close");
+      evt.preventDefault();
+    },
+    validateForm(obj) {
+      var properties = 0;
+      for (var key in obj) {
+        if (obj[key] !== null && obj[key] !== "") {
+          properties++;
+        }
+      }
+      if (properties < 1) {
+        this.sourceErrMsg = "Please enter a data-source.";
+        this.showErrorAlert = true;
+      } else if (properties > 1) {
+        this.sourceErrMsg = "Please enter no more than one data-source.";
+        this.showErrorAlert = true;
+      } else if (Number.isInteger(this.form.cat_amount) === false) {
+        this.sourceErrMsg = "Please specify the amount of category columns.";
+        this.showErrorAlert = true;
+      } else {
+        const payload = this.form.source.file;
+        this.change_matrix("http://localhost:5000/upload", payload);
+        this.$emit("close");
+      }
+    },
+    delete_matrix(deleted_matrix_id) {
+      const path = `http://localhost:5000/matrix/${deleted_matrix_id}`;
+      const payload = null;
+      this.change_matrix(path, payload);
+    },
+    onMatrixActivated(matrix) {
+      this.form.x = matrix.x;
+      this.form.y = matrix.y;
+      console.log(this.form);
+    }
+  }
+};
+</script>
