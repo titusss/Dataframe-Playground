@@ -4,8 +4,8 @@
       <svg
         v-for="matrix in matrices"
         :key="matrix.id"
-        @click="selected = matrix.id, select_matrix(matrix)"
-        :class="{hot:selected==matrix.id, active:selected==matrix.id}"
+        @click="selected = matrix, select_matrix(matrix)"
+        :class="{hot:selected.id==matrix.id, active:selected.id==matrix.id}"
         :style="{'grid-area': `${matrix.y} / ${matrix.x} / auto / auto`, 'height': `${(matrix.height * gap)-(gap-rect_height)}px`, 'width': `${(matrix.width * gap)-(gap-rect_width)}px`}"
         v-b-tooltip
         :title="matrix.title"
@@ -118,7 +118,7 @@ export default {
   data() {
     return {
       is_hot: false,
-      selected: this.matrices[0].id,
+      selected: this.matrices[0],
       button_enabled: false,
       relative_expression: {
         type: "relative_expression",
