@@ -118,7 +118,7 @@ export default {
     },
     lock_session() {
       this.disabled_lock = true;
-      const path = "http://localhost:5000/locked";
+      const path = "https://hiri-test-service-dks4e6fxka-ew.a.run.app/locked";
       var payload = new FormData();
       payload.append("url", JSON.stringify(this.$route.query.config));
       axios.post(path, payload).then(res => {
@@ -145,7 +145,7 @@ export default {
       payload.append("url", JSON.stringify(this.$route.query.config));
       payload.append("export_form", JSON.stringify(this.export_form));
       axios({
-        url: "http://localhost:5000/export",
+        url: "https://hiri-test-service-dks4e6fxka-ew.a.run.app/export",
         method: "POST",
         // responseType: "blob",
         data: payload
