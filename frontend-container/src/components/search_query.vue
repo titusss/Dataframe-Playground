@@ -263,7 +263,7 @@ export default {
       }
     },
     post_query() {
-      const path = "http://0.0.0.0:5000/query";
+      const path = "http://localhost:5000/query";
       var data = new FormData();
       var structured_query = this.restructure_query();
       console.log(structured_query);
