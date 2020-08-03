@@ -169,7 +169,7 @@ export default {
     },
     generate_vis_link(plugin) {
       this.loading.state = true;
-      const path = "http://localhost:5000/visualization";
+      const path = "https://hiri-test-service-dks4e6fxka-ew.a.run.app/visualization";
       var payload = new FormData();
       payload.append("plugin", JSON.stringify(plugin));
       payload.append("url", JSON.stringify(this.$route.query.config));
@@ -191,7 +191,7 @@ export default {
     load_config() {
       this.loading.state = true;
       this.config = null;
-      const path = "http://localhost:5000/config";
+      const path = "https://hiri-test-service-dks4e6fxka-ew.a.run.app/config";
       var payload = new FormData();
       payload.append("url", JSON.stringify(this.$route.query.config));
       axios

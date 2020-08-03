@@ -263,7 +263,7 @@ export default {
       }
     },
     post_query() {
-      const path = "http://localhost:5000/query";
+      const path = "https://hiri-test-service-dks4e6fxka-ew.a.run.app/query";
       var data = new FormData();
       var structured_query = this.restructure_query();
       console.log(structured_query);
