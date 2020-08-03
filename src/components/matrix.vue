@@ -118,7 +118,7 @@ export default {
   data() {
     return {
       is_hot: false,
-      selected: undefined,
+      selected: this.matrices[0].id,
       button_enabled: false,
       relative_expression: {
         type: "relative_expression",
