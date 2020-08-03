@@ -92,7 +92,7 @@ ERROR_MESSAGES = {
         },
         'unexpected': {
             'type': 'Unexpected Upload Error',
-            'message': 'An unexpected error has occured while uploading the data.'
+            'message': 'An unexpected error has occured while uploading the data. Did you select the target matrix in the preview?'
         }
     },
 }
