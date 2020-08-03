@@ -1,0 +1,256 @@
+<template>
+  <div>
+    <div class="table_preview">
+      <svg
+        v-for="matrix in matrices"
+        :key="matrix.id"
+        @click="selected = matrix.id, select_matrix(matrix)"
+        :class="{hot:selected==matrix.id, active:selected==matrix.id}"
+        :style="{'grid-area': `${matrix.y} / ${matrix.x} / auto / auto`, 'height': `${(matrix.height * gap)-(gap-rect_height)}px`, 'width': `${(matrix.width * gap)-(gap-rect_width)}px`}"
+        v-b-tooltip
+        :title="matrix.title"
+        trigger="click"
+      >
+        <g
+          v-for="column in matrix.height"
+          :key="column"
+          class="rows"
+          :style="{transform: `translate(0px, ${column * gap - gap}px)`}"
+          v-bind:class="{ active: matrix.isActive }"
+        >
+          <rect
+            v-for="row in matrix.width"
+            :key="row"
+            class="cells"
+            :style="{transform: `translate(${row * gap - gap}px, 0px)`, width: rect_width, height: rect_height}"
+          />
+        </g>
+      </svg>
+    </div>
+    <div class="table_buttons">
+      <b-button-group>
+        <b-button
+          v-b-toggle.collapse-differential
+          v-b-popover.hover.top="'Merges uploaded data with selected table for differential expression when selected.'"
+          title="Differential Expression"
+          :pressed.sync="relative_expression.activated"
+          :disabled="button_enabled == 0"
+          @click="emit_transformation(relative_expression)"
+          size="sm"
+          variant="secondary"
+        >
+          <img src="../assets/differential.svg" class="img_in_btn" />Differential
+        </b-button>
+        <b-button
+          v-b-modal.modal_delete
+          @click="on_delete_matrix(selected)"
+          :disabled="button_enabled == 0"
+          size="sm"
+          variant="danger"
+        >
+          <img src="../assets/trash.svg" class="img_in_btn" />Remove
+        </b-button>
+      </b-button-group>
+
+      <b-collapse id="collapse-differential" class="mt-2">
+        <b-card class="transformation-options">
+          <!-- <p class="card-text">Select base column for normalization.</p> -->
+          <div>
+            <b-form>
+              <!-- <b-form-select
+                id="input-3"
+                v-model="form.normalization_column"
+                :options="df_categories"
+                required
+              >
+              <b-form-select-option :value="null" disabled>Select a column</b-form-select-option></b-form-select>-->
+              <b-form-checkbox
+                id="checkbox-1"
+                v-model="relative_expression.options.activated"
+                name="checkbox-1"
+                :value="false"
+                :unchecked-value="true"
+                class="log-fc-toggle"
+              >Activate logarithmic fold-change</b-form-checkbox>
+              <div v-if="!relative_expression.options.activated">
+              <label class="mr-sm-2" for="log-input">log Base:</label>
+              <b-form-input
+                id="log-input"
+                v-model="relative_expression.options.value"
+                type="number"
+                max="1001"
+                class="mb-2 mr-sm-2 mb-sm-0 log-input inline"
+                size="sm"
+                placeholder="'2'"
+              ></b-form-input>
+              <div class="log-preview">
+                <b-badge variant="dark" class="log-preview-badge">
+                  <span class="supsub">
+                    <span class="base formula">
+                      log
+                      <sub class="subscript">
+                        <strong class="formula-strong">{{relative_expression.options.value}} </strong>
+                      </sub>
+                      <span class="base formula">(x)</span>
+                    </span>
+                  </span>
+                </b-badge>
+              </div>
+              </div>
+            </b-form>
+          </div>
+        </b-card>
+      </b-collapse>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "matrix",
+  props: {
+    gap: Number,
+    rect_width: Number,
+    rect_height: Number,
+    matrices: Array,
+    df_categories: Array
+  },
+  data() {
+    return {
+      is_hot: false,
+      selected: undefined,
+      button_enabled: false,
+      relative_expression: {
+        type: "relative_expression",
+        activated: false,
+        options: {
+          activated: false,
+          value: 2,
+          type: "log-fc"
+        }
+      },
+      transformation: null,
+      form: {
+        normalization_column: null
+      }
+    };
+  },
+  methods: {
+    emit_transformation(current_transformation) {
+      if (current_transformation.activated == true) {
+        this.transformation = current_transformation
+      }
+      else {
+        this.transformation = null
+      }
+      this.$emit("transformation_selected", this.transformation);
+    },
+    select_matrix(matrix) {
+      // console.log(matrix);
+      this.$emit("matrix_activated", matrix);
+      if (matrix.isActive == true) {
+        this.button_enabled = true;
+      } else {
+        this.button_enabled = false;
+      }
+    },
+    on_delete_matrix(deleted_matrix_id) {
+      this.$emit("delete", deleted_matrix_id);
+    }
+  }
+};
+</script>
+
+<style>
+:root {
+  --cell-width: 16px;
+  --cell-height: 16px;
+  --cell-color: #e0e0e0;
+}
+rect {
+  fill: var(--cell-color);
+}
+
+.rows {
+  display: flex;
+}
+
+.active,
+svg:hover {
+  --cell-color: #484848;
+}
+
+.table_preview {
+  display: inline-grid;
+}
+
+rect {
+  transition: fill 200ms ease-out;
+}
+
+svg {
+  margin: 5px;
+  cursor: pointer;
+}
+
+.hot {
+  animation-name: pulse;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+}
+
+.btn-secondary:not(:disabled):not(.disabled).active {
+  background-color: #007bff !important;
+  border-color: #007bff !important;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 100%;
+  }
+  50% {
+    opacity: 15%;
+  }
+  100% {
+    opacity: 100%;
+  }
+}
+/* .supsub {
+  font-family: "Nimbus Roman No9 L","Times New Roman",Times,serif;
+} */
+/* .subscript>strong {
+  color: #007bff;
+} */
+.transformation-options {
+  max-width: fit-content;
+  margin: auto;
+}
+.log-preview {
+  font-size: 1.25rem;
+  display: inline-block !important;
+}
+.log-preview-badge {
+  display: inline-block !important;
+}
+.formula {
+  font-weight: 400 !important;
+  font-family: "Times New Roman", Times, serif;
+  font-style: italic;
+}
+.formula-strong {
+  font-weight: 600;
+  font-family: sans-serif;
+  font-style: initial;
+}
+#log-input {
+  max-width: 4rem;
+  display: inline-block;
+}
+.badge_dark {
+  background-color: #343a40 !important;
+}
+.log-fc-toggle {
+  margin-bottom: .5rem;
+  display: block;
+}
+</style>
