@@ -40,15 +40,15 @@
                 :key="plugin.name"
                 :title="plugin.name"
                 :desc="plugin.desc"
-                :img="plugin.filename"
+
                 :id="plugin._id.$oid"
               />
-              <plugins
+              <!-- <plugins
                 v-on:plugin_clicked="show_modal('modal_add_plugin')"
                 :title="'Add Plugin'"
                 :desc="'Connect a new visualization'"
                 :img="'add_plugin.svg'"
-              />
+              /> -->
             </div>
           </div>
           <!-- <h5 class="title">Filter queries</h5> -->
