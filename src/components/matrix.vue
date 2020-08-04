@@ -4,8 +4,8 @@
       <svg
         v-for="matrix in matrices"
         :key="matrix.id"
-        @click="selected = matrix.id, select_matrix(matrix)"
-        :class="{hot:selected==matrix.id, active:selected==matrix.id}"
+        @click="selected = matrix, select_matrix()"
+        :class="{hot:selected.id==matrix.id, active:selected.id==matrix.id}"
         :style="{'grid-area': `${matrix.y} / ${matrix.x} / auto / auto`, 'height': `${(matrix.height * gap)-(gap-rect_height)}px`, 'width': `${(matrix.width * gap)-(gap-rect_width)}px`}"
         v-b-tooltip
         :title="matrix.title"
@@ -135,6 +135,21 @@ export default {
       }
     };
   },
+  created() {
+    console.log(this.matrices)
+    if(this.matrices.length == 1) {
+      this.selected = this.matrices[0]
+    }
+    else if(this.matrices.length > 1) {
+      for(let i in this.matrices) {
+        if (this.matrices[i].x == 1) {
+          this.selected = this.matrices[i]
+          console.log(this.selected)
+          break
+        }
+      }
+    }
+  },
   methods: {
     emit_transformation(current_transformation) {
       if (current_transformation.activated == true) {
@@ -145,10 +160,10 @@ export default {
       }
       this.$emit("transformation_selected", this.transformation);
     },
-    select_matrix(matrix) {
+    select_matrix() {
       // console.log(matrix);
-      this.$emit("matrix_activated", matrix);
-      if (matrix.isActive == true) {
+      this.$emit("matrix_activated", this.selected);
+      if (this.selected.isActive == true) {
         this.button_enabled = true;
       } else {
         this.button_enabled = false;
