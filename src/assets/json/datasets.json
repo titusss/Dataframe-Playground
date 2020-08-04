@@ -1,0 +1,37 @@
+[
+  {
+    "label": "Salmonella Small Proteins",
+    "options": [
+      {
+        "text": "4h Dual RNA Seq",
+        "value": "salmonella-small-proteins_4h-dual-rna-seq.csv",
+        "seperator": "\t"
+      },
+      {
+        "text": "8h Dual RNA Seq",
+        "value": "salmonella-small-proteins_8h-dual-rna-seq.csv",
+        "seperator": "\t"
+      },
+      {
+        "text": "16h Dual RNA Seq",
+        "value": "salmonella-small-proteins_16h-dual-rna-seq.csv",
+        "seperator": "\t"
+      },
+      {
+        "text": "24h Dual RNA Seq",
+        "value": "salmonella-small-proteins_24h-dual-rna-seq.csv",
+        "seperator": "\t"
+      },
+      {
+        "text": "GradR",
+        "value": "salmonella-small-proteins_gradr.csv",
+        "seperator": "\t"
+      },
+      {
+        "text": "TraDIS",
+        "value": "salmonella-small-proteins_tradis.csv",
+        "seperator": "\t"
+      }
+    ]
+  }
+]
