@@ -43,7 +43,21 @@
               <b-form-group id="input-group-6" label="Source:" label-for="source-card">
                 <b-card no-body id="source-card">
                   <b-tabs card>
-                    <b-tab title="Upload" active>
+                    <b-tab title="Paste Text" active>
+                      <b-form-group
+                        id="input-group-1"
+                        description="Paste a tab-seperated table here. Avoid using the dot character ('.') as it will be replaced by an underscore ('_')."
+                      >
+                        <b-form-textarea
+                          id="textarea"
+                          v-model="form.source.text"
+                          placeholder="Copy & paste a tab-seperated table here..."
+                          rows="9"
+                          max-rows="18"
+                        ></b-form-textarea>
+                      </b-form-group>
+                    </b-tab>
+                    <b-tab title="Upload file">
                       <b-form-group
                         id="input-group-4"
                         description="Upload a CSV, TSV, or Excel from your machine."
@@ -62,12 +76,12 @@
                       </b-form-group>
                       <!-- <div class="mt-3">Selected file: {{ form.source.file ? form.source.file.name : '' }}</div> -->
                     </b-tab>
-                    <b-tab title="Database">
+                    <b-tab title="Dataset">
                       <b-form-group
                         id="input-group-3"
                         description="Select a dataset from our global database."
                       >
-                        <b-form-select id="input-3" v-model="form.source.database" :options="foods"></b-form-select>
+                        <b-form-select id="input-3" v-model="form.source.database" :options="datasets"></b-form-select>
                       </b-form-group>
                     </b-tab>
                     <b-tab title="URL">
@@ -76,20 +90,6 @@
                         description="Enter a valid URL to your dataset."
                       >
                         <b-form-input id="input-1" v-model="form.source.url" type="url" placeholder></b-form-input>
-                      </b-form-group>
-                    </b-tab>
-                    <b-tab title="Text">
-                      <b-form-group
-                        id="input-group-1"
-                        description="Paste a tab-seperated table here. Avoid using the dot character ('.') as it will be replaced by an underscore ('_')."
-                      >
-                        <b-form-textarea
-                          id="textarea"
-                          v-model="form.source.text"
-                          placeholder="Tab-seperated table..."
-                          rows="9"
-                          max-rows="18"
-                        ></b-form-textarea>
                       </b-form-group>
                     </b-tab>
                   </b-tabs>
@@ -123,6 +123,7 @@
 <script>
 import matrix from "./matrix.vue";
 import axios from "axios";
+import datasets from "../assets/json/datasets.json";
 
 export default {
   name: "addDataForm",
@@ -135,6 +136,7 @@ export default {
   },
   data() {
     return {
+      datasets,
       animate: true,
       show_loading_overlay: false,
       sourceErrMsg: "",
@@ -145,8 +147,8 @@ export default {
       bar_value: 1,
       form: {
         title: "",
-        x: null,
-        y: null,
+        x: 2,
+        y: 2,
         type: [],
         db_entry_id: "",
         cat_amount: null,
@@ -236,6 +238,7 @@ export default {
     onSubmit(evt) {
       evt.preventDefault();
       this.progress_bar();
+      console.log(this.form.source);
       this.validateForm(this.form.source);
     },
     onReset(evt) {
