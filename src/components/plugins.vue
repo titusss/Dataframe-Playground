@@ -4,14 +4,14 @@
         class="plugin_card plugin_selected"
         v-bind:class="{plugin_selected_expanded:this.isSelected}"
         @click="plugin_selected()">
-        <!-- <img :src="require(`@/assets/${img}`)" alt /> -->
+        <img :src="this.image_url" alt />
         <div class>
           <h5>{{title}}</h5>
           <p>{{desc}}</p>
         </div>
       </div>
       <div class="plugin_card card_shadow" @click="plugin_selected()">
-        <!-- <img :src="require(`@/assets/${img}`)" alt /> -->
+        <img :src="this.image_url" alt /> -->
         <div class>
           <h5>{{title}}</h5>
           <p>{{desc}}</p>
@@ -26,7 +26,7 @@ export default {
   props: {
     title: String,
     desc: String,
-
+    image_url: String,
     active_plugin: String,
     id: String
   },
