@@ -40,7 +40,7 @@
                 :key="plugin.name"
                 :title="plugin.name"
                 :desc="plugin.desc"
-                :image="plugin.image_url"
+                :image_url="plugin.image_url"
                 :id="plugin._id.$oid"
               />
               <!-- <plugins
