@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class="plugin_card card_shadow" @click="plugin_selected()">
-        <img :src="this.image_url" alt /> -->
+        <img :src="this.image_url" alt />
         <div class>
           <h5>{{title}}</h5>
           <p>{{desc}}</p>
