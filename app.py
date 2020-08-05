@@ -373,6 +373,12 @@ def upload_file(request, extension_whitelist, metadata):
     # If data is pasted text with "Text" as source
     elif metadata['source']['text'] != "null":
         return metadata['source']['text'], "string"
+    elif metadata['source']['database'] != "null":
+        file = "/static/" + metadata['source']['database']
+        extension = os.path.splitext(file.filename)[1]
+        print('extension: ', extension)
+        print('metadata: ', metadata)
+        return file, extension
     return "failure"
 
 
