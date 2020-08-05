@@ -12,7 +12,7 @@ def convert_to_df(input_file, extension, decimal_character):
     if extension == ".xlsx":
         df = pd.read_excel(input_file)
     elif extension == ".csv":
-        df = pd.read_csv(input_file, sep=',')
+        df = pd.read_csv(input_file, sep=None)
     elif extension == ".txt":
         df = pd.read_csv(input_file, sep='\t')
     elif extension == "string":

@@ -341,6 +341,7 @@ def add_matrix():
         print('metadata: ', metadata)
         source, extension = upload_file(
             request, ALLOWED_EXTENSIONS_MATRIX, metadata)
+        print('aha')
         db_entry_id = process_file.add_matrix(
             source, metadata, extension, db, PRE_CONFIGURED_PLUGINS)
         return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
@@ -371,13 +372,12 @@ def upload_file(request, extension_whitelist, metadata):
         print(file)
         return file, extension
     # If data is pasted text with "Text" as source
-    elif metadata['source']['text'] != "null":
+    elif metadata['source']['text'] != None:
+        print('ohhhh')
         return metadata['source']['text'], "string"
-    elif metadata['source']['database'] != "null":
-        file = "/static/" + metadata['source']['database']
-        extension = os.path.splitext(file.filename)[1]
-        print('extension: ', extension)
-        print('metadata: ', metadata)
+    elif metadata['source']['database'] != None:
+        file = "static/" + metadata['source']['database']
+        extension = os.path.splitext(metadata['source']['database'])[1]
         return file, extension
     return "failure"
 
