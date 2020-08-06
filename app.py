@@ -251,7 +251,11 @@ def make_vis_link():
         db_entry = db.visualizations.find_one(
             {"_id": ObjectId(url)}, {'_id': False})
         # CHANGE: Right now every new visualization creates a new MongoDB entry
-        vis_link = visualize.route(db.plugins, pd.DataFrame.from_dict(
+        if len(db_entry['filtered_dataframe']) > 0:
+            vis_link = visualize.route(db.plugins, pd.DataFrame.from_dict(
+            db_entry['filtered_dataframe']), plugin)
+        else:
+            vis_link = visualize.route(db.plugins, pd.DataFrame.from_dict(
             db_entry['transformed_dataframe']), plugin)
         db.visualizations.update_one({'_id': ObjectId(url)}, {
             '$push': {'vis_links': vis_link}})
