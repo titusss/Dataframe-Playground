@@ -252,7 +252,7 @@ def make_vis_link():
             {"_id": ObjectId(url)}, {'_id': False})
         # CHANGE: Right now every new visualization creates a new MongoDB entry
         vis_link = visualize.route(db.plugins, pd.DataFrame.from_dict(
-            db_entry['transformed_dataframe']), db_entry['cat_amount'], plugin)
+            db_entry['transformed_dataframe']), plugin)
         db.visualizations.update_one({'_id': ObjectId(url)}, {
             '$push': {'vis_links': vis_link}})
         print(vis_link)
