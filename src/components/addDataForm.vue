@@ -38,8 +38,8 @@
                   min="0"
                   required
                 ></b-form-spinbutton>
-                <!-- <b-form-input id="input-cat-amount" v-model="form.cat_amount" required placeholder="Number of categories..."></b-form-input> -->
-              <!-- </b-form-group> -->
+                <b-form-input id="input-cat-amount" v-model="form.cat_amount" required placeholder="Number of categories..."></b-form-input>
+              </b-form-group> -->
               <b-form-group id="input-group-6" label="Source:" label-for="source-card">
                 <b-card no-body id="source-card">
                   <b-tabs card>
