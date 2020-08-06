@@ -121,7 +121,7 @@ export default {
   },
   data() {
     return {
-      backend_url: 'https://hiri-test-frontend-dks4e6fxka-ew.a.run.app',
+      backend_url: 'https://hiri-test-service-dks4e6fxka-ew.a.run.app',
       loading: {
         state: true,
         increment: 10,
