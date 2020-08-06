@@ -13,6 +13,9 @@
 
 <script>
 export default {
+  props: {
+    increment: Number,
+  },
   data() {
     return {
       loading: {
@@ -33,7 +36,7 @@ export default {
         clearInterval();
       }
       else {
-        this.loading.bar.value = this.loading.bar.value + 10;
+        this.loading.bar.value = this.loading.bar.value + this.increment;
       }
     }, 500);
   },

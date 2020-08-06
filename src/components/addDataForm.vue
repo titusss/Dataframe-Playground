@@ -24,7 +24,7 @@
               <b-form-group id="input-group-2" label="Title:" label-for="input-2">
                 <b-form-input id="input-2" v-model="form.title" required placeholder></b-form-input>
               </b-form-group>
-              <b-form-group
+              <!-- <b-form-group
                 id="group-cat-amount"
                 label="Category columns:"
                 label-for="input-cat-amount"
@@ -39,7 +39,7 @@
                   required
                 ></b-form-spinbutton>
                 <!-- <b-form-input id="input-cat-amount" v-model="form.cat_amount" required placeholder="Number of categories..."></b-form-input> -->
-              </b-form-group>
+              <!-- </b-form-group> -->
               <b-form-group id="input-group-6" label="Source:" label-for="source-card">
                 <b-card no-body id="source-card">
                   <b-tabs card>
@@ -151,7 +151,6 @@ export default {
         y: 2,
         type: [],
         db_entry_id: "",
-        cat_amount: null,
         plugins_id: [],
         locked: false,
         transformation: "",
@@ -257,9 +256,6 @@ export default {
         this.showErrorAlert = true;
       } else if (properties > 1) {
         this.sourceErrMsg = "Please enter no more than one data-source.";
-        this.showErrorAlert = true;
-      } else if (Number.isInteger(this.form.cat_amount) === false) {
-        this.sourceErrMsg = "Please specify the amount of category columns.";
         this.showErrorAlert = true;
       } else {
         const payload = this.form.source.file;
