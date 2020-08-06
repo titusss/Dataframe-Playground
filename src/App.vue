@@ -6,7 +6,8 @@
       style="position:fixed;top:10px;width:100vw;z-index:1060;"
     />
     <loading
-      v-show="loading.state"
+      v-if="loading.state"
+      :increment="this.loading.increment"
       style="position: absolute;z-index: 100;top: 0;left: 0;width: 100vw;"
     />
     <!-- <b-progress v-if="loading.state" :value="loading.bar.value" :variant="loading.bar.variant" :key="loading.bar.variant" height="6px"></b-progress> -->
@@ -120,8 +121,10 @@ export default {
   },
   data() {
     return {
+      backend_url: 'http://localhost:5000/',
       loading: {
         state: true,
+        increment: 10,
         bar: {
           variant: "primary",
           value: 0,
@@ -169,7 +172,8 @@ export default {
     },
     generate_vis_link(plugin) {
       this.loading.state = true;
-      const path = "https://hiri-test-service-dks4e6fxka-ew.a.run.app/visualization";
+      this.loading.increment = 2;
+      const path = `${this.backend_url}/visualization`;
       var payload = new FormData();
       payload.append("plugin", JSON.stringify(plugin));
       payload.append("url", JSON.stringify(this.$route.query.config));
@@ -190,8 +194,9 @@ export default {
     },
     load_config() {
       this.loading.state = true;
+      this.loading.increment = 5;
       this.config = null;
-      const path = "https://hiri-test-service-dks4e6fxka-ew.a.run.app/config";
+      const path = `${this.backend_url}/config`;
       var payload = new FormData();
       payload.append("url", JSON.stringify(this.$route.query.config));
       axios
