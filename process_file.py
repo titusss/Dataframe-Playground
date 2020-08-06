@@ -11,10 +11,8 @@ def convert_to_df(input_file, extension, decimal_character):
     import pandas as pd
     if extension == ".xlsx":
         df = pd.read_excel(input_file)
-    elif extension == ".csv":
-        df = pd.read_csv(input_file, sep=None)
-    elif extension == ".txt":
-        df = pd.read_csv(input_file, sep='\t')
+    elif extension == ".csv" or extension == ".txt":
+        df = pd.read_csv(input_file, sep=None, decimal=decimal_character, error_bad_lines=False)
     elif extension == "string":
         from io import StringIO
         df = pd.read_csv(StringIO(input_file), sep='\t', decimal=decimal_character, error_bad_lines=False)
@@ -22,7 +20,7 @@ def convert_to_df(input_file, extension, decimal_character):
     else:
         print("Error: No valid extension. Please upload .xlsx (Excel), .csv, or .txt (TSV).")
         return "Error"
-    df.fillna(0, inplace=True)
+    df.fillna('Error', inplace=True)
     df.columns = df.columns.str.replace('.', '_') # Dot's mess with the df. Replace it with an underscore: _
     return df
 
@@ -52,8 +50,7 @@ def remove_matrix(mockup_db_entry, metadata, db, remove_id):
     if len(sum(db_entry['active_matrices'], []))>0:
         db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
         db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
-        # db_entry['vis_links'] = visualize.route(db.plugins, pd.DataFrame.from_dict(db_entry['transformed_dataframe']), metadata['cat_amount'], db_entry['plugins_id']) # CHANGE: Right now every new visualization creates a new MongoDB entry
-        db_entry['cat_amount'] = metadata['cat_amount']
+        # db_entry['vis_links'] = visualize.route(db.plugins, pd.DataFrame.from_dict(db_entry['transformed_dataframe']), metadata['categories'], db_entry['plugins_id']) # CHANGE: Right now every new visualization creates a new MongoDB entry
         db_entry_id = insert_update_entry(db_entry, db.visualizations, metadata)
     else:
         mockup_db_entry['locked'] = db_entry['locked']
@@ -78,7 +75,6 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
         df = convert_to_df(input_file, extension, metadata["decimal_character"])
         db_entry = new_db_entry(df, metadata, pre_configured_plugins)
     db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
-    db_entry['cat_amount'] = metadata['cat_amount']
     db_entry['vis_links'] = []
     db_entry['filtered_dataframe'] = []
     if metadata['db_entry_id'] == '': # Enter new DB entry when creating a new visualization
