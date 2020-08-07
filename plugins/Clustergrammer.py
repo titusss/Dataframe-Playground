@@ -1,18 +1,24 @@
 def main(df):
     import requests
-    file_path = csv_to_tsv(df) # Define the path to the file you want to visualize.
-    upload_url = "http://amp.pharm.mssm.edu/clustergrammer/matrix_upload/" # Define the path to the visualizing sertver endpoint.
-    response = requests.post(upload_url, files={'file': open(file_path, 'rb')})
+    import pandas as pd
+    from io import BytesIO
+    dataframe = prepare_df(df) # Define the path to the file you want to visualize.
+    output = BytesIO()
+    dataframe.to_csv(output, sep='\t', index=False)
+    output.seek(0)
+
+    upload_url = "https://amp.pharm.mssm.edu/clustergrammer/matrix_upload/" # Define the path to the visualizing sertver endpoint.
+    response = requests.post(upload_url, files={'file': output})
     print(response.text)
     vis_link = response.text
+    
     return vis_link
 
-def csv_to_tsv(df):
+def prepare_df(df):
     import pandas as pd
     import copy
     import numpy as np
     dataframe = copy.deepcopy(df)
-    file_path = "uploads/output_matrix.txt"
 
     # Append category title string before values for all cat columns.
     # dataframe[dataframe.columns[0:cat_amount]] = dataframe.columns[0:cat_amount] + \
@@ -37,6 +43,5 @@ def csv_to_tsv(df):
     print('here: ')
     print(dataframe)
     # Export the data frame as tab-seperated .txt.
-    dataframe.to_csv(file_path, sep='\t', index=False)
     print('Output file has been generated and saved.')
-    return file_path
+    return dataframe
