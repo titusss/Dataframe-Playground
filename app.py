@@ -97,7 +97,7 @@ ERROR_MESSAGES = {
     },
 }
 # MongoDB
-client = MongoClient(os.environ.get("MONGO_CONNECTION_STRING"))
+client = MongoClient("mongodb+srv://pymongo-user:K5l3XACp2wg5QuO4@cluster0.hxih0.gcp.mongodb.net/test?retryWrites=true&w=majority")
 db = client.test
 visualizations = db.visualizations
 plugins = db.plugins
