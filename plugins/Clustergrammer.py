@@ -1,12 +1,13 @@
 def main(df):
     import requests
     import pandas as pd
-    from io import BytesIO
+    from io import StringIO
     dataframe = prepare_df(df) # Define the path to the file you want to visualize.
-    output = BytesIO()
+    output = StringIO()
+    print(dataframe)
     dataframe.to_csv(output, sep='\t', index=False)
-    output.seek(0)
-
+    output.name = "output.txt"
+    output.seek(0)  
     upload_url = "https://amp.pharm.mssm.edu/clustergrammer/matrix_upload/" # Define the path to the visualizing sertver endpoint.
     response = requests.post(upload_url, files={'file': output})
     print(response.text)

@@ -3,7 +3,7 @@
 node_modules
 /dist
 __pycache__/
-plotly_authentification.py
+plotly
 
 # local env files
 .venv.local
