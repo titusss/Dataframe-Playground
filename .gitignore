@@ -1,8 +1,9 @@
 .DS_Store
-.nosync
+*.nosync
 node_modules
 /dist
 __pycache__/
+plotly_authentification.py
 
 # local env files
 .venv.local
