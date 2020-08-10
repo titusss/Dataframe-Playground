@@ -11,8 +11,7 @@ def main(df):
     upload_url = "https://amp.pharm.mssm.edu/clustergrammer/matrix_upload/" # Define the path to the visualizing sertver endpoint.
     response = requests.post(upload_url, files={'file': output})
     print(response.text)
-    vis_link = response.text
-    
+    vis_link = response.text.replace("http://","https://")
     return vis_link
 
 def prepare_df(df):
@@ -30,19 +29,14 @@ def prepare_df(df):
     print('categoris: ', value_columns)
     print("categories: ", categories)
     dataframe_reordered_columns = categories + value_columns
-    print('dataframe_reordered_columns: ', dataframe_reordered_columns)
     dataframe = dataframe[dataframe_reordered_columns] # Put all categories column to the beginning of the dataframe.
-    print(dataframe)
     if len(categories) > 0:
         for category in categories:
-            print(category)
             dataframe[category] = dataframe[category].name + ': ' + dataframe[category].astype(str)
             dataframe = dataframe.rename(columns={category: ''})
     else:
         dataframe.columns[0] = dataframe.columns[0].name + ': ' + dataframe.columns[0].astype(str)
         dataframe = dataframe.rename(columns={dataframe.columns[0]: ''})
-    print('here: ')
-    print(dataframe)
     # Export the data frame as tab-seperated .txt.
     print('Output file has been generated and saved.')
     return dataframe
