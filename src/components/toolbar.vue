@@ -125,7 +125,6 @@ export default {
         if (res.data.error_type) {
           this.$emit("error_occured", res.data);
         } else {
-          console.log(res);
           this.button_lock = "dark";
           this.icon_lock = "lock";
           this.$bvToast.show("lock-toast");
