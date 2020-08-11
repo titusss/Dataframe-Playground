@@ -159,7 +159,7 @@ def export_df():
         return respond_error(ERROR_MESSAGES['export_error']['expected']['type'], ERROR_MESSAGES['export_error']['expected']['message'])
     except Exception as e:
         print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['export_error']['unexpected']['type'], ERROR_MESSAGES['export_error']['unexpected']['message'])
+        return respond_error(ERROR_MESSAGES['export_error']['unexpected']['type'], e)
 
 
 def df_to_excel(dataframe_dict):
