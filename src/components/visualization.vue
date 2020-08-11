@@ -11,6 +11,7 @@ export default {
     vis_link: String
   },
   created() {
+    this.vis_link
     console.log("jajaja");
     // this.vis_link = this.$route.query.vis
     console.log(this.vis_link);

@@ -177,6 +177,17 @@ export default {
 </script>
 
 <style>
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.15;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 :root {
   --cell-width: 16px;
   --cell-height: 16px;
@@ -217,18 +228,6 @@ svg {
 .btn-secondary:not(:disabled):not(.disabled).active {
   background-color: #007bff !important;
   border-color: #007bff !important;
-}
-
-@keyframes pulse {
-  0% {
-    opacity: 100%;
-  }
-  50% {
-    opacity: 15%;
-  }
-  100% {
-    opacity: 100%;
-  }
 }
 /* .supsub {
   font-family: "Nimbus Roman No9 L","Times New Roman",Times,serif;
