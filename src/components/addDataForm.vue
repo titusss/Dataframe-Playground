@@ -39,7 +39,7 @@
                   required
                 ></b-form-spinbutton>
                 <b-form-input id="input-cat-amount" v-model="form.cat_amount" required placeholder="Number of categories..."></b-form-input>
-              </b-form-group> -->
+              </b-form-group>-->
               <b-form-group id="input-group-6" label="Source:" label-for="source-card">
                 <b-card no-body id="source-card">
                   <b-tabs card>
@@ -56,11 +56,28 @@
                           max-rows="18"
                         ></b-form-textarea>
                       </b-form-group>
+                      <b-form inline>
+                        <b-form-group
+                          class="seperator-group mb-2 mr-sm-2 mb-sm-0"
+                          label-align-sm="left"
+                          label="Decimal Character:"
+                          label-for="dropdown-csv-sep"
+                        >
+                          <b-form-input
+                            id="dropdown-csv-sep"
+                            class="seperator-field"
+                            size="sm"
+                            type="text"
+                            maxlength="1"
+                            v-model="form.formatting.text.decimal_character"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-form>
                     </b-tab>
                     <b-tab title="Upload file">
                       <b-form-group
                         id="input-group-4"
-                        description="Upload a CSV, TSV, or Excel from your machine."
+                        description="Upload a .csv (CSV), .txt (TSV), or .xlsx (Excel) file from your machine."
                       >
                         <b-form-file
                           id="upload_form"
@@ -72,8 +89,41 @@
                           drop-placeholder="Drop file here..."
                           accept=".txt, .xlsx"
                         ></b-form-file>
-                        <!-- <div class="mt-3">Selected file: {{ form.source.file ? form.source.file.name : '' }}</div> -->
                       </b-form-group>
+                      <b-form inline>
+                        <b-form-group
+                          class="seperator-group"
+                          label-align-sm="left"
+                          label="CSV Seperator:"
+                          label-for="dropdown-csv-sep"
+                        >
+                          <b-form-input
+                            id="dropdown-csv-sep"
+                            class="seperator-field mb-2 mr-sm-2 mb-sm-0"
+                            size="sm"
+                            type="text"
+                            maxlength="1"
+                            v-model="form.formatting.file.csv_seperator"
+                          ></b-form-input>
+                        </b-form-group>
+                        <b-form-group
+                          class="seperator-group mb-2 mr-sm-2 mb-sm-0"
+                          label-align-sm="left"
+                          label="Decimal Character:"
+                          label-for="dropdown-csv-sep"
+                        >
+                          <b-form-input
+                            id="dropdown-csv-sep"
+                            class="seperator-field"
+                            size="sm"
+                            type="text"
+                            maxlength="1"
+                            v-model="form.formatting.file.decimal_character"
+                          ></b-form-input>
+                        </b-form-group>
+                      </b-form>
+                      <!-- <div class="mt-3">Selected file: {{ form.source.file ? form.source.file.name : '' }}</div> -->
+
                       <!-- <div class="mt-3">Selected file: {{ form.source.file ? form.source.file.name : '' }}</div> -->
                     </b-tab>
                     <b-tab title="Dataset">
@@ -81,7 +131,11 @@
                         id="input-group-3"
                         description="Select a dataset from our global database."
                       >
-                        <b-form-select id="input-3" v-model="form.source.database" :options="datasets"></b-form-select>
+                        <b-form-select
+                          id="input-3"
+                          v-model="form.source.database"
+                          :options="datasets"
+                        ></b-form-select>
                       </b-form-group>
                     </b-tab>
                     <b-tab title="URL">
@@ -154,7 +208,15 @@ export default {
         plugins_id: [],
         locked: false,
         transformation: "",
-        decimal_character: ",",
+        formatting: {
+          file: {
+            csv_seperator: ",",
+            decimal_character: "."
+          },
+          text: {
+            decimal_character: "."
+          }
+        },
         source: {
           file: null,
           database: null,
@@ -257,6 +319,12 @@ export default {
       } else if (properties > 1) {
         this.sourceErrMsg = "Please enter no more than one data-source.";
         this.showErrorAlert = true;
+      } else if (this.form.formatting.file.csv_seperator == "" || this.form.formatting.file.decimal_character == "") {
+        this.sourceErrMsg = "The CSV seperator or decimal character for uploaded files cannot be empty.";
+        this.showErrorAlert = true;
+      } else if (this.form.formatting.text.decimal_character == "") {
+        this.sourceErrMsg = "The decimal character for pasted text cannot be empty.";
+        this.showErrorAlert = true;
       } else {
         const payload = this.form.source.file;
         this.change_matrix("https://hiri-test-service-dks4e6fxka-ew.a.run.app/upload", payload);
@@ -276,3 +344,16 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.seperator-group {
+  margin-bottom: 0 !important;
+  color: #6c757d;
+  font-size: small;
+  margin-bottom: 0.5rem !important;
+}
+#dropdown-csv-sep {
+  margin-left: 0.5rem;
+  width: 30px;
+}
+</style>
