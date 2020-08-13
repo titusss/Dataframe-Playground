@@ -7,15 +7,16 @@ max_preview_columns = 8
 max_y = 1
 active_matrices = [[]]
 
-def convert_to_df(input_file, extension, decimal_character):
-    import pandas as pd
+def convert_to_df(input_file, extension, formatting):
     if extension == ".xlsx":
         df = pd.read_excel(input_file)
-    elif extension == ".csv" or extension == ".txt":
-        df = pd.read_csv(input_file, sep=None, decimal=decimal_character, error_bad_lines=False)
+    elif extension == ".csv":
+        df = pd.read_csv(input_file, sep=formatting["file"]["csv_seperator"], decimal=formatting["file"]["decimal_character"], error_bad_lines=False)
+    elif extension == ".txt":
+        df = pd.read_csv(input_file, sep='\t', decimal=formatting["file"]["decimal_character"], error_bad_lines=False)
     elif extension == "string":
         from io import StringIO
-        df = pd.read_csv(StringIO(input_file), sep='\t', decimal=decimal_character, error_bad_lines=False)
+        df = pd.read_csv(StringIO(input_file), sep='\t', decimal=formatting["text"]["decimal_character"], error_bad_lines=False)
         df.columns = pd.to_numeric(df.columns,errors='ignore')
     else:
         print("Error: No valid extension. Please upload .xlsx (Excel), .csv, or .txt (TSV).")
@@ -62,7 +63,7 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
     import visualize
     if metadata['db_entry_id'] != '': # If you edit an existing visualization
         db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
-        df = convert_to_df(input_file, extension, metadata["decimal_character"])
+        df = convert_to_df(input_file, extension, metadata["formatting"])
         db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
         if metadata['transformation'] != '':
             transformation_type = metadata['transformation']['type']
@@ -72,7 +73,7 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
         else:
             db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
     else: # If you create a new visualization
-        df = convert_to_df(input_file, extension, metadata["decimal_character"])
+        df = convert_to_df(input_file, extension, metadata["formatting"])
         db_entry = new_db_entry(df, metadata, pre_configured_plugins)
     db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
     db_entry['vis_links'] = []
