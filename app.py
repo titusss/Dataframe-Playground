@@ -338,21 +338,19 @@ def respond_error(error_type, error_message):
 
 @app.route('/upload', methods=['GET', 'POST'])
 def add_matrix():
-    try:
-        metadata = json.loads(request.form['form'])
-        print('metadata: ', metadata)
-        source, extension = upload_file(
-            request, ALLOWED_EXTENSIONS_MATRIX, metadata)
-        print('aha')
-        db_entry_id = process_file.add_matrix(
-            source, metadata, extension, db, PRE_CONFIGURED_PLUGINS)
-        return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
-    except ValueError:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['upload_error']['expected']['type'], ERROR_MESSAGES['upload_error']['expected']['message'])
-    except Exception as e:
-        print('ERROR')
-        return respond_error(ERROR_MESSAGES['upload_error']['unexpected']['type'], ERROR_MESSAGES['upload_error']['unexpected']['message'])
+    metadata = json.loads(request.form['form'])
+    if metadata['source']['database'] != None: # NOTE: Unelegant. Determine decimal and seperator characters of database csv's.
+        metadata['formatting']['file']['csv_seperator'] = '\t'
+        metadata['formatting']['file']['decimal_character'] = ','
+    source, extension = upload_file(request, ALLOWED_EXTENSIONS_MATRIX, metadata)
+    db_entry_id = process_file.add_matrix(source, metadata, extension, db, PRE_CONFIGURED_PLUGINS)
+    return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
+    # except ValueError:
+    #     print('###### ERROR')
+    #     return respond_error(ERROR_MESSAGES['upload_error']['expected']['type'], ERROR_MESSAGES['upload_error']['expected']['message'])
+    # except Exception as e:
+    #     print('ERROR')
+    #     return respond_error(ERROR_MESSAGES['upload_error']['unexpected']['type'], ERROR_MESSAGES['upload_error']['unexpected']['message'])
 
 
 def respond_data(label, payload):
