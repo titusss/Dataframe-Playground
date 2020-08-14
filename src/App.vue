@@ -14,7 +14,7 @@
     <!-- <div class="loading" v-if="loading"><b-spinner label="Spinning"></b-spinner><span>Loading ...</span></div> -->
     <div>
       <div v-if="loading.state === false">
-        <toolbar :locked="config.locked" @error_occured="error_occured" />
+        <toolbar :locked="config.locked" :backend_url="backend_url" @error_occured="error_occured" />
       </div>
       <div class="grid_container">
         <!-- <div class="header">
@@ -59,6 +59,7 @@
               @error_occured="error_occured"
               v-bind:df_categories="Object.keys(this.config.transformed_dataframe[0])"
               v-bind:server_queries="this.config.query"
+              v-bind:backend_url="backend_url"
             />
           </div>
           <div>
@@ -81,12 +82,13 @@
             v-bind:matrices="this.config.preview_matrices"
             v-bind:plugins="this.config.plugins"
             v-bind:df_categories="Object.keys(this.config.transformed_dataframe)"
+            v-bind:backend_url="backend_url"
             @dataframe_change="redirect_to_config"
             @error_occured="error_occured"
           />
         </b-modal>
         <b-modal id="modal_add_plugin" hide-footer>
-          <add_plugin @plugins_change="redirect_to_config" />
+          <add_plugin @plugins_change="redirect_to_config" :backend_url="backend_url"/>
         </b-modal>
       </div>
     </div>
