@@ -338,6 +338,7 @@ def respond_error(error_type, error_message):
 
 @app.route('/upload', methods=['GET', 'POST'])
 def add_matrix():
+    # try:
     metadata = json.loads(request.form['form'])
     if metadata['source']['database'] != None: # NOTE: Unelegant. Determine decimal and seperator characters of database csv's.
         metadata['formatting']['file']['csv_seperator'] = '\t'
