@@ -183,7 +183,8 @@ export default {
   name: "addDataForm",
   props: {
     matrices: Array,
-    df_categories: Array
+    df_categories: Array,
+    backend_url: String,
   },
   components: {
     matrix
@@ -327,12 +328,12 @@ export default {
         this.showErrorAlert = true;
       } else {
         const payload = this.form.source.file;
-        this.change_matrix("https://hiri-test-service-dks4e6fxka-ew.a.run.app/upload", payload);
+        this.change_matrix(`${this.backend_url}/upload`, payload);
         this.$emit("close");
       }
     },
     delete_matrix(deleted_matrix_id) {
-      const path = `https://hiri-test-service-dks4e6fxka-ew.a.run.app/matrix/${deleted_matrix_id}`;
+      const path = `${this.backend_url}/matrix/${deleted_matrix_id}`;
       const payload = null;
       this.change_matrix(path, payload);
     },
