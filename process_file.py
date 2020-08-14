@@ -7,7 +7,8 @@ max_preview_columns = 8
 max_y = 1
 active_matrices = [[]]
 
-def convert_to_df(input_file, extension, formatting):
+def convert_to_df(input_file, extension, formatting, df_title):
+    import numpy as np
     if extension == ".xlsx":
         df = pd.read_excel(input_file)
     elif extension == ".csv":
@@ -23,6 +24,8 @@ def convert_to_df(input_file, extension, formatting):
         return "Error"
     df.fillna('Error', inplace=True)
     df.columns = df.columns.str.replace('.', '_') # Dot's mess with the df. Replace it with an underscore: _
+    categories = list(df.select_dtypes(np.number).columns)
+    df.columns = ['(' + df_title + ') ' + x if x in categories else x for x in df.columns] # Append the dataframe title to the column names
     return df
 
 def insert_update_entry(entry, collection, metadata):
@@ -61,9 +64,10 @@ def remove_matrix(mockup_db_entry, metadata, db, remove_id):
 def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
     from pymongo import MongoClient
     import visualize
+    print("metadata: ", metadata)
     if metadata['db_entry_id'] != '': # If you edit an existing visualization
         db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
-        df = convert_to_df(input_file, extension, metadata["formatting"])
+        df = convert_to_df(input_file, extension, metadata["formatting"], metadata["title"])
         db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
         if metadata['transformation'] != '':
             transformation_type = metadata['transformation']['type']
@@ -73,7 +77,7 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
         else:
             db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
     else: # If you create a new visualization
-        df = convert_to_df(input_file, extension, metadata["formatting"])
+        df = convert_to_df(input_file, extension, metadata["formatting"], metadata["title"])
         db_entry = new_db_entry(df, metadata, pre_configured_plugins)
     db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
     db_entry['vis_links'] = []
@@ -89,7 +93,7 @@ def merge_db_entry(db_entry, flattened_am):
     for i in range(len(flattened_am)): # Looping through
         df_merged = pd.merge(df_merged, pd.DataFrame.from_dict(flattened_am[i]['dataframe']), how='outer')
         print(flattened_am[i])
-    df_merged.fillna(0, inplace=True) # Replace NA values with 0
+    df_merged.fillna('', inplace=True) # Replace NA values with 0
     db_entry['transformed_dataframe'] = df_merged.to_dict('records')
     return db_entry
 
