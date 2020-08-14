@@ -63,6 +63,9 @@
 <script>
 import axios from 'axios'
 export default {
+  props: {
+    backend_url: String,
+  },
   data() {
     return {
       form: {
@@ -79,7 +82,7 @@ export default {
     onSubmit(evt) {
       evt.preventDefault()
       const payload = this.form.icon;
-      this.add_plugin("https://hiri-test-service-dks4e6fxka-ew.a.run.app/plugins", payload);
+      this.add_plugin(`${this.backend_url}/plugins`, payload);
     },
     onReset(evt) {
       evt.preventDefault()

@@ -165,7 +165,8 @@ export default {
   name: "search_query",
   props: {
     df_categories: Array,
-    server_queries: Array
+    server_queries: Array,
+    backend_url: String
   },
   components: {
     input_autocomplete,
@@ -263,7 +264,7 @@ export default {
       }
     },
     post_query() {
-      const path = "https://hiri-test-service-dks4e6fxka-ew.a.run.app/query";
+      const path = `${this.backend_url}/query`;
       var data = new FormData();
       var structured_query = this.restructure_query();
       console.log(structured_query);
