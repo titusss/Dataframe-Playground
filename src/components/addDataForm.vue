@@ -236,23 +236,23 @@ export default {
       show: true
     };
   },
-  created() {
-    console.log(this.plugins);
-    // this.fetch_matrices();
-    console.log("proped matrices: ", this.matrices);
-  },
+  // created() {
+  //   // console.log(this.plugins);
+  //   // this.fetch_matrices();
+  //   // console.log("proped matrices: ", this.matrices);
+  // },
   beforeDestroy() {
     clearInterval(this.timer);
     this.timer = null;
   },
   methods: {
     change_transformation(obj) {
-      console.log(obj);
+      // console.log(obj);
       this.form.transformation = obj;
-      console.log("form: ", this.form);
+      // console.log("form: ", this.form);
     },
     progress_bar() {
-      console.log("mounted");
+      // console.log("mounted");
       this.timer = setInterval(() => {
         this.bar_value = this.bar_value + Math.random() * 40;
       }, 2000);
@@ -286,8 +286,8 @@ export default {
             self.$emit("error_occured", res.data);
           } else {
             this.$nextTick(() => {
-              console.log("after next tick res: ", res);
-              console.log(JSON.stringify(res));
+              // console.log("after next tick res: ", res);
+              // console.log(JSON.stringify(res));
               self.$emit("dataframe_change", res);
               this.show_loading_overlay = false;
             });
@@ -300,7 +300,7 @@ export default {
     onSubmit(evt) {
       evt.preventDefault();
       this.progress_bar();
-      console.log(this.form.source);
+      // console.log(this.form.source);
       this.validateForm(this.form.source);
     },
     onReset(evt) {
@@ -340,7 +340,7 @@ export default {
     onMatrixActivated(matrix) {
       this.form.x = matrix.x;
       this.form.y = matrix.y;
-      console.log(this.form);
+      // console.log(this.form);
     }
   }
 };
