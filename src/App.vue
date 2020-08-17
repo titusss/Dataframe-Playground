@@ -55,7 +55,7 @@
           <!-- <h5 class="title">Filter queries</h5> -->
           <div class="field block" v-if="this.config.transformed_dataframe.length > 0">
             <search_query
-              @dataframe_filtered="redirect_to_config"
+              @dataframe_filtered="redirect_to_config($event); update_filtered(true)"
               @error_occured="error_occured"
               v-bind:df_categories="Object.keys(this.config.transformed_dataframe[0])"
               v-bind:server_queries="this.config.query"
@@ -69,6 +69,7 @@
             <dataframe
               v-bind:dataframe="this.config.transformed_dataframe"
               v-bind:dataframe_filtered="this.config.filtered_dataframe"
+              v-bind:filtered.sync="this.filtered"
             />
           </div>
         </div>
@@ -83,7 +84,7 @@
             v-bind:plugins="this.config.plugins"
             v-bind:df_categories="Object.keys(this.config.transformed_dataframe)"
             v-bind:backend_url="backend_url"
-            @dataframe_change="redirect_to_config"
+            @dataframe_change="redirect_to_config($event); update_filtered(false);"
             @error_occured="error_occured"
           />
         </b-modal>
@@ -136,7 +137,8 @@ export default {
       config: null,
       active_plugin_id: null,
       active_vis_link: "",
-      error: null
+      error: null,
+      filtered: false
     };
   },
   created() {
@@ -156,7 +158,6 @@ export default {
           this.active_plugin_id = plugin._id.$oid;
           let vis_exists = false;
           for (let i in this.config.vis_links) {
-            console.log(this.config.vis_links);
             if (this.config.vis_links[i].plugin_id == this.active_plugin_id) {
               this.active_vis_link = this.config.vis_links[i].link;
               vis_exists = true;
@@ -164,13 +165,16 @@ export default {
             }
           }
           if (vis_exists === false) {
-            console.log("doesn't contain");
+            // console.log("doesn't contain");
             this.generate_vis_link(plugin);
           }
         } else {
           this.active_plugin_id = "";
         }
       }
+    },
+    update_filtered(state) {
+      this.filtered = state;
     },
     generate_vis_link(plugin) {
       this.loading.state = true;
@@ -180,14 +184,14 @@ export default {
       payload.append("plugin", JSON.stringify(plugin));
       payload.append("url", JSON.stringify(this.$route.query.config));
       axios.post(path, payload).then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.data.error_type) {
           this.error_occured(res.data);
-          console.log(res);
+          // console.log(res);
         } else {
           // this.config.vis_links.push(res);
           // this.load_config()
-          console.log(res);
+          // console.log(res);
           this.load_config();
           this.active_vis_link = res.data.vis_link.link;
         }
@@ -210,9 +214,9 @@ export default {
             this.config = res.data.db_entry;
             this.$nextTick(() => {
               this.loading.state = false;
-              console.log(this.config);
-              console.log(res);
-              console.log(this.config.plugins[0]);
+              // console.log(this.config);
+              // console.log(res);
+              // console.log(this.config.plugins[0]);
             });
           }
         })
@@ -222,9 +226,7 @@ export default {
     },
     get_plugins(res) {
       this.hide_modal("modal_add_plugin");
-      console.log(res.data);
       this.plugins = res.data;
-      console.log(this.plugins);
     },
     hide_modal(modal_id) {
       this.$bvModal.hide(modal_id);
@@ -238,9 +240,9 @@ export default {
     },
     redirect_to_config(res) {
       // this.config = null
-      console.log("res: ", res);
-      console.log(this.config);
-      console.log(res.data.db_entry_id["$oid"]);
+      // console.log("res: ", res);
+      // console.log(this.config);
+      // console.log(res.data.db_entry_id["$oid"]);
       if (this.config._id == res.data.db_entry_id["$oid"]) {
         // this.$router.go()
         this.active_vis_link = "";
@@ -260,13 +262,11 @@ export default {
     }
   },
   mounted() {
-    console.log("###########");
     this.loading.bar.timer = setInterval(() => {
       this.loading.bar.value = this.loading.bar.value + 50 * Math.random(3, 4);
     }, 500);
   },
   beforeDestroy() {
-    console.log(this.loading.bar.timer);
     clearInterval(this.loading.bar.timer);
     this.loading.bar.timer = null;
   }
