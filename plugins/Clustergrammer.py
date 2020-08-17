@@ -4,7 +4,6 @@ def main(df):
     from io import StringIO
     dataframe = prepare_df(df) # Define the path to the file you want to visualize.
     output = StringIO()
-    print(dataframe)
     dataframe.to_csv(output, sep='\t', index=False)
     output.name = "output.txt"
     output.seek(0)  
@@ -26,8 +25,6 @@ def prepare_df(df):
     # Remove the category titles from first row.
     categories = list(df.select_dtypes(exclude=[np.number]).columns) # Get all columns that are non numerics
     value_columns = [x for x in list(df.columns) if x not in categories] # Get all columns that are not category columns
-    print('categoris: ', value_columns)
-    print("categories: ", categories)
     dataframe_reordered_columns = categories + value_columns
     dataframe = dataframe[dataframe_reordered_columns] # Put all categories column to the beginning of the dataframe.
     if len(categories) > 0:
