@@ -5,7 +5,6 @@ def route(collection, df, plugin):
     import importlib
     from pymongo import MongoClient
     from bson.json_util import ObjectId
-    print(plugin)
     plugin_module = importlib.import_module("plugins.{}".format(plugin['name']))
     visualization = {}
     visualization['plugin_name'] = plugin['name']

@@ -259,7 +259,6 @@ def make_vis_link():
             '$push': {'vis_links': vis_link}})
         print(vis_link)
         print('########')
-        print(Response({'vis_link': vis_link}))
         return Response(dumps({'vis_link': vis_link}), mimetype="application/json")
     except (IndexError, TypeError):
         print('###### ERROR')
@@ -322,7 +321,6 @@ def respond_config():
 
             db_entry['plugins'] = [plugin for plugin in db.plugins.find(
                 {'_id': {'$in': db_entry['plugins_id']}})]
-            print(db_entry)
             return Response(dumps({'db_entry': db_entry}), mimetype="application/json")
     except KeyError:
         print('###### ERROR')
@@ -370,11 +368,9 @@ def upload_file(request, extension_whitelist, metadata):
         if file and allowed_file(file.filename, extension_whitelist):
             print('true')
             extension = os.path.splitext(file.filename)[1]
-        print(file)
         return file, extension
     # If data is pasted text with "Text" as source
     elif metadata['source']['text'] != None:
-        print('ohhhh')
         return metadata['source']['text'], "string"
     elif metadata['source']['database'] != None:
         file = "static/" + metadata['source']['database']

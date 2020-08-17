@@ -21,12 +21,9 @@ def main(query, df):
             df = df[df_mask]
         elif block_type == "transformation":
             print(block["forms"]["target_value"])
-            print(filter_area)
-            print(df_mask)
             # df.loc[df_mask, filter_area] = block["forms"]["target_value"]
             df[filter_area] = df[filter_area].where(~df_mask, other=block["forms"]["target_value"])
             # df = df.where(~df_mask, other=10)
-            print(df)
     return df
 
 def setup_query_parameters(forms, df):
