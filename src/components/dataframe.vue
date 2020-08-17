@@ -38,30 +38,36 @@
         <b-form-group class="inline-element" id="toggle-filtered">
           <span class="col-form-label-sm">Show filtered</span>
           <label class="switch switch-label bv-no-focus-ring">
-            <input type="checkbox" v-model="filtered_visible" value="false" unchecked-value="true" />
+            <input type="checkbox" v-model="filtered" value="false" unchecked-value="true" />
             <span class="slider round"></span>
           </label>
           <!-- <div class="filter-toggle-text">Filtered table is visible? {{ filtered_visible }}</div> -->
         </b-form-group>
       </div>
       <!-- User Interface controls -->
-      <div class="table-wrapper">
+      <div class="table-wrapper" v-if="this.items != null">
         <b-table
           id="dataframe-table"
-          ref="selectableTable"
+          ref="ref_dataframe_table"
           hover
           small
+          :items.sync="items"
           :current-page="currentPage"
           :per-page="perPage"
           :filter="filter"
           :filterIncludedFields="filterOn"
-          :items="items"
           :fields="dataframe_headers"
           head-variant="light"
           @filtered="onFiltered"
         >
           <template v-slot:cell()="data">{{data.value}}</template>
           <template v-slot:cell(GeneID)="data">{{data.value}}</template>
+          <!-- <template v-slot:table-busy>
+            <div class="text-center text-danger my-2">
+              <b-spinner class="align-middle"></b-spinner>
+              <strong>Loading...</strong>
+            </div>
+          </template> -->
         </b-table>
       </div>
     </b-card>
@@ -72,35 +78,19 @@
 export default {
   props: {
     dataframe: Array,
-    dataframe_filtered: Array
+    dataframe_filtered: Array,
+    filtered: Boolean,
   },
   watch: {
-    dataframe_filtered: {
-      handler() {
-        console.log('ahhhhajjaja')
-        this.filtered_visible = true;
-        this.items = this.dataframe_filtered
-      }
+    dataframe: function() {
+      this.update_table(this.dataframe)
     },
-    // dataframe: {
-    //   handler(newDf, oldDf) {
-    //     console.log(newDf)
-    //     console.log(oldDf)
-    //     console.log('ohhhhahahaha')
-    //     this.filtered_visible = false;
-    //     this.items = this.dataframe;
-    //   }
-    // },
-    filtered_visible: {
-      handler() {
-        if (this.filtered_visible==true) {
-          this.items = this.dataframe_filtered
-          this.totalRows = this.items.length;
-        }
-        else {
-          this.items = this.dataframe
-          this.totalRows = this.items.length;
-        }
+    filtered: function() {
+      // this.$emit('update:filtered', this.filtered)
+      if (this.filtered === true) {
+        this.update_table(this.dataframe_filtered);
+      } else {
+        this.update_table(this.dataframe)
       }
     }
   },
@@ -113,29 +103,38 @@ export default {
       pageOptions: [20, 50, 100, 1000],
       filter: null,
       filterOn: [],
-      filtered_visible: false,
-      items: this.dataframe
+      items: this.dataframe,
     };
   },
   mounted() {
     this.totalRows = this.items.length;
   },
   methods: {
+    update_table(dataframe) {
+      this.items = dataframe;
+      this.create_table_headers();
+      this.totalRows = this.items.length;
+      // this.$refs.ref_dataframe_table.refresh();
+      this.currentPage = 1;
+    },
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
+    },
+    create_table_headers() {
+      for (let header in this.items[0]) {
+        let entry = {};
+        entry["key"] = header;
+        entry["sortable"] = true;
+        this.dataframe_headers.push(entry);
+      }
     }
   },
   created() {
-    for (let header in this.items[0]) {
-      let entry = {};
-      entry["key"] = header;
-      entry["sortable"] = true;
-      this.dataframe_headers.push(entry);
-    }
+    this.create_table_headers(this.dataframe);
     if (this.dataframe_filtered.length > 0) {
-      this.filtered_visible = true;
+      this.filtered = true;
     }
   }
 };

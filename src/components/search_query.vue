@@ -1,6 +1,10 @@
 <template>
   <div>
-    <loading v-if="loading" style="position: fixed;z-index: 100;top: 0;left: 0;width: 100vw;" />
+    <loading
+      v-if="loading"
+      :increment="20"
+      style="position: fixed;z-index: 100;top: 0;left: 0;width: 100vw;"
+    />
     <b-form @submit="onSubmit" inline>
       <b-card
         bg-variant="light"
@@ -222,14 +226,14 @@ export default {
       added_block["block_name"] = index;
       this.query.push([added_block]);
       this.id++;
-      console.log(this.query);
+      // console.log(this.query);
     },
     restructure_query() {
       let structured_query = [];
       for (let array in this.query) {
         for (let sub_array in this.query[array]) {
           let structured_query_block = {};
-          console.log(this.query[array][sub_array]);
+          // console.log(this.query[array][sub_array]);
           structured_query_block["name"] = this.query[array][sub_array][
             "block_name"
           ];
@@ -267,11 +271,11 @@ export default {
       const path = `${this.backend_url}/query`;
       var data = new FormData();
       var structured_query = this.restructure_query();
-      console.log(structured_query);
+      // console.log(structured_query);
       data.append("query", JSON.stringify(structured_query));
       data.append("url", JSON.stringify(this.$route.query.config));
-      console.log(this.query);
-      console.log(data);
+      // console.log(this.query);
+      // console.log(data);
       let self = this;
       // self.$parent.$bvModal.hide('bv_modal_addData')
       axios
@@ -282,7 +286,9 @@ export default {
           } else {
             self.$emit("dataframe_filtered", res);
             this.$nextTick(() => {
-              this.loading = false;
+              setTimeout(() => { // This forces the loading bar to stay alive for 2 additional seconds, to compensate the delay between backend work and frontend rendering of the dataframe table. This isn't very good.
+                this.loading = false;
+              }, 2000);
             });
           }
         })
