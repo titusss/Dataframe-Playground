@@ -114,8 +114,8 @@ export default {
       this.items = dataframe;
       this.create_table_headers();
       this.totalRows = this.items.length;
-      // this.$refs.ref_dataframe_table.refresh();
       this.currentPage = 1;
+      this.$refs.ref_dataframe_table.refresh();
     },
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
