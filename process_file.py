@@ -92,7 +92,6 @@ def merge_db_entry(db_entry, flattened_am):
     df_merged = pd.DataFrame.from_dict(flattened_am[0]['dataframe'])
     for i in range(len(flattened_am)): # Looping through
         df_merged = pd.merge(df_merged, pd.DataFrame.from_dict(flattened_am[i]['dataframe']), how='outer')
-        print(flattened_am[i])
     df_merged.fillna('', inplace=True) # Replace NA values with 0
     db_entry['transformed_dataframe'] = df_merged.to_dict('records')
     return db_entry
