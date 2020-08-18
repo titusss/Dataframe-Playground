@@ -338,6 +338,7 @@ def respond_error(error_type, error_message):
 def add_matrix():
     # try:
     metadata = json.loads(request.form['form'])
+    print("metadata: ", metadata)
     if metadata['source']['database'] != None: # NOTE: Unelegant. Determine decimal and seperator characters of database csv's.
         metadata['formatting']['file']['csv_seperator'] = '\t'
         metadata['formatting']['file']['decimal_character'] = ','
@@ -357,7 +358,6 @@ def respond_data(label, payload):
     response_object[label] = payload
     return response_object
 
-
 def upload_file(request, extension_whitelist, metadata):
     if 'file' in request.files:
         file = request.files['file']
@@ -373,8 +373,8 @@ def upload_file(request, extension_whitelist, metadata):
     elif metadata['source']['text'] != None:
         return metadata['source']['text'], "string"
     elif metadata['source']['database'] != None:
-        file = "static/" + metadata['source']['database']
-        extension = os.path.splitext(metadata['source']['database'])[1]
+        file = "static/" + metadata['source']['database']['filename']
+        extension = os.path.splitext(metadata['source']['database']['filename'])[1]
         return file, extension
     return "failure"
 
