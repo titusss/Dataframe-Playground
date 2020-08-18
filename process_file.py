@@ -7,17 +7,21 @@ max_preview_columns = 8
 max_y = 1
 active_matrices = [[]]
 
-def convert_to_df(input_file, extension, formatting, df_title):
+def convert_to_df(input_file, extension, metadata,):
+    print(metadata["database_columns"])
     import numpy as np
     if extension == ".xlsx":
         df = pd.read_excel(input_file)
     elif extension == ".csv":
-        df = pd.read_csv(input_file, sep=formatting["file"]["csv_seperator"], decimal=formatting["file"]["decimal_character"], error_bad_lines=False)
+        if len(metadata["database_columns"]) > 0:
+            df = pd.read_csv(input_file, sep=metadata["formatting"]["file"]["csv_seperator"], decimal=metadata["formatting"]["file"]["decimal_character"], error_bad_lines=False, usecols=metadata["database_columns"])
+        else:
+            df = pd.read_csv(input_file, sep=metadata["formatting"]["file"]["csv_seperator"], decimal=metadata["formatting"]["file"]["decimal_character"], error_bad_lines=False)
     elif extension == ".txt":
-        df = pd.read_csv(input_file, sep='\t', decimal=formatting["file"]["decimal_character"], error_bad_lines=False)
+        df = pd.read_csv(input_file, sep='\t', decimal=metadata["formatting"]["file"]["decimal_character"], error_bad_lines=False)
     elif extension == "string":
         from io import StringIO
-        df = pd.read_csv(StringIO(input_file), sep='\t', decimal=formatting["text"]["decimal_character"], error_bad_lines=False)
+        df = pd.read_csv(StringIO(input_file), sep='\t', decimal=metadata["formatting"]["text"]["decimal_character"], error_bad_lines=False)
         df.columns = pd.to_numeric(df.columns,errors='ignore')
     else:
         print("Error: No valid extension. Please upload .xlsx (Excel), .csv, or .txt (TSV).")
@@ -25,7 +29,7 @@ def convert_to_df(input_file, extension, formatting, df_title):
     df.fillna('Error', inplace=True)
     df.columns = df.columns.str.replace('.', '_') # Dot's mess with the df. Replace it with an underscore: _
     categories = list(df.select_dtypes(np.number).columns)
-    df.columns = ['(' + df_title + ') ' + x if x in categories else x for x in df.columns] # Append the dataframe title to the column names
+    df.columns = ['(' + metadata["title"] + ') ' + x if x in categories else x for x in df.columns] # Append the dataframe title to the column names
     return df
 
 def insert_update_entry(entry, collection, metadata):
@@ -67,7 +71,7 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
     print("metadata: ", metadata)
     if metadata['db_entry_id'] != '': # If you edit an existing visualization
         db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
-        df = convert_to_df(input_file, extension, metadata["formatting"], metadata["title"])
+        df = convert_to_df(input_file, extension, metadata)
         db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
         if metadata['transformation'] != '':
             transformation_type = metadata['transformation']['type']
@@ -77,7 +81,7 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
         else:
             db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
     else: # If you create a new visualization
-        df = convert_to_df(input_file, extension, metadata["formatting"], metadata["title"])
+        df = convert_to_df(input_file, extension, metadata)
         db_entry = new_db_entry(df, metadata, pre_configured_plugins)
     db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
     db_entry['vis_links'] = []
