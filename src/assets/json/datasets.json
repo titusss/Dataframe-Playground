@@ -4,32 +4,32 @@
     "options": [
       {
         "text": "4h Dual RNA Seq",
-        "value": "salmonella-small-proteins_4h-dual-rna-seq.csv",
+        "value": {"filename": "salmonella-small-proteins_4h-dual-rna-seq.csv", "columns": [{"value": null, "text": "All columns"},"genes","logFC","logCPM","PValue","FDR"]},
         "seperator": "\t"
       },
       {
         "text": "8h Dual RNA Seq",
-        "value": "salmonella-small-proteins_8h-dual-rna-seq.csv",
+        "value": {"filename": "salmonella-small-proteins_8h-dual-rna-seq.csv", "columns": [{"value": null, "text": "All columns"},"genes","logFC","logCPM","PValue","FDR"]},
         "seperator": "\t"
       },
       {
         "text": "16h Dual RNA Seq",
-        "value": "salmonella-small-proteins_16h-dual-rna-seq.csv",
+        "value": {"filename": "salmonella-small-proteins_16h-dual-rna-seq.csv", "columns": [{"value": null, "text": "All columns"},"genes","logFC","logCPM","PValue","FDR"]},
         "seperator": "\t"
       },
       {
         "text": "24h Dual RNA Seq",
-        "value": "salmonella-small-proteins_24h-dual-rna-seq.csv",
+        "value": {"filename": "salmonella-small-proteins_24h-dual-rna-seq.csv", "columns": [{"value": null, "text": "All columns"},"genes","logFC","logCPM","PValue","FDR"]},
         "seperator": "\t"
       },
       {
         "text": "GradR",
-        "value": "salmonella-small-proteins_gradr.csv",
+        "value": {"filename": "salmonella-small-proteins_gradr.csv", "columns": [{"value": null, "text": "All columns"},"locus_tag","gene_name","function","logFC","logCPM","PValue","q.value"]},
         "seperator": "\t"
       },
       {
         "text": "TraDIS",
-        "value": "salmonella-small-proteins_tradis.csv",
+        "value": {"filename": "salmonella-small-proteins_tradis.csv", "columns": [{"value": null, "text": "All columns"},"UniprotID","locus","gene","protein","#aa","norm_to_max fraction 1","norm_to_max fraction 2","norm_to_max fraction 3","norm_to_max fraction 4","norm_to_max fraction 5","norm_to_max fraction 6","norm_to_max fraction 7","norm_to_max fraction 8","norm_to_max fraction 9","norm_to_max fraction 10","norm_to_max fraction 11","norm_to_max fraction 12","norm_to_max fraction 13","norm_to_max fraction 14","norm_to_max fraction 15","norm_to_max fraction 16","norm_to_max fraction 17","norm_to_max fraction 18","norm_to_max fraction 19","norm_to_max fraction 20","norm_to_max fraction P"]},
         "seperator": "\t"
       }
     ]

@@ -137,6 +137,46 @@
                           :options="datasets"
                         ></b-form-select>
                       </b-form-group>
+                      <b-form-group
+                        v-if="form.source.database"
+                        id="input-group-4"
+                        description="Leave the field blank to upload the whole dataset or select specific columns."
+                        label="Select columns"
+                      >
+                        <b-form-tags
+                          v-model="form.database_columns"
+                          size="lg"
+                          add-on-change
+                          no-outer-focus
+                          class="mb-2"
+                        >
+                          <template
+                            v-slot="{ tags, inputAttrs, inputHandlers, disabled, removeTag }"
+                          >
+                            <ul v-if="tags.length > 0" class="list-inline d-inline-block mb-2">
+                              <li v-for="tag in tags" :key="tag" class="list-inline-item">
+                                <b-form-tag
+                                  @remove="removeTag(tag)"
+                                  :title="tag"
+                                  :disabled="disabled"
+                                  variant="dark"
+                                >{{ tag }}</b-form-tag>
+                              </li>
+                            </ul>
+                            <b-form-select
+                              v-bind="inputAttrs"
+                              v-on="inputHandlers"
+                              :disabled="disabled || availableOptions.length === 0"
+                              :options="availableOptions"
+                            >
+                              <template v-slot:first>
+                                <!-- This is required to prevent bugs with Safari -->
+                                <option disabled value>Choose columns...</option>
+                              </template>
+                            </b-form-select>
+                          </template>
+                        </b-form-tags>
+                      </b-form-group>
                     </b-tab>
                     <b-tab title="URL">
                       <b-form-group
@@ -184,7 +224,7 @@ export default {
   props: {
     matrices: Array,
     df_categories: Array,
-    backend_url: String,
+    backend_url: String
   },
   components: {
     matrix
@@ -223,7 +263,8 @@ export default {
           database: null,
           url: null,
           text: null
-        }
+        },
+        database_columns: [],
       },
       text: "",
       foods: [
@@ -236,6 +277,11 @@ export default {
       show: true
     };
   },
+  computed: {
+    availableOptions() {
+      return this.form.source.database.columns.slice(1).filter(opt => this.form.database_columns.indexOf(opt) === -1)
+    }
+  },
   // created() {
   //   // console.log(this.plugins);
   //   // this.fetch_matrices();
@@ -246,6 +292,15 @@ export default {
     this.timer = null;
   },
   methods: {
+    uuidv4() {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
+        c
+      ) {
+        var r = (Math.random() * 16) | 0,
+          v = c == "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    },
     change_transformation(obj) {
       // console.log(obj);
       this.form.transformation = obj;
@@ -320,11 +375,16 @@ export default {
       } else if (properties > 1) {
         this.sourceErrMsg = "Please enter no more than one data-source.";
         this.showErrorAlert = true;
-      } else if (this.form.formatting.file.csv_seperator == "" || this.form.formatting.file.decimal_character == "") {
-        this.sourceErrMsg = "The CSV seperator or decimal character for uploaded files cannot be empty.";
+      } else if (
+        this.form.formatting.file.csv_seperator == "" ||
+        this.form.formatting.file.decimal_character == ""
+      ) {
+        this.sourceErrMsg =
+          "The CSV seperator or decimal character for uploaded files cannot be empty.";
         this.showErrorAlert = true;
       } else if (this.form.formatting.text.decimal_character == "") {
-        this.sourceErrMsg = "The decimal character for pasted text cannot be empty.";
+        this.sourceErrMsg =
+          "The decimal character for pasted text cannot be empty.";
         this.showErrorAlert = true;
       } else {
         const payload = this.form.source.file;
