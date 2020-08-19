@@ -12,9 +12,12 @@ def relative_expression(metadata, df_old, df_new):
         df_new_log = np.log(df_new.select_dtypes(include=[np.number])) / np.log(metadata['transformation']['options']['value'])
         df_transformed = df_old_log.select_dtypes(include=[np.number]) / df_new_log.select_dtypes(include=[np.number])
     else:
-        df_transformed = df_old / df_new
+        df_transformed = df_old.select_dtypes(include=[np.number]) / df_new.select_dtypes(include=[np.number])
+    print(df_transformed)
     df_transformed.replace([np.inf, -np.inf], np.nan, inplace=True)
-    df_transformed.fillna(0, inplace=True)
+    print(df_transformed)
+    df_transformed.fillna('', inplace=True)
+    print(df_transformed)
     df_old[df_transformed.columns] = df_transformed
     df_transformed = df_old
     return df_transformed
