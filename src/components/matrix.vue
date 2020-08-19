@@ -73,29 +73,29 @@
                 class="log-fc-toggle"
               >Activate logarithmic fold-change</b-form-checkbox>
               <div v-if="!relative_expression.options.activated">
-              <label class="mr-sm-2" for="log-input">log Base:</label>
-              <b-form-input
-                id="log-input"
-                v-model="relative_expression.options.value"
-                type="number"
-                max="1001"
-                class="mb-2 mr-sm-2 mb-sm-0 log-input inline"
-                size="sm"
-                placeholder="'2'"
-              ></b-form-input>
-              <div class="log-preview">
-                <b-badge variant="dark" class="log-preview-badge">
-                  <span class="supsub">
-                    <span class="base formula">
-                      log
-                      <sub class="subscript">
-                        <strong class="formula-strong">{{relative_expression.options.value}} </strong>
-                      </sub>
-                      <span class="base formula">(x)</span>
+                <label class="mr-sm-2" for="log-input">log Base:</label>
+                <b-form-input
+                  id="log-input"
+                  v-model="relative_expression.options.value"
+                  type="number"
+                  max="1001"
+                  class="mb-2 mr-sm-2 mb-sm-0 log-input inline"
+                  size="sm"
+                  placeholder="'2'"
+                ></b-form-input>
+                <div class="log-preview">
+                  <b-badge variant="dark" class="log-preview-badge">
+                    <span class="supsub">
+                      <span class="base formula">
+                        log
+                        <sub class="subscript">
+                          <strong class="formula-strong">{{relative_expression.options.value}}</strong>
+                        </sub>
+                        <span class="base formula">(x)</span>
+                      </span>
                     </span>
-                  </span>
-                </b-badge>
-              </div>
+                  </b-badge>
+                </div>
               </div>
             </b-form>
           </div>
@@ -136,12 +136,14 @@ export default {
     };
   },
   created() {
-    console.log(this.matrices)
-    for (let i in this.matrices) {
-      console.log(this.matrices[i])
-      if (this.matrices[i].x === 1 && this.matrices[i].y === 2) {
-        this.selected = this.matrices[i]
-        break
+    if (this.matrices.length === 1) {
+      this.selected = this.matrices[0];
+    } else {
+      for (let i in this.matrices) {
+        if (this.matrices[i].x === 1 && this.matrices[i].y === 2) {
+          this.selected = this.matrices[i];
+          break;
+        }
       }
     }
     this.$emit("matrix_activated", this.selected);
@@ -149,10 +151,9 @@ export default {
   methods: {
     emit_transformation(current_transformation) {
       if (current_transformation.activated == true) {
-        this.transformation = current_transformation
-      }
-      else {
-        this.transformation = null
+        this.transformation = current_transformation;
+      } else {
+        this.transformation = null;
       }
       this.$emit("transformation_selected", this.transformation);
     },
@@ -260,7 +261,7 @@ svg {
   background-color: #343a40 !important;
 }
 .log-fc-toggle {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
   display: block;
 }
 </style>
