@@ -82,9 +82,15 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
         if metadata['transformation'] != '':
             transformation_type = metadata['transformation']['type']
             import transform_dataframe
-            df_old = pd.DataFrame.from_dict(db_entry['transformed_dataframe'])
+            for matrix in sum(db_entry['active_matrices'], []):
+                if matrix['id'] == metadata['matrix_id']:
+                    df = rename_df_columns(df, matrix["title"])
+                    try:
+                        df_old = pd.DataFrame.from_dict(matrix['transformed_dataframe']) # I don't know if there's ever a case where this is needed
+                    except KeyError:
+                        df_old = pd.DataFrame.from_dict(matrix['dataframe'])
+                    break
             df = transform_dataframe.main(transformation_type, metadata, df_old, df)
-            
             db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
             db_entry['transformed_dataframe'] = df.to_dict('records')
         else:
