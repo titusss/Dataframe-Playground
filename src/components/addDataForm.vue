@@ -245,6 +245,7 @@ export default {
         x: 2,
         y: 2,
         type: [],
+        matrix_id: null,
         db_entry_id: "",
         plugins_id: [],
         locked: false,
@@ -292,15 +293,6 @@ export default {
     this.timer = null;
   },
   methods: {
-    uuidv4() {
-      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
-        c
-      ) {
-        var r = (Math.random() * 16) | 0,
-          v = c == "x" ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      });
-    },
     change_transformation(obj) {
       // console.log(obj);
       this.form.transformation = obj;
@@ -400,7 +392,8 @@ export default {
     onMatrixActivated(matrix) {
       this.form.x = matrix.x;
       this.form.y = matrix.y;
-      // console.log(this.form);
+      this.form.matrix_id = matrix.id
+      console.log(this.form.matrix_id);
     }
   }
 };
