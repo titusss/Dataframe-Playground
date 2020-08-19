@@ -1,6 +1,7 @@
 import uuid
 import pandas as pd
 from bson.json_util import ObjectId
+import numpy as np
 
 max_preview_rows = 12
 max_preview_columns = 8
@@ -9,7 +10,7 @@ active_matrices = [[]]
 
 def convert_to_df(input_file, extension, metadata,):
     print(metadata["database_columns"])
-    import numpy as np
+    
     if extension == ".xlsx":
         df = pd.read_excel(input_file)
     elif extension == ".csv":
@@ -26,10 +27,9 @@ def convert_to_df(input_file, extension, metadata,):
     else:
         print("Error: No valid extension. Please upload .xlsx (Excel), .csv, or .txt (TSV).")
         return "Error"
-    df.fillna('Error', inplace=True)
+    df.fillna(0, inplace=True)
+    print(df)
     df.columns = df.columns.str.replace('.', '_') # Dot's mess with the df. Replace it with an underscore: _
-    categories = list(df.select_dtypes(np.number).columns)
-    df.columns = ['(' + metadata["title"] + ') ' + x if x in categories else x for x in df.columns] # Append the dataframe title to the column names
     return df
 
 def insert_update_entry(entry, collection, metadata):
@@ -65,23 +65,35 @@ def remove_matrix(mockup_db_entry, metadata, db, remove_id):
         db_entry_id = insert_update_entry(mockup_db_entry, db.visualizations, metadata)
     return db_entry_id
 
+def rename_df_columns(df, title):
+    categories = list(df.select_dtypes(np.number).columns)
+    df.columns = ['(' + title + ') ' + x if x in categories else x for x in df.columns] # Append the dataframe title to the column names
+    return df
+
 def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
     from pymongo import MongoClient
     import visualize
     print("metadata: ", metadata)
     if metadata['db_entry_id'] != '': # If you edit an existing visualization
+
         db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
         df = convert_to_df(input_file, extension, metadata)
-        db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
+
         if metadata['transformation'] != '':
             transformation_type = metadata['transformation']['type']
             import transform_dataframe
             df_old = pd.DataFrame.from_dict(db_entry['transformed_dataframe'])
-            db_entry['transformed_dataframe'] = transform_dataframe.main(transformation_type, metadata, df_old, df).to_dict('records')
+            df = transform_dataframe.main(transformation_type, metadata, df_old, df)
+            
+            db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
+            db_entry['transformed_dataframe'] = df.to_dict('records')
         else:
+            df = rename_df_columns(df, metadata["title"])
+            db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
             db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
     else: # If you create a new visualization
         df = convert_to_df(input_file, extension, metadata)
+        df = rename_df_columns(df, metadata["title"])
         db_entry = new_db_entry(df, metadata, pre_configured_plugins)
     db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
     db_entry['vis_links'] = []
@@ -94,9 +106,10 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
 
 def merge_db_entry(db_entry, flattened_am):
     df_merged = pd.DataFrame.from_dict(flattened_am[0]['dataframe'])
+    print(df_merged)
     for i in range(len(flattened_am)): # Looping through
         df_merged = pd.merge(df_merged, pd.DataFrame.from_dict(flattened_am[i]['dataframe']), how='outer')
-    df_merged.fillna('', inplace=True) # Replace NA values with 0
+    df_merged.fillna(0, inplace=True) # Replace NA values with 0
     db_entry['transformed_dataframe'] = df_merged.to_dict('records')
     return db_entry
 
@@ -106,10 +119,14 @@ def new_db_entry(df, metadata, pre_configured_plugins):
     db_entry['active_matrices'] = [[]]
     db_entry['plugins_id'] = pre_configured_plugins
     db_entry['transformed_dataframe'] = df.to_dict('records')
+    print('active_matrices: ', active_matrices)
     db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
+    print('active_matrices: ', active_matrices)
     return db_entry
 
 def make_active_matrix(metadata, df, active_matrices, dataframe): # NOTE: Why is there a df and a dataframe argument?
+    # This is neither readable, nor necessary, but it works for now. I'm truly sorry.
+    print('make_active_matrix')
     added_matrix = make_single_matrix(metadata['x'],metadata['y'],max_preview_columns,max_preview_rows,metadata['title'],True, dataframe)
     added_axis = 1
     if added_matrix['y']-1>len(active_matrices): # If new matrix is below current matrices (y-axis)
@@ -123,16 +140,19 @@ def make_active_matrix(metadata, df, active_matrices, dataframe): # NOTE: Why is
         added_matrix['height'] = df.shape[0]
     if df.shape[1]<max_preview_columns:
         added_matrix['width'] = df.shape[1]
-    try:
-        if metadata['transformation'] == 'relative_expression': # NOTE: What is this doing here?
-            old_matrix = pd.DataFrame.from_dict(active_matrices[added_matrix['y']-2][added_matrix['x']-2]['dataframe'])
-            divided_dataframe = old_matrix.div(df)
-            divided_dataframe = divided_dataframe.astype(int)
-            added_matrix['dataframe'] = divided_dataframe.to_dict('records')
-        active_matrices[added_matrix['y']-2][added_matrix['x']-2] = added_matrix
-    except:
-        active_matrices[added_matrix['y']-2].insert(added_matrix['x']-2, added_matrix)
+    # Yeah it doesn't get better here. Basically: If you upload the data to x=1 or y=1, it has to insert the matrix at index 0 to shift all other matrices 1 to the left or down.
+    if added_matrix['y'] == 1:
+        active_matrices[0].insert(added_matrix['x']-2, added_matrix)
+    elif added_matrix['x'] == 1:
+        active_matrices[added_matrix['y']-2].insert(0, added_matrix)
+    else:
+        try:
+            active_matrices[added_matrix['y']-2][added_matrix['x']-2] = added_matrix
+        except:
+            active_matrices[added_matrix['y']-2].insert(added_matrix['x']-2, added_matrix)
+    print('active_matrices#########################: ', active_matrices)
     active_matrices = correct_matrice_positions(active_matrices)
+    print('active_matrices corrected: ', active_matrices)
     return active_matrices, added_axis
 
 def correct_matrice_positions(active_matrices):
