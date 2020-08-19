@@ -137,18 +137,14 @@ export default {
   },
   created() {
     console.log(this.matrices)
-    if(this.matrices.length == 1) {
-      this.selected = this.matrices[0]
-    }
-    else if(this.matrices.length > 1) {
-      for(let i in this.matrices) {
-        if (this.matrices[i].x == 1) {
-          this.selected = this.matrices[i]
-          console.log(this.selected)
-          break
-        }
+    for (let i in this.matrices) {
+      console.log(this.matrices[i])
+      if (this.matrices[i].x === 1 && this.matrices[i].y === 2) {
+        this.selected = this.matrices[i]
+        break
       }
     }
+    this.$emit("matrix_activated", this.selected);
   },
   methods: {
     emit_transformation(current_transformation) {
@@ -161,7 +157,7 @@ export default {
       this.$emit("transformation_selected", this.transformation);
     },
     select_matrix() {
-      // console.log(matrix);
+      console.log(this.selected);
       this.$emit("matrix_activated", this.selected);
       if (this.selected.isActive == true) {
         this.button_enabled = true;
