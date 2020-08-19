@@ -21,8 +21,8 @@ MATRIX = [
         "id": uuid.uuid4().hex,
         "width": 5,
         "height": 5,
-        "x": 2,
-        "y": 2,
+        "x": 1,
+        "y": 1,
         "isActive": False
     }
 ]
