@@ -13,6 +13,11 @@
     "label": "Salmonella Small Proteins",
     "options": [
       {
+        "text": "2h Dual RNA Seq",
+        "value": {"filename": "salmonella-small-proteins_2h-dual-rna-seq.csv", "columns": [{"value": null, "text": "All columns"},"genes","logFC","logCPM","PValue","FDR"]},
+        "seperator": "\t"
+      },
+      {
         "text": "4h Dual RNA Seq",
         "value": {"filename": "salmonella-small-proteins_4h-dual-rna-seq.csv", "columns": [{"value": null, "text": "All columns"},"genes","logFC","logCPM","PValue","FDR"]},
         "seperator": "\t"
