@@ -1,5 +1,15 @@
 [
   {
+    "label": "SalCom Salmonella enterica Typhimurium Gene Expression Compendium",
+    "options": [
+      {
+        "text": "Salmonella RNA Seq",
+        "value": {"filename": "salmonella-salcom.csv", "columns": [{"value": null, "text": "All columns"},"locus_tag","common gene name","strand","start","end","EEP","MEP","LEP","ESP (biological replicate 1)","ESP (biological replicate 2)","ESP average (Biol. Rep. 1 and 2)","LSP  (biological replicate 1)","LSP  (biological replicate 2)","LSP average (Biol. Rep. 1 and 2)","25┴C","Cold shock (15┴C)","pH3 shock","pH5.8 shock","NaCl shock","Bile shock","LowFe2+ shock","Anaerobic shock","Anaerobic growth","Aerobic shock","InSPI2 (biological replicate 1)","InSPI2 (biological replicate 2)","InSPI2 average (Biol. Rep. 1 and 2)","InSPI2 LowMg2+","Peroxide shock (InSPI2)","Nitric oxide shock (InSPI2)","NonSPI2","Temp10","Temp20","RNA pool"]},
+        "seperator": "\t"
+      }
+    ]
+  },
+  {
     "label": "Salmonella Small Proteins",
     "options": [
       {
