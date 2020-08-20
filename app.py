@@ -198,6 +198,7 @@ def search_query():
     try:
         import filter_dataframe
         import pandas as pd
+        import numpy as np
         query = json.loads(request.form['query'])
         url = json.loads(request.form['url'])
         db_entry = db.visualizations.find_one(
@@ -207,7 +208,7 @@ def search_query():
         filtered_df = filter_dataframe.main(query, df)
         mongo_update = {
             '$set': {
-                'filtered_dataframe': filtered_df.to_dict('records'),
+                'filtered_dataframe': filtered_df.replace({np.nan: None}).to_dict('records'),
                 'vis_links': [],
                 'query': query
             }
