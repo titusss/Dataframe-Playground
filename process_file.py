@@ -27,7 +27,8 @@ def convert_to_df(input_file, extension, metadata,):
     else:
         print("Error: No valid extension. Please upload .xlsx (Excel), .csv, or .txt (TSV).")
         return "Error"
-    df.fillna(float('nan'), inplace=True)
+    print
+    # df.fillna(np.nan, inplace=True)
     print(df)
     df.columns = df.columns.str.replace('.', '_') # Dot's mess with the df. Replace it with an underscore: _
     return df
@@ -104,16 +105,16 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
             df = rename_df_columns(df, metadata["title"])
             df.info(verbose=True)
             print(df)
-            db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
+            db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.replace({np.nan: None}).to_dict('records'))
             db_entry['transformed_dataframe'] = df.to_dict('records')
         else:
             df = rename_df_columns(df, metadata["title"])
-            db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
+            db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.replace({np.nan: None}).to_dict('records'))
             db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
     else: # If you create a new visualization
         df = convert_to_df(input_file, extension, metadata)
         df = rename_df_columns(df, metadata["title"])
-        db_entry = new_db_entry(df, metadata, pre_configured_plugins)
+        db_entry = new_db_entry(df.replace({np.nan: None}), metadata, pre_configured_plugins)
     db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
     db_entry['vis_links'] = []
     db_entry['filtered_dataframe'] = []
@@ -131,9 +132,10 @@ def merge_db_entry(db_entry, flattened_am):
     df_merged = pd.DataFrame.from_dict(flattened_am[0]['dataframe'])
     for i in range(len(flattened_am)): # Looping through
         df_merged = pd.merge(df_merged, pd.DataFrame.from_dict(flattened_am[i]['dataframe']), how='outer')
-    df_merged.fillna(float('nan'), inplace=True) # Replace NA values with 0
-    db_entry['transformed_dataframe'] = df_merged.to_dict('records')
+    # df_merged.fillna(np.nan, inplace=True) # Replace NA values with 0
+    db_entry['transformed_dataframe'] = df_merged.replace({np.nan: None}).to_dict('records')
     return db_entry
+
 
 def new_db_entry(df, metadata, pre_configured_plugins):
     db_entry = {}
