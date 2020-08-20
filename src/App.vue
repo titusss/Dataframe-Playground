@@ -124,7 +124,7 @@ export default {
   },
   data() {
     return {
-      backend_url: 'https://hiri-test-service-dks4e6fxka-ew.a.run.app',
+      backend_url: 'http://localhost:5000',
       loading: {
         state: true,
         increment: 10,
