@@ -15,11 +15,14 @@ def relative_expression(metadata, df_old, df_new):
         df_transformed = df_old.select_dtypes(include=[np.number]) / df_new.select_dtypes(include=[np.number])
     print(df_transformed)
     df_transformed.replace([np.inf, -np.inf], np.nan, inplace=True)
-    print(df_transformed)
-    df_transformed.fillna('', inplace=True)
-    print(df_transformed)
+    # df_transformed = df_transformed.dropna()
+    # df_transformed = df_transformed.replace({np.nan: None})
+    
+    df_transformed.fillna(float('nan'), inplace=True)
+    print('df_transformed: ', df_transformed)
     df_old[df_transformed.columns] = df_transformed
     df_transformed = df_old
+    print(df_transformed)
     return df_transformed
 
 TRANSFORMATION_FUNCTIONS = {
