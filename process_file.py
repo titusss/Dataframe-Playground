@@ -106,7 +106,7 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
             df.info(verbose=True)
             print(df)
             db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.replace({np.nan: None}).to_dict('records'))
-            db_entry['transformed_dataframe'] = df.to_dict('records')
+            db_entry['transformed_dataframe'] = df.replace({np.nan: None}).to_dict('records')
         else:
             df = rename_df_columns(df, metadata["title"])
             db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.replace({np.nan: None}).to_dict('records'))
@@ -138,6 +138,7 @@ def merge_db_entry(db_entry, flattened_am):
 
 
 def new_db_entry(df, metadata, pre_configured_plugins):
+    print('df, new_db_entry: ', df)
     db_entry = {}
     db_entry['locked'] = False
     db_entry['active_matrices'] = [[]]
@@ -149,6 +150,7 @@ def new_db_entry(df, metadata, pre_configured_plugins):
 def make_active_matrix(metadata, df, active_matrices, dataframe): # NOTE: Why is there a df and a dataframe argument?
     # This is neither readable, nor necessary, but it works for now. I'm truly sorry.
     print('make_active_matrix')
+    print('dataframe: ', dataframe)
     added_matrix = make_single_matrix(metadata['x'],metadata['y'],max_preview_columns,max_preview_rows,metadata['title'],True, dataframe)
     added_axis = 1
     if added_matrix['y']-1>len(active_matrices): # If new matrix is below current matrices (y-axis)
