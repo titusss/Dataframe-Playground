@@ -27,7 +27,7 @@ def convert_to_df(input_file, extension, metadata,):
     else:
         print("Error: No valid extension. Please upload .xlsx (Excel), .csv, or .txt (TSV).")
         return "Error"
-    df.fillna(0, inplace=True)
+    df.fillna(float('nan'), inplace=True)
     print(df)
     df.columns = df.columns.str.replace('.', '_') # Dot's mess with the df. Replace it with an underscore: _
     return df
@@ -67,30 +67,43 @@ def remove_matrix(mockup_db_entry, metadata, db, remove_id):
 
 def rename_df_columns(df, title):
     categories = list(df.select_dtypes(np.number).columns)
+    print('categories: ', categories)
     df.columns = ['(' + title + ') ' + x if x in categories else x for x in df.columns] # Append the dataframe title to the column names
     return df
+
+def remove_df_title(title):
+    try:
+        title = title.split(') ', 1)[1]
+    except:
+        pass
+    print('title: ', title)
+    return title
 
 def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
     from pymongo import MongoClient
     import visualize
     print("metadata: ", metadata)
     if metadata['db_entry_id'] != '': # If you edit an existing visualization
-
         db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
         df = convert_to_df(input_file, extension, metadata)
-
         if metadata['transformation'] != '':
             transformation_type = metadata['transformation']['type']
             import transform_dataframe
             for matrix in sum(db_entry['active_matrices'], []):
                 if matrix['id'] == metadata['matrix_id']:
-                    df = rename_df_columns(df, matrix["title"])
                     try:
-                        df_old = pd.DataFrame.from_dict(matrix['transformed_dataframe']) # I don't know if there's ever a case where this is needed
+                        df_old = pd.DataFrame.from_dict(matrix['transformed_dataframe']) # I don't know if there's ever a case where this is needed.
                     except KeyError:
                         df_old = pd.DataFrame.from_dict(matrix['dataframe'])
+                    try:
+                        df_old.rename(columns=lambda title: remove_df_title(title), inplace=True) # Remove the title from the old base df.
+                    except:
+                        print("Error: The old dataframe's columns couldn't be renamed: ", df_old.columns)
                     break
             df = transform_dataframe.main(transformation_type, metadata, df_old, df)
+            df = rename_df_columns(df, metadata["title"])
+            df.info(verbose=True)
+            print(df)
             db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
             db_entry['transformed_dataframe'] = df.to_dict('records')
         else:
@@ -108,14 +121,17 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
         db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
     else: # Update existing DB entry when modifying an existing visualization
         db_entry_id = insert_update_entry(db_entry, db.visualizations, metadata)
+    try:
+        print(db_entry['transformed_dataframe'])
+    except:
+        print(db_entry['dataframe'])
     return db_entry_id
 
 def merge_db_entry(db_entry, flattened_am):
     df_merged = pd.DataFrame.from_dict(flattened_am[0]['dataframe'])
-    print(df_merged)
     for i in range(len(flattened_am)): # Looping through
         df_merged = pd.merge(df_merged, pd.DataFrame.from_dict(flattened_am[i]['dataframe']), how='outer')
-    df_merged.fillna(0, inplace=True) # Replace NA values with 0
+    df_merged.fillna(float('nan'), inplace=True) # Replace NA values with 0
     db_entry['transformed_dataframe'] = df_merged.to_dict('records')
     return db_entry
 
@@ -125,9 +141,7 @@ def new_db_entry(df, metadata, pre_configured_plugins):
     db_entry['active_matrices'] = [[]]
     db_entry['plugins_id'] = pre_configured_plugins
     db_entry['transformed_dataframe'] = df.to_dict('records')
-    print('active_matrices: ', active_matrices)
     db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
-    print('active_matrices: ', active_matrices)
     return db_entry
 
 def make_active_matrix(metadata, df, active_matrices, dataframe): # NOTE: Why is there a df and a dataframe argument?
@@ -156,9 +170,9 @@ def make_active_matrix(metadata, df, active_matrices, dataframe): # NOTE: Why is
             active_matrices[added_matrix['y']-2][added_matrix['x']-2] = added_matrix
         except:
             active_matrices[added_matrix['y']-2].insert(added_matrix['x']-2, added_matrix)
-    print('active_matrices#########################: ', active_matrices)
+    # print('active_matrices#########################: ', active_matrices)
     active_matrices = correct_matrice_positions(active_matrices)
-    print('active_matrices corrected: ', active_matrices)
+    # print('active_matrices corrected: ', active_matrices)
     return active_matrices, added_axis
 
 def correct_matrice_positions(active_matrices):
