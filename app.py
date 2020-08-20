@@ -213,7 +213,7 @@ def search_query():
             }
         }
         db_entry_id = upload_db_entry(db_entry, mongo_update, url)
-        return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
+        return Response(dumps({'db_entry_id': db_entry_id}, allow_nan=True), mimetype="application/json")
     except KeyError:
         print('###### ERROR')
         return respond_error(ERROR_MESSAGES['query_error']['expected']['type'], ERROR_MESSAGES['query_error']['expected']['message'])
@@ -259,7 +259,7 @@ def make_vis_link():
             '$push': {'vis_links': vis_link}})
         print(vis_link)
         print('########')
-        return Response(dumps({'vis_link': vis_link}), mimetype="application/json")
+        return Response(dumps({'vis_link': vis_link}, allow_nan=True), mimetype="application/json")
     except (IndexError, TypeError):
         print('###### ERROR')
         return respond_error(ERROR_MESSAGES['visualization_error']['expected']['type'], ERROR_MESSAGES['visualization_error']['expected']['message'])
@@ -297,7 +297,7 @@ def add_plugin():
         db_entry_id = ObjectId(metadata['db_entry_id'])
         print('db_entry_id filled id: ', db_entry_id)
     print('db_plugins_id: ', db_plugin_entry_id)
-    return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
+    return Response(dumps({'db_entry_id': db_entry_id}, allow_nan=True), mimetype="application/json")
 
 @app.route('/config', methods=['GET', 'POST'])
 def respond_config():
@@ -313,7 +313,7 @@ def respond_config():
             db_entry['_id'] = str(db_entry['_id'])
             db_entry['plugins'] = [plugin for plugin in db.plugins.find(
                 {'_id': {'$in': db_entry['plugins_id']}})]
-            return Response(dumps({'db_entry': db_entry}), mimetype="application/json")
+            return Response(dumps({'db_entry': db_entry}, allow_nan=True), mimetype="application/json")
         else:
             print('undefined')
             import copy
@@ -321,7 +321,7 @@ def respond_config():
 
             db_entry['plugins'] = [plugin for plugin in db.plugins.find(
                 {'_id': {'$in': db_entry['plugins_id']}})]
-            return Response(dumps({'db_entry': db_entry}), mimetype="application/json")
+            return Response(dumps({'db_entry': db_entry}, allow_nan=True), mimetype="application/json")
     except KeyError:
         print('###### ERROR')
         return respond_error(ERROR_MESSAGES['config_error']['expected']['type'], ERROR_MESSAGES['config_error']['expected']['message'])
@@ -331,7 +331,7 @@ def respond_config():
 
 
 def respond_error(error_type, error_message):
-    return Response(dumps({'error_type': error_type, 'error_message': error_message}), mimetype="application/json")
+    return Response(dumps({'error_type': error_type, 'error_message': error_message}, allow_nan=True), mimetype="application/json")
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -344,7 +344,7 @@ def add_matrix():
         metadata['formatting']['file']['decimal_character'] = ','
     source, extension = upload_file(request, ALLOWED_EXTENSIONS_MATRIX, metadata)
     db_entry_id = process_file.add_matrix(source, metadata, extension, db, PRE_CONFIGURED_PLUGINS)
-    return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
+    return Response(dumps({'db_entry_id': db_entry_id}, allow_nan=True), mimetype="application/json")
     # except ValueError:
     #     print('###### ERROR')
     #     return respond_error(ERROR_MESSAGES['upload_error']['expected']['type'], ERROR_MESSAGES['upload_error']['expected']['message'])
@@ -390,7 +390,7 @@ def remove_matrix(matrix_id):
     print('###### metadata: ', metadata)
     db_entry_id = process_file.remove_matrix(
         DB_ENTRY_MOCKUP, metadata, db, matrix_id)
-    return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
+    return Response(dumps({'db_entry_id': db_entry_id}, allow_nan=True), mimetype="application/json")
 
 
 def make_preview(input_file, extension, dataList, remove_id):
