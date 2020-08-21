@@ -92,25 +92,21 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
             import transform_dataframe
             for matrix in sum(db_entry['active_matrices'], []):
                 if matrix['id'] == metadata['matrix_id']:
-                    try:
-                        df_old = pd.DataFrame.from_dict(matrix['transformed_dataframe']) # I don't know if there's ever a case where this is needed.
-                    except KeyError:
-                        df_old = pd.DataFrame.from_dict(matrix['dataframe'])
+                    df_old = pd.DataFrame.from_dict(matrix['dataframe'])
                     try:
                         df_old.rename(columns=lambda title: remove_df_title(title), inplace=True) # Remove the title from the old base df.
                     except:
                         print("Error: The old dataframe's columns couldn't be renamed: ", df_old.columns)
                     break
             df = transform_dataframe.main(transformation_type, metadata, df_old, df)
-            df = rename_df_columns(df, metadata["title"])
-            df.info(verbose=True)
-            print(df)
-            db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.replace({np.nan: None}).to_dict('records'))
-            db_entry['transformed_dataframe'] = df.replace({np.nan: None}).to_dict('records')
-        else:
-            df = rename_df_columns(df, metadata["title"])
-            db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.replace({np.nan: None}).to_dict('records'))
-            db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
+            # df = rename_df_columns(df, metadata["title"])
+            # df.info(verbose=True)
+            # print(df)
+            # db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.replace({np.nan: None}).to_dict('records'))
+            # db_entry['transformed_dataframe'] = df.replace({np.nan: None}).to_dict('records')
+        df = rename_df_columns(df, metadata["title"])
+        db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.replace({np.nan: None}).to_dict('records'))
+        db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
     else: # If you create a new visualization
         df = convert_to_df(input_file, extension, metadata)
         df = rename_df_columns(df, metadata["title"])
@@ -130,8 +126,8 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
 
 def merge_db_entry(db_entry, flattened_am):
     df_merged = pd.DataFrame.from_dict(flattened_am[0]['dataframe'])
-    for i in range(len(flattened_am)): # Looping through
-        df_merged = pd.merge(df_merged, pd.DataFrame.from_dict(flattened_am[i]['dataframe']), how='outer')
+    for i in range(len(flattened_am)): # Looping through. This could be replaced in the future by merging only with the single transformed_dataframe.
+        df_merged = pd.merge(df_merged, pd.DataFrame.from_dict(flattened_am[i]['dataframe']), how='outer') # NOTE: Performance
     # df_merged.fillna(np.nan, inplace=True) # Replace NA values with 0
     db_entry['transformed_dataframe'] = df_merged.replace({np.nan: None}).to_dict('records')
     return db_entry
