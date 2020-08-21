@@ -12,7 +12,10 @@ node_modules
 *.env
 =======
 __pycache__/
-plotly
+
+# Plotly credentials
+.plotly
+*.credentials
 
 # local env files
 .venv.local
