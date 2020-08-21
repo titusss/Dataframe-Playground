@@ -1,7 +1,7 @@
 # To-Do: Configure CORS to only allow specific requests. Very important!
 
 import os
-from flask import Flask, flash, request, redirect, url_for, jsonify, send_from_directory, Response
+from flask import Flask, flash, request, redirect, url_for, jsonify, send_from_directory, Response, send_file
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 import uuid
@@ -145,20 +145,20 @@ def export_df():
         except (KeyError, TypeError):
             pass
         dataframe_dict["unfiltered"] = {}
-        dataframe_dict["unfiltered"]["df"] = pd.DataFrame.from_dict(db_entry['transformed_dataframe'])
+        try:
+            dataframe_dict["unfiltered"]["df"] = pd.DataFrame.from_dict(db_entry['transformed_dataframe'])
+        except KeyError: # This is probably unnecessary, as every entry should have a transformed_dataframe, in theory.
+            print("NOTE: db_entry['transformed_dataframe'] not found, using db_entry['dataframe'] instead.")
+            dataframe_dict["unfiltered"]["df"] = pd.DataFrame.from_dict(db_entry['dataframe'])
         dataframe_dict["unfiltered"]["name"] = "Source Data"
         if export_form["file_type"] == 'excel':
             res = df_to_excel(dataframe_dict)
         elif export_form["file_type"] == 'csv':
             res = df_to_csv(dataframe_dict, export_form['csv_seperator'])
         return res
-    except ValueError:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['export_error']['expected']['type'], ERROR_MESSAGES['export_error']['expected']['message'])
     except Exception as e:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['export_error']['unexpected']['type'], ERROR_MESSAGES['export_error']['unexpected']['message'])
-
+        print(str(e))
+        return respond_error(ERROR_MESSAGES['export_error']['expected']['type'], str(e))
 
 def df_to_excel(dataframe_dict):
     from io import BytesIO
@@ -167,12 +167,12 @@ def df_to_excel(dataframe_dict):
     writer = pd.ExcelWriter(output, engine='xlsxwriter')
     # Load the filtered, and unfiltered dataframe as excel sheets.
     for dataframe_parent in dataframe_dict:
-        dataframe_dict[dataframe_parent]["df"].to_excel(
-            writer, sheet_name=dataframe_dict[dataframe_parent]["name"], index=False)
+        dataframe_dict[dataframe_parent]["df"].to_excel(writer, sheet_name=dataframe_dict[dataframe_parent]["name"], index=False)
     writer.close()
     output.seek(0)
-    return Response(output, mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-disposition": "attachment; filename=filename.xlsx"})
-
+    return send_file(output, mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", as_attachment=True, attachment_filename="dataframes.xlsx")
+    # This is the only instance where the send_file module from flask is used. You can try an approach with Response as below, however this exact implementation has caused the excel file to be corrupted.
+    # return Response(output, mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-disposition": "attachment; filename=filename.xlsx"})
 
 def df_to_csv(dataframe_dict, seperator):
     # CSV doesn't support multi-sheets, so only one dataframe can be exported.
@@ -180,8 +180,7 @@ def df_to_csv(dataframe_dict, seperator):
         df = dataframe_dict["filtered"]["df"]
     except KeyError:
         df = dataframe_dict["unfiltered"]["df"]
-    return Response(df.to_csv(sep=seperator, index=False, encoding='utf-8'), mimetype="text/csv", headers={"Content-disposition": "attachment; filename=filename.csv"})
-
+    return Response(df.to_csv(sep=seperator, index=False, encoding='utf-8'), mimetype="text/csv", headers={"Content-disposition": "attachment; filename=dataframe.csv"})
 
 def upload_db_entry(db_entry, mongo_update, url):
     if 'locked' in db_entry and db_entry['locked'] == True:
@@ -191,7 +190,6 @@ def upload_db_entry(db_entry, mongo_update, url):
         db_entry_id = ObjectId(url)
         db.visualizations.update_one({'_id': db_entry_id}, mongo_update)
     return db_entry_id
-
 
 @app.route('/query', methods=['POST'])
 def search_query():
@@ -215,13 +213,9 @@ def search_query():
         }
         db_entry_id = upload_db_entry(db_entry, mongo_update, url)
         return Response(dumps({'db_entry_id': db_entry_id}, allow_nan=True), mimetype="application/json")
-    except KeyError:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['query_error']['expected']['type'], ERROR_MESSAGES['query_error']['expected']['message'])
     except Exception as e:
         print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['query_error']['unexpected']['type'], ERROR_MESSAGES['query_error']['unexpected']['message'])
-
+        return respond_error(ERROR_MESSAGES['query_error']['expected']['type'], str(e))
 
 @app.route('/locked', methods=['POST'])
 def lock_session():
@@ -232,13 +226,9 @@ def lock_session():
         db.visualizations.update_one({'_id': ObjectId(url)}, {
             '$set': {'locked': True}})
         return "success"
-    except KeyError:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['locking_error']['expected']['type'], ERROR_MESSAGES['locking_error']['expected']['message'])
     except Exception as e:
         print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['locking_error']['unexpected']['type'], ERROR_MESSAGES['locking_error']['unexpected']['message'])
-
+        return respond_error(ERROR_MESSAGES['locking_error']['expected']['type'], str(e))
 
 @app.route('/visualization', methods=['POST'])
 def make_vis_link():
@@ -261,12 +251,9 @@ def make_vis_link():
         print(vis_link)
         print('########')
         return Response(dumps({'vis_link': vis_link}, allow_nan=True), mimetype="application/json")
-    except (IndexError, TypeError):
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['visualization_error']['expected']['type'], ERROR_MESSAGES['visualization_error']['expected']['message'])
     except Exception as e:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['visualization_error']['unexpected']['type'], ERROR_MESSAGES['visualization_error']['unexpected']['message'])
+        print(str(e))
+        return respond_error(ERROR_MESSAGES['visualization_error']['expected']['type'], str(e))
 
 @app.route('/plugins', methods=['POST'])
 def add_plugin():
@@ -319,40 +306,30 @@ def respond_config():
             print('undefined')
             import copy
             db_entry = copy.deepcopy(DB_ENTRY_MOCKUP)
-
             db_entry['plugins'] = [plugin for plugin in db.plugins.find(
                 {'_id': {'$in': db_entry['plugins_id']}})]
             return Response(dumps({'db_entry': db_entry}, allow_nan=True), mimetype="application/json")
-    except KeyError:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['config_error']['expected']['type'], ERROR_MESSAGES['config_error']['expected']['message'])
     except Exception as e:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['config_error']['unexpected']['type'], ERROR_MESSAGES['config_error']['unexpected']['message'])
-
+        print(str(e))
+        return respond_error(ERROR_MESSAGES['config_error']['expected']['type'], str(e))
 
 def respond_error(error_type, error_message):
     return Response(dumps({'error_type': error_type, 'error_message': error_message}, allow_nan=True), mimetype="application/json")
 
-
 @app.route('/upload', methods=['GET', 'POST'])
 def add_matrix():
-    # try:
-    metadata = json.loads(request.form['form'])
-    print("metadata: ", metadata)
-    if metadata['source']['database'] != None: # NOTE: Unelegant. Determine decimal and seperator characters of database csv's.
-        metadata['formatting']['file']['csv_seperator'] = '\t'
-        metadata['formatting']['file']['decimal_character'] = ','
-    source, extension = upload_file(request, ALLOWED_EXTENSIONS_MATRIX, metadata)
-    db_entry_id = process_file.add_matrix(source, metadata, extension, db, PRE_CONFIGURED_PLUGINS)
-    return Response(dumps({'db_entry_id': db_entry_id}, allow_nan=True), mimetype="application/json")
-    # except ValueError:
-    #     print('###### ERROR')
-    #     return respond_error(ERROR_MESSAGES['upload_error']['expected']['type'], ERROR_MESSAGES['upload_error']['expected']['message'])
-    # except Exception as e:
-    #     print('ERROR')
-    #     return respond_error(ERROR_MESSAGES['upload_error']['unexpected']['type'], ERROR_MESSAGES['upload_error']['unexpected']['message'])
-
+    try:
+        metadata = json.loads(request.form['form'])
+        print("metadata: ", metadata)
+        if metadata['source']['database'] != None: # NOTE: Unelegant. Determine decimal and seperator characters of database csv's.
+            metadata['formatting']['file']['csv_seperator'] = '\t'
+            metadata['formatting']['file']['decimal_character'] = ','
+        source, extension = upload_file(request, ALLOWED_EXTENSIONS_MATRIX, metadata)
+        db_entry_id = process_file.add_matrix(source, metadata, extension, db, PRE_CONFIGURED_PLUGINS)
+        return Response(dumps({'db_entry_id': db_entry_id}, allow_nan=True), mimetype="application/json")
+    except Exception as e:
+        print(str(e))
+        return respond_error(ERROR_MESSAGES['upload_error']['expected']['type'], str(e))
 
 def respond_data(label, payload):
     response_object = {'status': 'success'}
@@ -379,11 +356,9 @@ def upload_file(request, extension_whitelist, metadata):
         return file, extension
     return "failure"
 
-
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
 
 @app.route('/matrix/<matrix_id>', methods=['GET', 'POST'])
 def remove_matrix(matrix_id):
@@ -393,7 +368,6 @@ def remove_matrix(matrix_id):
         DB_ENTRY_MOCKUP, metadata, db, matrix_id)
     return Response(dumps({'db_entry_id': db_entry_id}, allow_nan=True), mimetype="application/json")
 
-
 def make_preview(input_file, extension, dataList, remove_id):
     MATRIX.clear()
     MATRICES, DATAFRAME, db_data_id = process_file.process_upload(
@@ -402,6 +376,4 @@ def make_preview(input_file, extension, dataList, remove_id):
         MATRIX.append(MATRICES[i])
     return DATAFRAME
 
-
-print('ran')
 client.close()
