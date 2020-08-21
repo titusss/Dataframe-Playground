@@ -2,7 +2,7 @@
   <div>
     <b-card>
       <div class="table-options">
-        <b-form-group label="Filter" label-size="sm" label-for="filterInput" class="inline-element">
+        <b-form-group label="Search" label-size="sm" label-for="filterInput" class="inline-element">
           <b-form-input
             v-model="filter"
             type="search"
@@ -13,7 +13,7 @@
           ></b-form-input>
         </b-form-group>
         <b-form-group
-          label="Per page"
+          label="Show"
           label-size="sm"
           label-for="perPageSelect"
           class="inline-element"
@@ -23,8 +23,9 @@
             id="perPageSelect"
             size="sm"
             :options="pageOptions"
-            class="inline-element"
+            class="inline-element rows-per-page"
           ></b-form-select>
+          <span style="display: inline !important;" class="d-block col-form-label-sm"> of {{this.totalRows}}</span>
         </b-form-group>
         <b-form-group class="inline-element">
           <b-pagination
@@ -254,5 +255,8 @@ input:checked + .slider:before {
   font-size: 0.875rem;
   line-height: 1.5;
   margin-left: 5px;
+}
+.rows-per-page {
+  max-width: max-content !important;
 }
 </style>
