@@ -147,23 +147,22 @@ export default {
       axios({
         url: `${this.backend_url}/export`,
         method: "POST",
-        // responseType: "blob",
+        responseType: "blob",
         data: payload
       }).then(res => {
-        console.log("response, yay!");
         if (res.data.error_type) {
           this.$emit("error_occured", res.data);
         } else {
-          var fileURL = window.URL.createObjectURL(new Blob([res.data]));
-          var fileLink = document.createElement("a");
-          fileLink.href = fileURL;
+          const url = window.URL.createObjectURL(new Blob([res.data]));
+          const link = document.createElement('a');
+          link.href = url;
           if (file_type == "excel") {
-            fileLink.setAttribute("download", "dataframes.xlsx");
+            link.setAttribute('download', 'dataframes.xlsx');
           } else if (file_type == "csv") {
-            fileLink.setAttribute("download", "dataframe.csv");
+            link.setAttribute("download", "dataframe.csv");
           }
-          document.body.appendChild(fileLink);
-          fileLink.click();
+          document.body.appendChild(link);
+          link.click();
         }
       });
     }
