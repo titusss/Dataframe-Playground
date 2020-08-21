@@ -4,7 +4,10 @@
 node_modules
 /dist
 __pycache__/
-plotly
+
+# Plotly credentials
+.plotly
+*.credentials
 
 # local env files
 .venv.local
