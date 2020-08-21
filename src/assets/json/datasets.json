@@ -1,4 +1,5 @@
 [
+  {"value": null, "text": "Please select a dataset"},
   {
     "label": "SalCom Salmonella enterica Typhimurium Gene Expression Compendium",
     "options": [

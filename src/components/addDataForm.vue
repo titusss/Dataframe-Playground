@@ -13,7 +13,7 @@
       <b-container class="bv-example-row">
         <b-row>
           <b-col>
-            <h2>Add Data</h2>
+            <h2 style="cursor:help; display:inline-block;" v-b-popover.hover.bottom="'Upload various datasets from our databases or your local machine. If you give datasets the same title, the tool will automatically merge them without data-loss. '" title="Upload a dataset">Add Data</h2>
             <b-form @submit="onSubmit" @reset="onReset" v-if="show">
               <!-- <b-form-group id="input-group-4" label="Type:" label-for="checkboxes-4">
             <b-form-radio-group v-model="form.type" id="checkboxes-4" required>
@@ -43,7 +43,59 @@
               <b-form-group id="input-group-6" label="Source:" label-for="source-card">
                 <b-card no-body id="source-card">
                   <b-tabs card>
-                    <b-tab title="Paste Text" active>
+                    <b-tab title="Dataset" active>
+                      <b-form-group
+                        id="input-group-3"
+                        description="Upload various experimental results for organisms from our global database."
+                      >
+                        <b-form-select
+                          id="input-3"
+                          v-model="form.source.database"
+                          :options="datasets"
+                        ></b-form-select>
+                      </b-form-group>
+                      <b-form-group
+                        v-if="form.source.database"
+                        id="input-group-4"
+                        description="Leave the field blank to upload the whole dataset or select specific columns."
+                        label="Select columns"
+                      >
+                        <b-form-tags
+                          v-model="form.database_columns"
+                          size="lg"
+                          add-on-change
+                          no-outer-focus
+                          class="mb-2"
+                        >
+                          <template
+                            v-slot="{ tags, inputAttrs, inputHandlers, disabled, removeTag }"
+                          >
+                            <ul v-if="tags.length > 0" class="list-inline d-inline-block mb-2">
+                              <li v-for="tag in tags" :key="tag" class="list-inline-item">
+                                <b-form-tag
+                                  @remove="removeTag(tag)"
+                                  :title="tag"
+                                  :disabled="disabled"
+                                  variant="dark"
+                                >{{ tag }}</b-form-tag>
+                              </li>
+                            </ul>
+                            <b-form-select
+                              v-bind="inputAttrs"
+                              v-on="inputHandlers"
+                              :disabled="disabled || availableOptions.length === 0"
+                              :options="availableOptions"
+                            >
+                              <template v-slot:first>
+                                <!-- This is required to prevent bugs with Safari -->
+                                <option disabled value>Choose columns...</option>
+                              </template>
+                            </b-form-select>
+                          </template>
+                        </b-form-tags>
+                      </b-form-group>
+                    </b-tab>
+                    <b-tab title="Paste Text">
                       <b-form-group
                         id="input-group-1"
                         description="Paste a tab-seperated table here. Avoid using the dot character ('.') as it will be replaced by an underscore ('_')."
@@ -126,64 +178,12 @@
 
                       <!-- <div class="mt-3">Selected file: {{ form.source.file ? form.source.file.name : '' }}</div> -->
                     </b-tab>
-                    <b-tab title="Dataset">
-                      <b-form-group
-                        id="input-group-3"
-                        description="Select a dataset from our global database."
-                      >
-                        <b-form-select
-                          id="input-3"
-                          v-model="form.source.database"
-                          :options="datasets"
-                        ></b-form-select>
-                      </b-form-group>
-                      <b-form-group
-                        v-if="form.source.database"
-                        id="input-group-4"
-                        description="Leave the field blank to upload the whole dataset or select specific columns."
-                        label="Select columns"
-                      >
-                        <b-form-tags
-                          v-model="form.database_columns"
-                          size="lg"
-                          add-on-change
-                          no-outer-focus
-                          class="mb-2"
-                        >
-                          <template
-                            v-slot="{ tags, inputAttrs, inputHandlers, disabled, removeTag }"
-                          >
-                            <ul v-if="tags.length > 0" class="list-inline d-inline-block mb-2">
-                              <li v-for="tag in tags" :key="tag" class="list-inline-item">
-                                <b-form-tag
-                                  @remove="removeTag(tag)"
-                                  :title="tag"
-                                  :disabled="disabled"
-                                  variant="dark"
-                                >{{ tag }}</b-form-tag>
-                              </li>
-                            </ul>
-                            <b-form-select
-                              v-bind="inputAttrs"
-                              v-on="inputHandlers"
-                              :disabled="disabled || availableOptions.length === 0"
-                              :options="availableOptions"
-                            >
-                              <template v-slot:first>
-                                <!-- This is required to prevent bugs with Safari -->
-                                <option disabled value>Choose columns...</option>
-                              </template>
-                            </b-form-select>
-                          </template>
-                        </b-form-tags>
-                      </b-form-group>
-                    </b-tab>
                     <b-tab title="URL">
                       <b-form-group
                         id="input-group-1"
                         description="Enter a valid URL to your dataset."
                       >
-                        <b-form-input id="input-1" v-model="form.source.url" type="url" placeholder></b-form-input>
+                        <b-form-input disabled id="input-1" v-model="form.source.url" type="url" placeholder></b-form-input>
                       </b-form-group>
                     </b-tab>
                   </b-tabs>
@@ -196,7 +196,7 @@
             </b-form>
           </b-col>
           <b-col class="center">
-            <h2>Matrix Preview</h2>
+            <h2 style="cursor:help;" v-b-popover.hover.top="'Choose where your dataframe should be placed. Select an existing matrix to replace it after uploading or to perform transformations.'" title="Place your data">Matrix Preview</h2>
             <matrix
               @delete="delete_matrix"
               v-bind:matrices="matrices"
