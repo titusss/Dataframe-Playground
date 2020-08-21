@@ -214,7 +214,7 @@ export default {
             this.config = res.data.db_entry;
             this.$nextTick(() => {
               this.loading.state = false;
-              // console.log(this.config);
+              console.log(this.config);
               // console.log(res);
               // console.log(this.config.plugins[0]);
             });
