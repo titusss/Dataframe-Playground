@@ -30,16 +30,16 @@
     <div class="table_buttons">
       <b-button-group>
         <b-button
-          v-b-toggle.collapse-differential
-          v-b-popover.hover.top="'Merges uploaded data with selected table for differential expression when selected.'"
-          title="Differential Expression"
+          v-b-toggle.collapse-relative
+          v-b-popover.hover.top="'Divides the selected dataframe B by the uploaded data A for relative expression when activated.'"
+          title="Relative Expression"
           :pressed.sync="relative_expression.activated"
           :disabled="button_enabled == 0"
           @click="emit_transformation(relative_expression)"
           size="sm"
           variant="secondary"
         >
-          <img src="../assets/differential.svg" class="img_in_btn" />Differential
+          <img src="../assets/differential.svg" class="img_in_btn" />Relative Expression
         </b-button>
         <b-button
           v-b-modal.modal_delete
@@ -52,7 +52,7 @@
         </b-button>
       </b-button-group>
 
-      <b-collapse id="collapse-differential" class="mt-2">
+      <b-collapse id="collapse-relative" class="mt-2">
         <b-card class="transformation-options">
           <!-- <p class="card-text">Select base column for normalization.</p> -->
           <div>
