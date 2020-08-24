@@ -176,10 +176,11 @@ def df_to_excel(dataframe_dict):
 
 def df_to_csv(dataframe_dict, seperator):
     # CSV doesn't support multi-sheets, so only one dataframe can be exported.
-    try:
-        df = dataframe_dict["filtered"]["df"]
-    except KeyError:
+    import pandas as pd
+    if len(dataframe_dict["filtered"]["df"].index) == 0: # If the dataframe is not filtered, export the unfiltered one.
         df = dataframe_dict["unfiltered"]["df"]
+    else:
+        df = dataframe_dict["filtered"]["df"]
     return Response(df.to_csv(sep=seperator, index=False, encoding='utf-8'), mimetype="text/csv", headers={"Content-disposition": "attachment; filename=dataframe.csv"})
 
 def upload_db_entry(db_entry, mongo_update, url):
