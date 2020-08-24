@@ -13,7 +13,8 @@
       <b-container class="bv-example-row">
         <b-row>
           <b-col>
-            <h2 style="cursor:help; display:inline-block;" v-b-popover.hover.bottom="'Upload various datasets from our databases or your local machine. If you give datasets the same title, the tool will automatically merge them without data-loss. '" title="Upload a dataset">Add Data</h2>
+            <h2 style="cursor:help; display:inline-block;" id="upload-dataset-popover-target">Add Data</h2>
+              <b-popover target="upload-dataset-popover-target" triggers="hover" placement="top"><template v-slot:title>Upload a dataset</template>Upload various datasets from our databases or your local machine. If you give datasets the same title, the tool will automatically merge them without data-loss. <strong>Dataframes must have at least 1 matching column.</strong></b-popover>
             <b-form @submit="onSubmit" @reset="onReset" v-if="show">
               <!-- <b-form-group id="input-group-4" label="Type:" label-for="checkboxes-4">
             <b-form-radio-group v-model="form.type" id="checkboxes-4" required>
@@ -46,7 +47,7 @@
                     <b-tab title="Dataset" active>
                       <b-form-group
                         id="input-group-3"
-                        description="Upload various experimental results for organisms from our global database."
+                        description="Use various experimental results (e.g. Salmonella RNA-seq) for organisms from our global database."
                       >
                         <b-form-select
                           id="input-3"
@@ -98,7 +99,7 @@
                     <b-tab title="Paste Text">
                       <b-form-group
                         id="input-group-1"
-                        description="Paste a tab-seperated table here. Avoid using the dot character ('.') as it will be replaced by an underscore ('_')."
+                        description="Copy a table from your favorite editor (e.g. Excel, OpenOffice) and paste it here. The dot character ('.') will be replaced by an underscore ('_') in text cells."
                       >
                         <b-form-textarea
                           id="textarea"
