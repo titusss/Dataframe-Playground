@@ -48,6 +48,7 @@ def insert_update_entry(entry, collection, metadata):
 
 # NOTE: remove_matrix is just shy of being redundant enough with add_matrix to not merge them into one function
 def remove_matrix(mockup_db_entry, metadata, db, remove_id):
+    print('remove_id', remove_id)
     from pymongo import MongoClient
     import visualize
     db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
@@ -57,8 +58,10 @@ def remove_matrix(mockup_db_entry, metadata, db, remove_id):
     db_entry['vis_links'] = []
     db_entry['filtered_dataframe'] = []
     if len(sum(db_entry['active_matrices'], []))>0:
+        print('sum long enough')
         db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
         db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
+
         # db_entry['vis_links'] = visualize.route(db.plugins, pd.DataFrame.from_dict(db_entry['transformed_dataframe']), metadata['categories'], db_entry['plugins_id']) # CHANGE: Right now every new visualization creates a new MongoDB entry
         db_entry_id = insert_update_entry(db_entry, db.visualizations, metadata)
     else:
@@ -80,10 +83,10 @@ def remove_df_title(title):
     print('title: ', title)
     return title
 
+# NOTE: This is a giant pile of 'mess'. Currently there only exists one dataframe and any kind of addition or subtractions means completely rebuilding this df from every source df in active_matrices.
 def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
     from pymongo import MongoClient
     import visualize
-    print("metadata: ", metadata)
     if metadata['db_entry_id'] != '': # If you edit an existing visualization
         db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
         df = convert_to_df(input_file, extension, metadata)
@@ -99,11 +102,6 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
                         print("Error: The old dataframe's columns couldn't be renamed: ", df_old.columns)
                     break
             df = transform_dataframe.main(transformation_type, metadata, df_old, df)
-            # df = rename_df_columns(df, metadata["title"])
-            # df.info(verbose=True)
-            # print(df)
-            # db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.replace({np.nan: None}).to_dict('records'))
-            # db_entry['transformed_dataframe'] = df.replace({np.nan: None}).to_dict('records')
         df = rename_df_columns(df, metadata["title"])
         db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.replace({np.nan: None}).to_dict('records'))
         db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
@@ -118,10 +116,6 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
         db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
     else: # Update existing DB entry when modifying an existing visualization
         db_entry_id = insert_update_entry(db_entry, db.visualizations, metadata)
-    try:
-        print(db_entry['transformed_dataframe'])
-    except:
-        print(db_entry['dataframe'])
     return db_entry_id
 
 def merge_db_entry(db_entry, flattened_am):
@@ -131,7 +125,6 @@ def merge_db_entry(db_entry, flattened_am):
     # df_merged.fillna(np.nan, inplace=True) # Replace NA values with 0
     db_entry['transformed_dataframe'] = df_merged.replace({np.nan: None}).to_dict('records')
     return db_entry
-
 
 def new_db_entry(df, metadata, pre_configured_plugins):
     print('df, new_db_entry: ', df)
