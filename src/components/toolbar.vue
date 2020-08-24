@@ -9,10 +9,14 @@
       >This URL is now locked and cannot be modified.</b-toast>
     </div>
     <b-button-toolbar class="toolbar">
-      <b-button-group class="mr-1">
+      <b-button-group
+        class="mr-1"
+        id="toolbar_group"
+      >
+        <b-popover id="tutorial_popover" :no-fade="true" triggers="" placement="top" target="toolbar_group" title="6. Save and download">Click the Lock button to save this session indefinitely. You can then share the URL to friends or in publications. A locked session is still interactive but any modification will generate a new URL and leave the locked session untouched. Click the download icon to download an Excel or CSV file.</b-popover>
         <b-button
           :disabled="disabled_lock"
-          title="Save file"
+          title="Save session"
           :variant="button_lock"
           @click="lock_session"
         >
@@ -20,7 +24,7 @@
         </b-button>
         <b-dropdown
           class="dropdown-export"
-          title="Load file"
+          title="Download excel or csv"
           variant="light"
           toggle-class="text-decoration-none"
           no-caret
@@ -79,6 +83,9 @@
         <b-button title="New document" variant="light" @click="new_session">
           <b-icon icon="file-earmark" aria-hidden="true"></b-icon>
         </b-button>
+        <b-button title="Help" :variant="tutorial_button_variant" @click="toggle_tutorial">
+          <b-icon icon="question-circle" aria-hidden="true"></b-icon>
+        </b-button>
       </b-button-group>
     </b-button-toolbar>
   </div>
@@ -96,6 +103,8 @@ export default {
       icon_lock: "unlock",
       button_lock: "light",
       disabled_lock: true,
+      tutorial_activated: false,
+      tutorial_button_variant: "light",
       url: null,
       export_form: {
         file_type: null,
@@ -104,6 +113,7 @@ export default {
     };
   },
   created() {
+    console.log(this.tutorial_activated)
     this.url = window.location.href;
     if (this.locked == true) {
       this.disabled_lock = true;
@@ -111,6 +121,22 @@ export default {
       this.icon_lock = "lock";
     } else if (this.locked == false) {
       this.disabled_lock = false;
+    }
+    // Always closes tutorial popovers. This is only for bulletproofing and is probably not necessary. PERFORMANCE.
+    this.$root.$emit('bv::hide::popover', 'tutorial_popover')
+  },
+  watch: {
+    // This doesn't need to be watched and could be handled by the "toggle_tutorial()" method and could be integrated there.
+    // Watching it, however, makes sure the tutorial is only shown when it's var is set to true, not just when the toolbar button is clicked.
+    tutorial_activated: function() {
+      if (this.tutorial_activated === true) {
+        this.tutorial_button_variant = 'secondary'
+        this.$root.$emit('bv::show::popover', 'tutorial_popover')
+      } else if (this.tutorial_activated === false) {
+        this.tutorial_button_variant = 'light'
+        this.$root.$emit('bv::hide::popover', 'tutorial_popover')
+      }
+      console.log(this.tutorial_activated)
     }
   },
   methods: {
@@ -131,6 +157,9 @@ export default {
           this.$bvToast.show("lock-toast");
         }
       });
+    },
+    toggle_tutorial() {
+      this.tutorial_activated = !this.tutorial_activated;
     },
     url_to_clipboard() {
       var url_field = document.getElementById("dropdown-url-field-input");
@@ -154,10 +183,10 @@ export default {
           this.$emit("error_occured", res.data);
         } else {
           const url = window.URL.createObjectURL(new Blob([res.data]));
-          const link = document.createElement('a');
+          const link = document.createElement("a");
           link.href = url;
           if (file_type == "excel") {
-            link.setAttribute('download', 'dataframes.xlsx');
+            link.setAttribute("download", "dataframes.xlsx");
           } else if (file_type == "csv") {
             link.setAttribute("download", "dataframe.csv");
           }

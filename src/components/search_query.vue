@@ -103,6 +103,7 @@
         no-caret
         toggle-class="text-decoration-none"
       >
+        <b-popover id="tutorial_popover" :no-fade="true" triggers="" placement="bottom" target="add-query-dropdown" title="2. Build filters">You can add multiple filters to search for all kinds of values, including GO terms, KEGG pathways, and COG categories.</b-popover>
         <template v-slot:button-content>
           <b-icon icon="plus-circle-fill"></b-icon> Add Filter
         </template>
@@ -130,6 +131,7 @@
         no-caret
         toggle-class="text-decoration-none"
       >
+        <b-popover id="tutorial_popover" :no-fade="true" triggers="" placement="rightbottom" target="load-query-dropdown" title="3. Load preset filters">Load pre-filled filters to search for pathogenicity islands, sORF, or just faulty data.</b-popover>
         <template v-slot:button-content>
           <b-icon icon="intersect"></b-icon> Load Filter
         </template>
