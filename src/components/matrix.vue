@@ -43,7 +43,7 @@
         </b-button>
         <b-button
           v-b-modal.modal_delete
-          @click="on_delete_matrix(selected)"
+          @click="on_delete_matrix()"
           :disabled="button_enabled == 0"
           size="sm"
           variant="danger"
@@ -158,7 +158,6 @@ export default {
       this.$emit("transformation_selected", this.transformation);
     },
     select_matrix() {
-      console.log(this.selected);
       this.$emit("matrix_activated", this.selected);
       if (this.selected.isActive == true) {
         this.button_enabled = true;
@@ -166,8 +165,8 @@ export default {
         this.button_enabled = false;
       }
     },
-    on_delete_matrix(deleted_matrix_id) {
-      this.$emit("delete", deleted_matrix_id);
+    on_delete_matrix() {
+      this.$emit("delete", this.selected);
     }
   }
 };
