@@ -26,14 +26,16 @@
             <div class="cell_title_ud">
               <h5 class="title">Upload data</h5>
             </div>
-            <div class="cell_upload_data field" @click="show_modal('bv_modal_addData')">
+            <div class="cell_upload_data field" @click="show_modal('bv_modal_addData')" id="upload_data_parent">
+              <b-popover id="tutorial_popover" :no-fade="true" triggers="" placement="right" target="upload_data_parent" title="1. Upload your data">Click on the + to upload, merge, or remove multiple datasets from our databases or your computer.</b-popover>
               <addDataButton v-on:plugin_clicked="show_modal('modal_add_plugin')" />
               <!-- <b-button variant="secondary"><b-icon icon="table"></b-icon>Upload</b-button> -->
             </div>
             <div class="cell_title_sp">
               <h5 class="title">Select the visualization</h5>
             </div>
-            <div class="cell_select_plugin field plugins" v-if="config.plugins">
+            <div class="cell_select_plugin field plugins" id="select_plugin_parent" v-if="config.plugins">
+              <b-popover id="tutorial_popover" :no-fade="true" triggers="" placement="top" target="select_plugin_parent" title="5. Visualize your data">Click on one of the plugins (e.g. Clustergrammer, Plotly) above to generate a plot.</b-popover>
               <plugins
                 @click.native="select_plugin(plugin)"
                 :active_plugin="active_plugin_id"
@@ -285,6 +287,9 @@ export default {
 h5 {
   font-size: 0.9rem !important;
   font-weight: 600 !important;
+}
+.popover {
+  z-index: 1030 !important;
 }
 /* button {
   margin: 5px !important;
