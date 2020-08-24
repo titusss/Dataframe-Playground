@@ -125,6 +125,7 @@ export default {
       this.currentPage = 1;
     },
     create_table_headers() {
+      this.dataframe_headers = []
       for (let header in this.items[0]) {
         let entry = {};
         entry["key"] = header;
