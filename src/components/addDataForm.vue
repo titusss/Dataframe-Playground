@@ -384,8 +384,8 @@ export default {
         this.$emit("close");
       }
     },
-    delete_matrix(deleted_matrix_id) {
-      const path = `${this.backend_url}/matrix/${deleted_matrix_id}`;
+    delete_matrix(matrix) {
+      const path = `${this.backend_url}/matrix/${matrix.id}`;
       const payload = null;
       this.change_matrix(path, payload);
     },
