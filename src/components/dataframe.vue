@@ -81,13 +81,20 @@ export default {
   props: {
     dataframe: Array,
     dataframe_filtered: Array,
-    filtered: Boolean,
+    update_is_filter: Boolean,
   },
   watch: {
     dataframe: function() {
-      this.update_table(this.dataframe)
+      if (this.update_is_filter === true) {
+        this.update_table(this.dataframe_filtered)
+        this.filtered = true;
+      } else {
+        this.update_table(this.dataframe)
+        this.filtered = false;
+      }
     },
     filtered: function() {
+      // PERFORMANCE: This is called twice after the dataframe update. This should be improved.
       // this.$emit('update:filtered', this.filtered)
       if (this.filtered === true) {
         this.update_table(this.dataframe_filtered);
@@ -106,6 +113,7 @@ export default {
       filter: null,
       filterOn: [],
       items: this.dataframe,
+      filtered: this.update_is_filter
     };
   },
   mounted() {
