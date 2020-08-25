@@ -126,6 +126,7 @@ export default {
     this.$root.$emit('bv::hide::popover', 'tutorial_popover')
   },
   watch: {
+    // PERFORMANCE
     // This doesn't need to be watched and could be handled by the "toggle_tutorial()" method and could be integrated there.
     // Watching it, however, makes sure the tutorial is only shown when it's var is set to true, not just when the toolbar button is clicked.
     tutorial_activated: function() {
@@ -136,7 +137,6 @@ export default {
         this.tutorial_button_variant = 'light'
         this.$root.$emit('bv::hide::popover', 'tutorial_popover')
       }
-      console.log(this.tutorial_activated)
     }
   },
   methods: {

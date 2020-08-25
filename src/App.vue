@@ -14,7 +14,7 @@
     <!-- <div class="loading" v-if="loading"><b-spinner label="Spinning"></b-spinner><span>Loading ...</span></div> -->
     <div>
       <div v-if="loading.state === false">
-        <toolbar :locked="config.locked" :backend_url="backend_url" @error_occured="error_occured" />
+        <toolbar :locked="config.locked" :backend_url="backend_url" @error_occured="error_occured"/>
       </div>
       <div class="grid_container">
         <!-- <div class="header">
@@ -57,6 +57,7 @@
           <!-- <h5 class="title">Filter queries</h5> -->
           <div class="field block" v-if="this.config.transformed_dataframe.length > 0">
             <search_query
+              v-if="!this.loading.state"
               @dataframe_filtered="redirect_to_config($event); update_filtered(true)"
               @error_occured="error_occured"
               v-bind:df_categories="Object.keys(this.config.transformed_dataframe[0])"
@@ -65,7 +66,7 @@
             />
           </div>
           <div>
-            <visualization v-bind:vis_link="this.active_vis_link" v-show="this.active_vis_link" />
+            <visualization v-bind:vis_link="this.active_vis_link" v-if="this.active_vis_link" />
           </div>
           <div class="html_dataframe" v-if="config.transformed_dataframe.length > 0">
             <dataframe
@@ -203,6 +204,8 @@ export default {
     load_config() {
       this.loading.state = true;
       this.loading.increment = 5;
+      this.active_plugin_id = null;
+      this.active_vis_link = null;
       this.config = null;
       const path = `${this.backend_url}/config`;
       var payload = new FormData();
@@ -247,8 +250,8 @@ export default {
       // console.log(res.data.db_entry_id["$oid"]);
       if (this.config._id == res.data.db_entry_id["$oid"]) {
         // this.$router.go()
-        this.active_vis_link = "";
-        this.active_plugin_id = "";
+        this.active_vis_link = null;
+        this.active_plugin_id = null;
         this.load_config();
       } else {
         this.$router.push({
