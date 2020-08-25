@@ -317,26 +317,21 @@ export default {
         "KEGG Pathway"
       ].items.filter_annotation.source.items = this.salmonella_kegg_terms.items;
     },
-    load_categories_json(query_source) {
+    load_categories_json(query_source, categories) {
+      categories.unshift("any column");
       for (let query_cat in query_source) {
         for (let query in query_source[query_cat]) {
-          if (
-            typeof query_source[query_cat][query].items["filter_area"] !==
-            "undefined"
-          ) {
-            query_source[query_cat][query].items["filter_area"][
-              "options"
-            ] = this.df_categories;
+          if (typeof query_source[query_cat][query].items["filter_area"] !== "undefined") {
+            query_source[query_cat][query].items["filter_area"]["options"] = categories;
           }
         }
       }
     }
   },
   created() {
-    this.df_categories.unshift("any column");
+    this.load_categories_json(this.filter_templates.items.templates, this.df_categories.slice(0)); // The slice is needed to preserve the old df_categories
+    this.load_categories_json(this.filter_templates.items.presets, this.df_categories.slice(0));
     this.load_autocomplete_json();
-    this.load_categories_json(this.filter_templates.items.templates);
-    this.load_categories_json(this.filter_templates.items.presets);
     this.convert_server_query_blocks(this.filter_templates.items);
   },
   data() {
