@@ -57,12 +57,12 @@
           <!-- <h5 class="title">Filter queries</h5> -->
           <div class="field block" v-if="this.config.transformed_dataframe.length > 0">
             <search_query
-              v-if="!this.loading.state"
               @dataframe_filtered="redirect_to_config($event); update_filtered(true)"
               @error_occured="error_occured"
               v-bind:df_categories="Object.keys(this.config.transformed_dataframe[0])"
               v-bind:server_queries="this.config.query"
               v-bind:backend_url="backend_url"
+              v-if="!this.loading.state"
             />
           </div>
           <div>
@@ -72,7 +72,7 @@
             <dataframe
               v-bind:dataframe="this.config.transformed_dataframe"
               v-bind:dataframe_filtered="this.config.filtered_dataframe"
-              v-bind:filtered.sync="this.filtered"
+              v-bind:update_is_filter="this.filtered"
             />
           </div>
         </div>

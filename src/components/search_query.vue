@@ -172,7 +172,7 @@ export default {
   props: {
     df_categories: Array,
     server_queries: Array,
-    backend_url: String
+    backend_url: String,
   },
   components: {
     input_autocomplete,
