@@ -318,7 +318,7 @@ export default {
       ].items.filter_annotation.source.items = this.salmonella_kegg_terms.items;
     },
     load_categories_json(query_source, categories) {
-      categories.unshift("any column");
+      categories.unshift("any column", "all columns");
       for (let query_cat in query_source) {
         for (let query in query_source[query_cat]) {
           if (typeof query_source[query_cat][query].items["filter_area"] !== "undefined") {
