@@ -10,7 +10,6 @@ COMPARISON_OPERATORS = {
     '!= not': operator.ne
 }
 
-
 def main(query, df):
     print(query)
     for block in query:
@@ -18,6 +17,13 @@ def main(query, df):
         comparison_operator, filter_area = setup_query_parameters(block["forms"], df)
         df_mask = filter_for(block["forms"], block["properties"], df, comparison_operator, filter_area)
         if block_type == "filter":
+            if len(df_mask.shape) > 1: # If the mask_area is larger than one column, we need to convert the mask from a 2D array to a 1D list.
+                df_mask = list(df_mask) # Maybe bad. This converts the df_mask to a python list, only in certain circumstances. Replacing values in the 2D array isn't easy otherwise.
+                for i in range(len(df_mask)):
+                    if False in df_mask[i]:
+                        df_mask[i] = False
+                    else:
+                        df_mask[i] = True
             df = df[df_mask]
         elif block_type == "transformation":
             print(block["forms"]["target_value"])

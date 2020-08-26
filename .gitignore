@@ -12,6 +12,7 @@ __pycache__/
 # local env files
 .venv.local
 .venv.*.local
+venv
 
 # Log files
 npm-debug.log*
