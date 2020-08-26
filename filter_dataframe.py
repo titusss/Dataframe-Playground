@@ -34,23 +34,25 @@ def main(query, df):
     return df
 
 def setup_query_parameters(forms, df):
-    df_numeric = df.select_dtypes(include=[np.number])
-    any_column = True # If this is set to False, all columns must satisfy the filter value.
+    if forms["filter_area"] == "all columns":
+        any_column = False
+    else:
+        any_column = True # If this is set to False, all columns must satisfy the filter value.
     try:
         comparison_operator = COMPARISON_OPERATORS[forms["logical_operator"]]
     except KeyError:
         # If no comparison operator is explicity given, set it to "equal (=)"
         comparison_operator = operator.eq
     try:
-        if forms["filter_area"] == "any column":
-            filter_area = list(df_numeric.columns)
-        elif forms["filter_area"] == "all columns":
-            filter_area = list(df_numeric.columns)
-            any_column = False
+        if forms["filter_area"] == "any column" or forms["filter_area"] == "all columns":
+            if comparison_operator == operator.eq:
+                filter_area = list(df.columns)
+            else:
+                filter_area = list(df.select_dtypes(include=[np.number]).columns)
         else:
             filter_area = forms["filter_area"]
     except KeyError:
-        filter_area = list(df_numeric.columns)
+        filter_area = list(df.select_dtypes(include=[np.number]).columns)
     return comparison_operator, filter_area, any_column
 
 def filter_for(forms, properties, df, comparison_operator, filter_area):
