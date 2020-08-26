@@ -20,7 +20,11 @@ __pycache__/
 # local env files
 .venv.local
 .venv.*.local
+<<<<<<< HEAD
 >>>>>>> Initial docker backend commit.
+=======
+venv
+>>>>>>> Fixed mask filtering for multiple columns. Improved performance. Added venv to gitignore.
 
 # Log files
 npm-debug.log*
