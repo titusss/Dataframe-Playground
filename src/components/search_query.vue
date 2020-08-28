@@ -324,6 +324,9 @@ export default {
           if (typeof query_source[query_cat][query].items["filter_area"] !== "undefined") {
             query_source[query_cat][query].items["filter_area"]["options"] = categories;
           }
+          else if (typeof query_source[query_cat][query].items["target_column"] !== "undefined") {
+            query_source[query_cat][query].items["target_column"]["options"] = this.df_categories;
+          }
         }
       }
     }
