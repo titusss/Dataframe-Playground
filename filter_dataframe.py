@@ -11,7 +11,7 @@ COMPARISON_OPERATORS = {
 }
 
 def main(query, df):
-    print(query)
+    # print(query)
     for block in query:
         block_type = block["properties"]["type"]
         comparison_operator, filter_area, any_column = setup_query_parameters(block["forms"], df)
@@ -27,17 +27,21 @@ def main(query, df):
                         df_mask[i] = not any_column
             df = df[df_mask]
         elif block_type == "transformation":
-            print(block["forms"]["target_value"])
+            # print(block["forms"]["target_value"])
             # df.loc[df_mask, filter_area] = block["forms"]["target_value"]
             df[filter_area] = df[filter_area].where(~df_mask, other=block["forms"]["target_value"])
             # df = df.where(~df_mask, other=10)
+        elif block_type == "hide":
+            df.drop(block["forms"]["target_column"], axis=1, inplace=True)
     return df
 
 def setup_query_parameters(forms, df):
-    if forms["filter_area"] == "all columns":
-        any_column = False
-    else:
-        any_column = True # If this is set to False, all columns must satisfy the filter value.
+    any_column = True # If this is set to False, all columns must satisfy the filter value.
+    try:
+        if forms["filter_area"] == "all columns":
+            any_column = False
+    except:
+        pass
     try:
         comparison_operator = COMPARISON_OPERATORS[forms["logical_operator"]]
     except KeyError:
@@ -60,20 +64,17 @@ def filter_for(forms, properties, df, comparison_operator, filter_area):
         try: # Filter for integers and floats
             filter_value = float(forms["filter_value"])
             df_mask = comparison_operator(df[filter_area].values, filter_value)
-            print('df_mask: ', df_mask)
+            # print('df_mask: ', df_mask)
         except ValueError: # Filter for string or semi-colon-seperated list of strings
             filter_value = str(forms["filter_value"]).split('; ')
-            print(filter_value)
-            print('made it')
             df_mask = df[filter_area].isin(filter_value).values
-            print(df_mask)
     elif properties["query"] == "annotation_code": # Search for locus tag's that include the entered annotation id (GO, KEGG, COG, etc.)
         import json
         with open('static/salmonella_annotations.json') as json_file:
             salmonella_annotations = json.load(json_file)
         df_genes = df[filter_area].tolist()
         filter_value = []
-        print(properties["code_type"])
+        # print(properties["code_type"])
         for salmonella_locus in salmonella_annotations:
             try:
                 if salmonella_locus in df_genes and forms["filter_annotation"] in list(salmonella_annotations[salmonella_locus][properties["code_type"]]):
@@ -81,4 +82,6 @@ def filter_for(forms, properties, df, comparison_operator, filter_area):
             except TypeError:
                 pass
         df_mask = df[filter_area].isin(filter_value)
+    else: # If the filter does not rely on a mask (e.g. dropping a column)
+        df_mask = None
     return df_mask
