@@ -84,15 +84,15 @@
         },
         "Hide Column": {
           "properties": {
-            "type": "filter",
+            "type": "hide",
             "query": "column"
           },
           "items": {
-            "column": {
+            "target_column": {
               "label": "Hide column",
               "type": "b-form-select",
               "options": [],
-              "id": "values_in_column_column",
+              "id": "hide_column",
               "selected": null
             }
           }
