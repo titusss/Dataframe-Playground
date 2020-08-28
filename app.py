@@ -215,7 +215,7 @@ def search_query():
         db_entry_id = upload_db_entry(db_entry, mongo_update, url)
         return Response(dumps({'db_entry_id': db_entry_id}, allow_nan=True), mimetype="application/json")
     except Exception as e:
-        print('###### ERROR')
+        print(str(e))
         return respond_error(ERROR_MESSAGES['query_error']['expected']['type'], str(e))
 
 @app.route('/locked', methods=['POST'])
