@@ -231,6 +231,20 @@ def lock_session():
         print('###### ERROR')
         return respond_error(ERROR_MESSAGES['locking_error']['expected']['type'], str(e))
 
+@app.route('/active_plugin', methods=['POST'])
+def set_active_plugin():
+    try:
+        from pymongo import MongoClient
+        active_plugin_id = json.load(request.form['active_plugin_id'])
+        url = json.loads(request.form['url'])
+        print('URL: ', url)
+        db.visualizations.update_one({'_id': ObjectId(url)}, {
+            '$set': {'active_plugin_id': active_plugin_id}})
+        return "success"
+    except Exception as e:
+        print('###### ERROR')
+        return respond_error(ERROR_MESSAGES['locking_error']['expected']['type'], str(e))
+
 @app.route('/visualization', methods=['POST'])
 def make_vis_link():
     try:
