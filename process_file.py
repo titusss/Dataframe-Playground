@@ -27,9 +27,7 @@ def convert_to_df(input_file, extension, metadata,):
     else:
         print("Error: No valid extension. Please upload .xlsx (Excel), .csv, or .txt (TSV).")
         return "Error"
-    print
     # df.fillna(np.nan, inplace=True)
-    print(df)
     df.columns = df.columns.str.replace('.', '_') # Dot's mess with the df. Replace it with an underscore: _
     return df
 
@@ -56,6 +54,7 @@ def remove_matrix(mockup_db_entry, metadata, db, remove_id):
     db_entry['active_matrices'] = [j for j in db_entry['active_matrices'] if j != []] # remove empty subarrays
     db_entry['active_matrices'] = correct_matrice_positions(db_entry['active_matrices'])
     db_entry['vis_links'] = []
+    db_entry['active_plugin_id'] = ''
     db_entry['filtered_dataframe'] = []
     if len(sum(db_entry['active_matrices'], []))>0:
         print('sum long enough')
@@ -112,6 +111,7 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
     db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
     db_entry['vis_links'] = []
     db_entry['filtered_dataframe'] = []
+    db_entry['active_plugin_id'] = ''
     if metadata['db_entry_id'] == '': # Enter new DB entry when creating a new visualization
         db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
     else: # Update existing DB entry when modifying an existing visualization
@@ -127,7 +127,6 @@ def merge_db_entry(db_entry, flattened_am):
     return db_entry
 
 def new_db_entry(df, metadata, pre_configured_plugins):
-    print('df, new_db_entry: ', df)
     db_entry = {}
     db_entry['locked'] = False
     db_entry['active_matrices'] = [[]]
@@ -139,7 +138,6 @@ def new_db_entry(df, metadata, pre_configured_plugins):
 def make_active_matrix(metadata, df, active_matrices, dataframe): # NOTE: Why is there a df and a dataframe argument?
     # This is neither readable, nor necessary, but it works for now. I'm truly sorry.
     print('make_active_matrix')
-    print('dataframe: ', dataframe)
     added_matrix = make_single_matrix(metadata['x'],metadata['y'],max_preview_columns,max_preview_rows,metadata['title'],True, dataframe)
     added_axis = 1
     if added_matrix['y']-1>len(active_matrices): # If new matrix is below current matrices (y-axis)
