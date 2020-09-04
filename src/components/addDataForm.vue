@@ -44,7 +44,7 @@
               <b-form-group id="input-group-6" label="Source:" label-for="source-card">
                 <b-card no-body id="source-card">
                   <b-tabs card>
-                    <b-tab title="Dataset" active>
+                    <b-tab title="Datasets" active>
                       <b-form-group
                         id="input-group-3"
                         description="Use various experimental results (e.g. Salmonella RNA-seq) for organisms from our global database."
@@ -58,8 +58,8 @@
                       <b-form-group
                         v-if="form.source.database"
                         id="input-group-4"
-                        description="Leave the field blank to upload the whole dataset or select specific columns."
-                        label="Select columns"
+                        description="Leave the field blank to upload the whole dataset or specify columns."
+                        label="(Optional) Select columns"
                       >
                         <b-form-tags
                           v-model="form.database_columns"
