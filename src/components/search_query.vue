@@ -321,6 +321,8 @@ export default {
       categories.unshift("any column", "all columns");
       for (let query_cat in query_source) {
         for (let query in query_source[query_cat]) {
+          // Performance: It might be useful to check for a common condition and then do another nested
+          // if else, instead of checking every entry for two diffferent conditions.
           if (typeof query_source[query_cat][query].items["filter_area"] !== "undefined") {
             query_source[query_cat][query].items["filter_area"]["options"] = categories;
           }

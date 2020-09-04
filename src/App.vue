@@ -14,7 +14,7 @@
     <!-- <div class="loading" v-if="loading"><b-spinner label="Spinning"></b-spinner><span>Loading ...</span></div> -->
     <div>
       <div v-if="loading.state === false">
-        <toolbar :locked="config.locked" :backend_url="backend_url" @error_occured="error_occured"/>
+        <toolbar :locked="config.locked" :backend_url="backend_url" @error_occured="error_occured" />
       </div>
       <div class="grid_container">
         <!-- <div class="header">
@@ -26,19 +26,41 @@
             <div class="cell_title_ud">
               <h5 class="title">Upload data</h5>
             </div>
-            <div class="cell_upload_data field" @click="show_modal('bv_modal_addData')" id="upload_data_parent">
-              <b-popover id="tutorial_popover" :no-fade="true" triggers="" placement="right" target="upload_data_parent" title="1. Upload your data">Click on the + to upload, merge, or remove multiple datasets from our databases or your computer.</b-popover>
+            <div
+              class="cell_upload_data field"
+              @click="show_modal('bv_modal_addData')"
+              id="upload_data_parent"
+            >
+              <b-popover
+                id="tutorial_popover"
+                :no-fade="true"
+                triggers
+                placement="right"
+                target="upload_data_parent"
+                title="1. Upload your data"
+              >Click on the + to upload, merge, or remove multiple datasets from our databases or your computer.</b-popover>
               <addDataButton v-on:plugin_clicked="show_modal('modal_add_plugin')" />
               <!-- <b-button variant="secondary"><b-icon icon="table"></b-icon>Upload</b-button> -->
             </div>
             <div class="cell_title_sp">
               <h5 class="title">Select the visualization</h5>
             </div>
-            <div class="cell_select_plugin field plugins" id="select_plugin_parent" v-if="config.plugins">
-              <b-popover id="tutorial_popover" :no-fade="true" triggers="" placement="top" target="select_plugin_parent" title="5. Visualize your data">Click on one of the plugins (e.g. Clustergrammer, Plotly) above to generate a plot.</b-popover>
+            <div
+              class="cell_select_plugin field plugins"
+              id="select_plugin_parent"
+              v-if="config.plugins"
+            >
+              <b-popover
+                id="tutorial_popover"
+                :no-fade="true"
+                triggers
+                placement="top"
+                target="select_plugin_parent"
+                title="5. Visualize your data"
+              >Click on one of the plugins (e.g. Clustergrammer, Plotly) above to generate a plot.</b-popover>
               <plugins
                 @click.native="select_plugin(plugin)"
-                :active_plugin="active_plugin_id"
+                :active_plugin="this.config.active_plugin_id"
                 v-for="plugin in config.plugins"
                 :key="plugin.name"
                 :title="plugin.name"
@@ -51,7 +73,7 @@
                 :title="'Add Plugin'"
                 :desc="'Connect a new visualization'"
                 :img="'add_plugin.svg'"
-              /> -->
+              />-->
             </div>
           </div>
           <!-- <h5 class="title">Filter queries</h5> -->
@@ -92,7 +114,7 @@
           />
         </b-modal>
         <b-modal id="modal_add_plugin" hide-footer>
-          <add_plugin @plugins_change="redirect_to_config" :backend_url="backend_url"/>
+          <add_plugin @plugins_change="redirect_to_config" :backend_url="backend_url" />
         </b-modal>
       </div>
     </div>
@@ -138,7 +160,6 @@ export default {
         }
       },
       config: null,
-      active_plugin_id: null,
       active_vis_link: "",
       error: null,
       filtered: false
@@ -157,11 +178,12 @@ export default {
       if (this.config.active_matrices.length > 0) {
         console.log(this.config)
         this.active_vis_link = "";
-        if (plugin._id.$oid != this.active_plugin_id) {
-          this.active_plugin_id = plugin._id.$oid;
+        let new_active_plugin_id = "";
+        if (plugin._id.$oid != this.config.active_plugin_id) {
+          new_active_plugin_id = plugin._id.$oid;
           let vis_exists = false;
           for (let i in this.config.vis_links) {
-            if (this.config.vis_links[i].plugin_id == this.active_plugin_id) {
+            if (this.config.vis_links[i].plugin_id == new_active_plugin_id) {
               this.active_vis_link = this.config.vis_links[i].link;
               vis_exists = true;
               break;
@@ -171,9 +193,18 @@ export default {
             // console.log("doesn't contain");
             this.generate_vis_link(plugin);
           }
-        } else {
-          this.active_plugin_id = "";
         }
+        const path = `${this.backend_url}/active_plugin_id`;
+        var payload = new FormData();
+        payload.append("active_plugin_id", JSON.stringify(new_active_plugin_id));
+        payload.append("url", JSON.stringify(this.$route.query.config));
+        axios.post(path, payload).then(res => {
+          if (res.data.error_type) {
+            this.error_occured(res.data);
+          } else {
+            this.load_config();
+          }
+        });
       }
     },
     update_filtered(state) {
@@ -204,7 +235,7 @@ export default {
     load_config() {
       this.loading.state = true;
       this.loading.increment = 5;
-      this.active_plugin_id = null;
+      // this.active_plugin_id = null;
       this.active_vis_link = null;
       this.config = null;
       const path = `${this.backend_url}/config`;
@@ -251,7 +282,7 @@ export default {
       if (this.config._id == res.data.db_entry_id["$oid"]) {
         // this.$router.go()
         this.active_vis_link = null;
-        this.active_plugin_id = null;
+        // this.active_plugin_id = null;
         this.load_config();
       } else {
         this.$router.push({
