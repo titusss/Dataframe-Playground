@@ -60,7 +60,7 @@
               >Click on one of the plugins (e.g. Clustergrammer, Plotly) above to generate a plot.</b-popover>
               <plugins
                 @click.native="select_plugin(plugin)"
-                :active_plugin="this.config.active_plugin_id"
+                :active_plugin="active_plugin_id"
                 v-for="plugin in config.plugins"
                 :key="plugin.name"
                 :title="plugin.name"
@@ -160,6 +160,7 @@ export default {
         }
       },
       config: null,
+      active_plugin_id: null,
       active_vis_link: "",
       error: null,
       filtered: false
@@ -167,23 +168,23 @@ export default {
   },
   created() {
     this.load_config();
-    console.log(this.config);
-    console.log(this.error);
   },
   watch: {
-    $route: "load_config"
+    $route: "load_config",
   },
   methods: {
+    test() {
+      const plugin = this.get_active_plugin(this.config.active_plugin_id)
+      this.generate_vis_link(plugin);
+    },
     select_plugin(plugin) {
       if (this.config.active_matrices.length > 0) {
-        console.log(this.config)
         this.active_vis_link = "";
-        let new_active_plugin_id = "";
-        if (plugin._id.$oid != this.config.active_plugin_id) {
-          new_active_plugin_id = plugin._id.$oid;
+        if (plugin._id.$oid != this.active_plugin_id) {
+          this.active_plugin_id = plugin._id.$oid;
           let vis_exists = false;
           for (let i in this.config.vis_links) {
-            if (this.config.vis_links[i].plugin_id == new_active_plugin_id) {
+            if (this.config.vis_links[i].plugin_id == this.active_plugin_id) {
               this.active_vis_link = this.config.vis_links[i].link;
               vis_exists = true;
               break;
@@ -193,22 +194,25 @@ export default {
             // console.log("doesn't contain");
             this.generate_vis_link(plugin);
           }
+        } else {
+          this.active_plugin_id = "";
         }
-        const path = `${this.backend_url}/active_plugin_id`;
-        var payload = new FormData();
-        payload.append("active_plugin_id", JSON.stringify(new_active_plugin_id));
-        payload.append("url", JSON.stringify(this.$route.query.config));
-        axios.post(path, payload).then(res => {
-          if (res.data.error_type) {
-            this.error_occured(res.data);
-          } else {
-            this.load_config();
-          }
-        });
+        this.post_active_plugin(this.active_plugin_id)
       }
     },
     update_filtered(state) {
       this.filtered = state;
+    },
+    post_active_plugin(plugin_id) {
+      const path = `${this.backend_url}/active_plugin`;
+      var payload = new FormData();
+      payload.append("active_plugin_id", JSON.stringify(plugin_id));
+      payload.append("url", JSON.stringify(this.$route.query.config));
+      axios.post(path, payload).then(res => {
+        if (res.data.error_type) {
+          this.error_occured(res.data);
+        }
+      });
     },
     generate_vis_link(plugin) {
       this.loading.state = true;
@@ -221,16 +225,21 @@ export default {
         // console.log(res);
         if (res.data.error_type) {
           this.error_occured(res.data);
-          // console.log(res);
         } else {
-          // this.config.vis_links.push(res);
-          // this.load_config()
-          // console.log(res);
           this.load_config();
           this.active_vis_link = res.data.vis_link.link;
         }
-        this.loading.state = false;
       });
+    },
+    get_active_vis_link(plugin_id) {
+      var vis_link = null
+      for(let i=0;i<this.config.vis_links.length;i++) {
+        if(this.config.vis_links[i].plugin_id==plugin_id) {
+          vis_link = this.config.vis_links[i].link
+          break
+        }
+      }
+      return vis_link
     },
     load_config() {
       this.loading.state = true;
@@ -248,9 +257,10 @@ export default {
             this.error_occured(res.data);
           } else {
             this.config = res.data.db_entry;
+            this.active_plugin_id = this.config.active_plugin_id
+            this.active_vis_link = this.get_active_vis_link(this.active_plugin_id) // PERFORMANCE: Maybe check for "", undefined, or null of active_plugin_id
             this.$nextTick(() => {
               this.loading.state = false;
-              console.log(this.config);
               // console.log(res);
               // console.log(this.config.plugins[0]);
             });
@@ -282,7 +292,7 @@ export default {
       if (this.config._id == res.data.db_entry_id["$oid"]) {
         // this.$router.go()
         this.active_vis_link = null;
-        // this.active_plugin_id = null;
+        this.active_plugin_id = null;
         this.load_config();
       } else {
         this.$router.push({
