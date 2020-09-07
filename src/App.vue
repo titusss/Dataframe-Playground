@@ -222,7 +222,6 @@ export default {
       payload.append("plugin", JSON.stringify(plugin));
       payload.append("url", JSON.stringify(this.$route.query.config));
       axios.post(path, payload).then(res => {
-        // console.log(res);
         if (res.data.error_type) {
           this.error_occured(res.data);
         } else {
