@@ -131,6 +131,7 @@ def new_db_entry(df, metadata, pre_configured_plugins):
     db_entry['locked'] = False
     db_entry['active_matrices'] = [[]]
     db_entry['plugins_id'] = pre_configured_plugins
+    # db_entry['active_plugin_id'] = ""
     db_entry['transformed_dataframe'] = df.to_dict('records')
     db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
     return db_entry
