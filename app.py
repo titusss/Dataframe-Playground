@@ -31,7 +31,8 @@ DB_ENTRY_MOCKUP = {
     'transformed_dataframe': [],
     'preview_matrices': MATRIX,
     'vis_links': [],
-    'plugins_id': PRE_CONFIGURED_PLUGINS
+    'plugins_id': PRE_CONFIGURED_PLUGINS,
+    'active_plugin_id': ''
 }
 
 ERROR_MESSAGES = {
@@ -187,9 +188,12 @@ def upload_db_entry(db_entry, mongo_update, url):
     if 'locked' in db_entry and db_entry['locked'] == True:
         db_entry['locked'] = False
         db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
+        print('new entry!')
     else:
         db_entry_id = ObjectId(url)
         db.visualizations.update_one({'_id': db_entry_id}, mongo_update)
+        print('same entry')
+        print(db_entry['active_plugin_id'])
     return db_entry_id
 
 @app.route('/query', methods=['POST'])
@@ -220,6 +224,7 @@ def search_query():
 
 @app.route('/locked', methods=['POST'])
 def lock_session():
+    print('locking')
     try:
         from pymongo import MongoClient
         url = json.loads(request.form['url'])
@@ -235,15 +240,17 @@ def lock_session():
 def set_active_plugin():
     try:
         from pymongo import MongoClient
-        active_plugin_id = json.load(request.form['active_plugin_id'])
+        active_plugin_id = json.loads(request.form['active_plugin_id'])
+        print(active_plugin_id)
         url = json.loads(request.form['url'])
-        print('URL: ', url)
-        db.visualizations.update_one({'_id': ObjectId(url)}, {
-            '$set': {'active_plugin_id': active_plugin_id}})
+        db_entry = db.visualizations.find_one(
+            {"_id": ObjectId(url)}, {'_id': False})
+        mongo_update = {'$set': {'active_plugin_id': active_plugin_id}}
+        db_entry_id = upload_db_entry(db_entry, mongo_update, url)
         return "success"
     except Exception as e:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['locking_error']['expected']['type'], str(e))
+        print(e)
+        return respond_error('Error in active plugin loading', str(e))
 
 @app.route('/visualization', methods=['POST'])
 def make_vis_link():
