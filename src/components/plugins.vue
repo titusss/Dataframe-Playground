@@ -1,23 +1,24 @@
 <template>
-    <div class="wrapper">
-      <div
-        class="plugin_card plugin_selected"
-        v-bind:class="{plugin_selected_expanded:this.isSelected}"
-        @click="plugin_selected()">
-        <img :src="this.image_url" alt />
-        <div class>
-          <h5>{{title}}</h5>
-          <p>{{desc}}</p>
-        </div>
-      </div>
-      <div class="plugin_card card_shadow" @click="plugin_selected()">
-        <img :src="this.image_url" alt />
-        <div class>
-          <h5>{{title}}</h5>
-          <p>{{desc}}</p>
-        </div>
+  <div class="wrapper">
+    <div
+      class="plugin_card plugin_selected"
+      v-bind:class="{plugin_selected_expanded:this.isSelected}"
+      @click="plugin_selected()"
+    >
+      <img :src="this.image_url" alt />
+      <div class>
+        <h5>{{title}}</h5>
+        <p>{{desc}}</p>
       </div>
     </div>
+    <div class="plugin_card card_shadow" @click="plugin_selected()">
+      <img :src="this.image_url" alt />
+      <div class>
+        <h5>{{title}}</h5>
+        <p>{{desc}}</p>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -30,38 +31,41 @@ export default {
     active_plugin: String,
     id: String
   },
-   data() {
-      return {
-       isSelected: false
-    }
+  data() {
+    return {
+      isSelected: false
+    };
   },
   watch: {
     active_plugin: {
       handler() {
-        console.log(this.active_plugin)
-        console.log('jjjjj')
-        console.log(this.id)
-        if(this.id == this.active_plugin) {
-          console.log('Truuuueeee')
-          this.isSelected = true
-        }
-        else {
-          this.isSelected = false
-        }
-      }
-    },
-    title: {
-      handler() {
-        console.log('i dunno')
+        console.log("changed");
+        console.log(this.active_plugin);
+        this.toggle_selected();
       }
     }
   },
   methods: {
     plugin_selected() {
-      this.$emit("plugin_clicked");
+      this.$emit("plugin_selected")
+    },
+    toggle_selected() {
+      if (this.id == this.active_plugin) {
+        console.log('the same')
+        this.isSelected = true;
+      } else {
+        console.log("different id's")
+        this.isSelected = false;
+      }
     }
+  },
+  created() {
+    if (this.id == this.active_plugin) {
+      this.$emit("plugin_selected")
+    }
+    this.toggle_selected();
   }
-}
+};
 </script>
 
 <style scoped>
