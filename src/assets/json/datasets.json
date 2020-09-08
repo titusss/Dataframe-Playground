@@ -4,8 +4,33 @@
     "label": "SalCom Salmonella enterica Typhimurium Gene Expression Compendium",
     "options": [
       {
-        "text": "Salmonella RNA Seq",
-        "value": {"filename": "salmonella-salcom.csv", "columns": [{"value": null, "text": "All columns"},"locus_tag","common gene name","strand","start","end","EEP","MEP","LEP","ESP (biological replicate 1)","ESP (biological replicate 2)","ESP average (Biol. Rep. 1 and 2)","LSP  (biological replicate 1)","LSP  (biological replicate 2)","LSP average (Biol. Rep. 1 and 2)","25┴C","Cold shock (15┴C)","pH3 shock","pH5.8 shock","NaCl shock","Bile shock","LowFe2+ shock","Anaerobic shock","Anaerobic growth","Aerobic shock","InSPI2 (biological replicate 1)","InSPI2 (biological replicate 2)","InSPI2 average (Biol. Rep. 1 and 2)","InSPI2 LowMg2+","Peroxide shock (InSPI2)","Nitric oxide shock (InSPI2)","NonSPI2","Temp10","Temp20","RNA pool"]},
+        "text": "Complete Dataset",
+        "value": {"filename": "salmonella-salcom_complete.csv", "columns": [{"value": null, "text": "All columns"},"locus_tag", "common gene name", "strand", "start", "end","EEP","MEP","LEP","ESP (biological replicate 1)","ESP (biological replicate 2)","ESP average (biological replicate 1 and 2)","LSP (biological replicate 1)","LSP (biological replicate 2)","LSP average (biological replicate 1 and 2)","25C","Cold shock (15C)","pH3 shock","pH5.8 shock","NaCl shock","Bile shock","LowFe2+ shock","Anaerobic shock","Anaerobic growth","Aerobic shock","InSPI2 (biological replicate 1)","InSPI2 (biological replicate 2)","InSPI2 average (biological replicate 1 and 2)","InSPI2 LowMg2+","Peroxide shock (InSPI2)","Nitric oxide shock (InSPI2)","NonSPI2","Temp10","Temp20","RNA pool"], "pre_selected_columns": ["locus_tag","EEP","MEP","LEP","ESP average (biological replicate 1 and 2)","LSP average (biological replicate 1 and 2)","Cold shock (15C)","pH3 shock","pH5.8 shock","NaCl shock","Bile shock","LowFe2+ shock","Anaerobic shock","Anaerobic growth","Aerobic shock","InSPI2 average (biological replicate 1 and 2)","InSPI2 LowMg2+","Peroxide shock (InSPI2)","Nitric oxide shock (InSPI2)","NonSPI2"]},
+        "seperator": "\t"
+      },
+      {
+        "text": "Growth Curves",
+        "value": {"filename": "salmonella-salcom_growth-curves.csv", "columns": [{"value": null, "text": "All columns"},"locus_tag", "common gene name", "strand", "start", "end","EEP","MEP","LEP","ESP (biological replicate 1)","ESP (biological replicate 2)","ESP average (biological replicate 1 and 2)","LSP (biological replicate 1)","LSP (biological replicate 2)","LSP average (biological replicate 1 and 2)"], "pre_selected_columns": ["locus_tag","EEP","MEP","LEP","ESP average (biological replicate 1 and 2)","LSP average (biological replicate 1 and 2)"]},
+        "seperator": "\t"
+      },
+      {
+        "text": "Environmental Shocks",
+        "value": {"filename": "salmonella-salcom_environmental-shocks.csv", "columns": [{"value": null, "text": "All columns"}, "locus_tag","common gene name","strand","start","end","MEP","Cold shock (15C)","pH3 shock","pH5.8 shock","NaCl shock","Bile shock","LowFe2+ shock","Anaerobic shock"], "pre_selected_columns": ["locus_tag","MEP","Cold shock (15C)","pH3 shock","pH5.8 shock","NaCl shock","Bile shock","LowFe2+ shock","Anaerobic shock"]},
+        "seperator": "\t"
+      },
+      {
+        "text": "Oxygen Shocks",
+        "value": {"filename": "salmonella-salcom_oxygen-shocks.csv", "columns": [{"value": null, "text": "All columns"}, "locus_tag", "common gene name", "strand", "start", "end","Anaerobic growth","Aerobic shock"], "pre_selected_columns": ["locus_tag","Anaerobic growth","Aerobic shock"]},
+        "seperator": "\t"
+      },
+      {
+        "text": "Intercellular stresses",
+        "value": {"filename": "salmonella-salcom_intercellular-stresses.csv", "columns": [{"value": null, "text": "All columns"}, "locus_tag", "common gene name", "strand", "start", "end", "InSPI2 (biological replicate 1)","InSPI2 (biological replicate 2)","InSPI2 average (biological replicate 1 and 2)","InSPI2 LowMg2+","Peroxide shock (InSPI2)","Nitric oxide shock (InSPI2)"], "pre_selected_columns": ["locus_tag","InSPI2 average (biological replicate 1 and 2)","InSPI2 LowMg2+","Peroxide shock (InSPI2)","Nitric oxide shock (InSPI2)"]},
+        "seperator": "\t"
+      },
+      {
+        "text": "SPI2",
+        "value": {"filename": "salmonella-salcom_spi2.csv", "columns": [{"value": null, "text": "All columns"}, "locus_tag", "common gene name", "strand", "start", "end" ,"InSPI2 (biological replicate 1)","InSPI2 (biological replicate 2)","InSPI2 average (biological replicate 1 and 2)","NonSPI2"], "pre_selected_columns": ["locus_tag","InSPI2 average (biological replicate 1 and 2)","NonSPI2"]},
         "seperator": "\t"
       }
     ]
