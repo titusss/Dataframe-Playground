@@ -58,7 +58,7 @@
                       <b-form-group
                         v-if="form.source.database"
                         id="input-group-4"
-                        description="Leave the field blank to upload the whole dataset or specify columns."
+                        description="Select which columns should be uploaded by adding or removing columns."
                         label="(Optional) Select columns"
                       >
                         <b-form-tags
@@ -89,7 +89,7 @@
                             >
                               <template v-slot:first>
                                 <!-- This is required to prevent bugs with Safari -->
-                                <option disabled value>Choose columns...</option>
+                                <option disabled value>Choose additional columns...</option>
                               </template>
                             </b-form-select>
                           </template>
@@ -232,6 +232,7 @@ export default {
   },
   data() {
     return {
+      test: ['test'],
       datasets,
       animate: true,
       show_loading_overlay: false,
@@ -278,6 +279,15 @@ export default {
       ],
       show: true
     };
+  },
+  watch: {
+    'form.source.database': function() {
+      if(this.form.source.database.pre_selected_columns) {
+        this.form.database_columns = this.form.source.database.pre_selected_columns
+      } else { // If no pre_selected_columns are specified in the datasets.json entry, pre-select all columns instead
+        this.form.database_columns = this.form.source.database.columns.slice(1) // Do not use the first empty placeholder value
+      }
+    }
   },
   computed: {
     availableOptions() {
