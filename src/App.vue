@@ -84,6 +84,7 @@
               v-bind:df_categories="Object.keys(this.config.transformed_dataframe[0])"
               v-bind:server_queries="this.config.query"
               v-bind:backend_url="backend_url"
+              v-bind:table_titles="table_titles"
               v-if="!this.loading.state"
             />
           </div>
@@ -168,6 +169,12 @@ export default {
   },
   created() {
     this.load_config();
+  },
+  computed: {
+    table_titles: function() {
+      let active_matrices_flattened = [].concat.apply([], this.config.active_matrices); // Flatten the nested array.
+      return active_matrices_flattened.map(a => a.title);
+    }
   },
   watch: {
     $route: "load_config",
@@ -260,7 +267,7 @@ export default {
             this.active_vis_link = this.get_active_vis_link(this.active_plugin_id) // PERFORMANCE: Maybe check for "", undefined, or null of active_plugin_id
             this.$nextTick(() => {
               this.loading.state = false;
-              // console.log(res);
+              console.log(this.config);
               // console.log(this.config.plugins[0]);
             });
           }

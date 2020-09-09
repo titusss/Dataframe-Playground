@@ -45,6 +45,32 @@
               class="mb-2 mr-sm-2 mb-sm-0"
               required
             ></input_autocomplete>
+            <div v-if="form.type === 'log-base-input'">
+              <b-form-input
+                :id="form.id"
+                v-model="form.selected"
+                size="sm"
+                class="mb-2 mr-sm-2 mb-sm-0 short-form"
+                :style="form.style"
+                type="number"
+                max="1001"
+                required
+              ></b-form-input>
+              <div class="log-preview">
+                <b-badge variant="dark" class="log-preview-badge">
+                  <span class="supsub">
+                    <span class="base formula">
+                      log
+                      <sub class="subscript">
+                        <strong class="formula-strong">{{form.selected}} </strong>
+                      </sub>
+                      <span v-if="!form_block.forms.items.target_column" class="base formula">({{form_block.forms.items.target_table.selected}})</span>
+                      <span v-else class="base formula">(Fold-Change)</span>
+                    </span>
+                  </span>
+                </b-badge>
+              </div>
+            </div>
           </div>
         </div>
         <!-- <b-dropdown
@@ -103,9 +129,16 @@
         no-caret
         toggle-class="text-decoration-none"
       >
-        <b-popover id="tutorial_popover" :no-fade="true" triggers="" placement="bottom" target="add-query-dropdown" title="2. Build filters">You can add multiple filters to search for all kinds of values, including GO terms, KEGG pathways, and COG categories.</b-popover>
+        <b-popover
+          id="tutorial_popover"
+          :no-fade="true"
+          triggers
+          placement="bottom"
+          target="add-query-dropdown"
+          title="2. Build filters"
+        >You can add multiple filters to search for all kinds of values, including GO terms, KEGG pathways, and COG categories.</b-popover>
         <template v-slot:button-content>
-          <b-icon icon="plus-circle-fill"></b-icon> Add Filter
+          <b-icon icon="plus-circle-fill"></b-icon>Add Filter
         </template>
         <b-dropdown-group
           v-for="(filter_template_group, index) in filter_templates.items.templates"
@@ -131,9 +164,16 @@
         no-caret
         toggle-class="text-decoration-none"
       >
-        <b-popover id="tutorial_popover" :no-fade="true" triggers="" placement="rightbottom" target="load-query-dropdown" title="3. Load preset filters">Load pre-filled filters to search for pathogenicity islands, sORF, or just faulty data.</b-popover>
+        <b-popover
+          id="tutorial_popover"
+          :no-fade="true"
+          triggers
+          placement="rightbottom"
+          target="load-query-dropdown"
+          title="3. Load preset filters"
+        >Load pre-filled filters to search for pathogenicity islands, sORF, or just faulty data.</b-popover>
         <template v-slot:button-content>
-          <b-icon icon="intersect"></b-icon> Load Filter
+          <b-icon icon="intersect"></b-icon>Load Filter
         </template>
         <b-dropdown-group
           v-for="(filter_preset_group, index) in filter_templates.items.presets"
@@ -149,10 +189,47 @@
           <b-dropdown-divider></b-dropdown-divider>
         </b-dropdown-group>
       </b-dropdown>
+
+      <b-dropdown
+        size="sm"
+        variant="link"
+        pill
+        id="load-query-dropdown"
+        text="Add..."
+        class="m-md-2 rounded"
+        no-caret
+        toggle-class="text-decoration-none"
+      >
+        <b-popover
+          id="tutorial_popover"
+          :no-fade="true"
+          triggers
+          placement="rightbottom"
+          target="load-query-dropdown"
+          title="3. Load preset filters"
+        >Load pre-filled filters to search for pathogenicity islands, sORF, or just faulty data.</b-popover>
+        <template v-slot:button-content>
+          <b-icon icon="calculator-fill"></b-icon>Transform Data
+        </template>
+        <b-dropdown-group
+          v-for="(filter_preset_group, index) in filter_templates.items.transformations"
+          :key="index"
+          :header="index"
+          id="dropdown-group-numeric"
+        >
+          <b-dropdown-item
+            v-for="(preset, index) in filter_preset_group"
+            :key="index"
+            v-on:click="add_query_block(preset, index)"
+          >{{index}}</b-dropdown-item>
+          <b-dropdown-divider></b-dropdown-divider>
+        </b-dropdown-group>
+      </b-dropdown>
+
       <div class="submit-button-parent">
         <b-button type="submit" variant="primary" pill size="sm" class="submit-button">
           <!-- <b-spinner label="Loading..." class="search-spinner" v-if="loading"></b-spinner> -->
-          <b-icon icon="search"></b-icon> Filter Data
+          <b-icon icon="search"></b-icon>Filter Data
         </b-button>
       </div>
     </b-form>
@@ -173,10 +250,16 @@ export default {
     df_categories: Array,
     server_queries: Array,
     backend_url: String,
+    table_titles: Array
   },
   components: {
     input_autocomplete,
     loading
+  },
+  watch: {
+    query: function() {
+      console.log(this.query)
+    }
   },
   methods: {
     deep_copy(input) {
@@ -288,7 +371,8 @@ export default {
           } else {
             self.$emit("dataframe_filtered", res);
             this.$nextTick(() => {
-              setTimeout(() => { // This forces the loading bar to stay alive for 2 additional seconds, to compensate the delay between backend work and frontend rendering of the dataframe table. This isn't very good.
+              setTimeout(() => {
+                // This forces the loading bar to stay alive for 2 additional seconds, to compensate the delay between backend work and frontend rendering of the dataframe table. This isn't very good.
                 this.loading = false;
               }, 2000);
             });
@@ -323,19 +407,46 @@ export default {
         for (let query in query_source[query_cat]) {
           // Performance: It might be useful to check for a common condition and then do another nested
           // if else, instead of checking every entry for two diffferent conditions.
-          if (typeof query_source[query_cat][query].items["filter_area"] !== "undefined") {
-            query_source[query_cat][query].items["filter_area"]["options"] = categories;
+          // Edit: I now use try with an empty catch. If Python likes that, how bad can it be in JS....haha?
+          try {
+            query_source[query_cat][query].items["filter_area"][
+              "options"
+            ] = categories;
+          } catch (e) {
+            console.log("o");
           }
-          else if (typeof query_source[query_cat][query].items["target_column"] !== "undefined") {
-            query_source[query_cat][query].items["target_column"]["options"] = this.df_categories;
+          try {
+            query_source[query_cat][query].items["target_column"][
+              "options"
+            ] = this.df_categories;
+          } catch (e) {
+            console.log("o");
+          }
+          try {
+            query_source[query_cat][query].items["target_table"][
+              "options"
+            ] = this.table_titles;
+          } catch (e) {
+            console.log("o");
           }
         }
       }
     }
   },
   created() {
-    this.load_categories_json(this.filter_templates.items.templates, this.df_categories.slice(0)); // The slice is needed to preserve the old df_categories
-    this.load_categories_json(this.filter_templates.items.presets, this.df_categories.slice(0));
+    console.log(this.table_titles);
+    this.load_categories_json(
+      this.filter_templates.items.templates,
+      this.df_categories.slice(0)
+    ); // The slice is needed to preserve the old df_categories
+    this.load_categories_json(
+      this.filter_templates.items.presets,
+      this.df_categories.slice(0)
+    );
+    this.load_categories_json(
+      this.filter_templates.items.transformations,
+      this.df_categories.slice(0)
+    );
     this.load_autocomplete_json();
     this.convert_server_query_blocks(this.filter_templates.items);
   },
@@ -385,6 +496,9 @@ button {
 }
 .form {
   display: inline-flex;
+}
+.short-form {
+  width: 4rem !important;
 }
 /* .search-spinner {
   width: 1em;
