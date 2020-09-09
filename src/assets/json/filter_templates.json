@@ -1,45 +1,7 @@
 {
   "items": {
-    "templates": {
-      "Filter": {
-        "Filter values": {
-          "properties": {
-            "type": "filter",
-            "query": "expression"
-          },
-          "items": {
-            "logical_operator": {
-              "label": "Show rows with values that are",
-              "type": "b-form-select",
-              "options": [
-                "= equal to",
-                "!= not",
-                "< less than",
-                "> more than",
-                ">= more or equal to",
-                "<= less or equal to"
-              ],
-              "id": "filter_values_logical-operator",
-              "selected": null
-            },
-            "filter_value": {
-              "type": "b-form-input",
-              "id": "filter_values_value",
-              "selected": null
-            },
-            "filter_area": {
-              "label": "for ",
-              "type": "b-form-select",
-              "options": [
-                "any column"
-              ],
-              "id": "filter_values_area",
-              "selected": "any column"
-            }
-          }
-        }
-      },
-      "Transform values": {
+    "transformations": {
+      "Basic": {
         "Change Values": {
           "properties": {
             "type": "transformation",
@@ -94,6 +56,119 @@
               "options": [],
               "id": "hide_column",
               "selected": null
+            }
+          }
+        }
+      },
+      "Calculations": {
+        "Calculate Fold Change": {
+          "properties": {
+            "type": "transformation",
+            "query": "column"
+          },
+          "items": {
+            "target_table": {
+              "label": "Show fold-change between table",
+              "type": "b-form-select",
+              "options": [],
+              "id": "change_values_target-table",
+              "selected": null
+            },
+            "target_column": {
+              "label": "and base column",
+              "type": "b-form-select",
+              "options": [],
+              "id": "change_values_base-column",
+              "selected": null
+            }
+          }
+        },
+        "Convert to log": {
+          "properties": {
+            "type": "transformation",
+            "query": "expression"
+          },
+          "items": {
+            "target_table": {
+              "label": "Convert the table",
+              "type": "b-form-select",
+              "options": [],
+              "id": "change_values_target-table",
+              "selected": null
+            },
+            "log_value": {
+              "label": "to logarithmic with base",
+              "type": "log-base-input",
+              "id": "change_values_log-base",
+              "selected": 2
+            }
+          }
+        },
+        "Calculate Log Fold Change": {
+          "properties": {
+            "type": "transformation",
+            "query": "column"
+          },
+          "items": {
+            "target_table": {
+              "label": "Show fold-change between table",
+              "type": "b-form-select",
+              "options": [],
+              "id": "change_values_target-table",
+              "selected": null
+            },
+            "target_column": {
+              "label": "and base column",
+              "type": "b-form-select",
+              "options": [],
+              "id": "change_values_base-column",
+              "selected": null
+            },
+            "log_value": {
+              "label": "in logarithmic with base",
+              "type": "log-base-input",
+              "id": "change_values_log-base",
+              "selected": 2
+            }
+          }
+        }
+      }
+    },
+    "templates": {
+      "Filter": {
+        "Filter values": {
+          "properties": {
+            "type": "filter",
+            "query": "expression"
+          },
+          "items": {
+            "logical_operator": {
+              "label": "Show rows with values that are",
+              "type": "b-form-select",
+              "options": [
+                "= equal to",
+                "!= not",
+                "< less than",
+                "> more than",
+                ">= more or equal to",
+                "<= less or equal to"
+              ],
+              "id": "filter_values_logical-operator",
+              "selected": null
+            },
+            "filter_value": {
+              "type": "b-form-input",
+              "id": "filter_values_value",
+              "selected": null
+            },
+            "filter_area": {
+              "label": "for ",
+              "type": "b-form-select",
+              "options": [
+                "any column"
+              ],
+              "id": "filter_values_area",
+              "selected": "any column"
             }
           }
         }
