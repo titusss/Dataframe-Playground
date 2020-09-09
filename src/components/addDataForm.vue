@@ -14,7 +14,7 @@
         <b-row>
           <b-col>
             <h2 style="cursor:help; display:inline-block;" id="upload-dataset-popover-target">Add Data</h2>
-              <b-popover target="upload-dataset-popover-target" triggers="hover" placement="top"><template v-slot:title>Upload a dataset</template>Upload various datasets from our databases or your local machine. If you give datasets the same title, the tool will automatically merge them without data-loss. <strong>Dataframes must have at least 1 matching column.</strong></b-popover>
+              <b-popover target="upload-dataset-popover-target" triggers="hover" placement="top"><template v-slot:title>Upload a dataset</template>Upload various datasets from our databases or your local machine. If you give datasets the same title, the tool will automatically merge them without data-loss. The first column and all columns with non-numeric values will be turned into index columns. <strong>Uploading multiple tables requires at least 1 matching index column in every table.</strong></b-popover>
             <b-form @submit="onSubmit" @reset="onReset" v-if="show">
               <!-- <b-form-group id="input-group-4" label="Type:" label-for="checkboxes-4">
             <b-form-radio-group v-model="form.type" id="checkboxes-4" required>
@@ -23,7 +23,7 @@
             </b-form-radio-group>
               </b-form-group>-->
               <b-form-group id="input-group-2" label="Title:" label-for="input-2">
-                <b-form-input id="input-2" v-model="form.title" required placeholder></b-form-input>
+                <b-form-input id="input-2" v-model="form.title"></b-form-input>
               </b-form-group>
               <!-- <b-form-group
                 id="group-cat-amount"
