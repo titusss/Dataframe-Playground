@@ -192,7 +192,7 @@
               </b-form-group>
               <b-alert v-model="showErrorAlert" variant="danger" dismissible>{{sourceErrMsg}}</b-alert>
               <pre class="mt-3 mb-0">{{ text }}</pre>
-              <b-button type="submit" variant="primary">Add</b-button>
+              <b-button type="submit" variant="primary" class="margin-right">Add</b-button>
               <b-button type="reset" variant="danger">Cancel</b-button>
             </b-form>
           </b-col>
@@ -362,8 +362,8 @@ export default {
       this.validateForm(this.form.source);
     },
     onReset(evt) {
-      this.$emit("close");
       evt.preventDefault();
+      this.$emit("close");
     },
     validateForm(obj) {
       var properties = 0;
@@ -392,7 +392,7 @@ export default {
       } else {
         const payload = this.form.source.file;
         this.change_matrix(`${this.backend_url}/upload`, payload);
-        this.$emit("close");
+        // this.$emit("close");
       }
     },
     delete_matrix(matrix) {
@@ -420,5 +420,8 @@ export default {
 #dropdown-csv-sep {
   margin-left: 0.5rem;
   width: 30px;
+}
+.margin-right {
+  margin-right: .5rem;
 }
 </style>
