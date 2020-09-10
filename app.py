@@ -207,7 +207,7 @@ def search_query():
         db_entry = db.visualizations.find_one(
             {"_id": ObjectId(url)}, {'_id': False})
         df = pd.DataFrame.from_dict(db_entry['transformed_dataframe'])
-        print('query: ', query)
+        # print('query: ', query)
         filtered_df = filter_dataframe.main(query, df)
         mongo_update = {
             '$set': {
