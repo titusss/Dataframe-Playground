@@ -28,7 +28,7 @@
       </svg>
     </div>
     <div class="table_buttons">
-      <b-button-group>
+      <!-- <b-button-group>
         <b-button
           v-b-toggle.collapse-relative
           v-b-popover.hover.top="'Divides the selected dataframe B by the uploaded data A for relative expression when activated.'"
@@ -40,7 +40,7 @@
           variant="secondary"
         >
           <img src="../assets/differential.svg" class="img_in_btn" />Relative Expression
-        </b-button>
+        </b-button> -->
         <b-button
           v-b-modal.modal_delete
           @click="on_delete_matrix()"
@@ -50,7 +50,7 @@
         >
           <img src="../assets/trash.svg" class="img_in_btn" />Remove
         </b-button>
-      </b-button-group>
+      <!-- </b-button-group> -->
 
       <b-collapse id="collapse-relative" class="mt-2">
         <b-card class="transformation-options">

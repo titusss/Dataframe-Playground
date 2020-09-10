@@ -112,6 +112,7 @@
             v-bind:backend_url="backend_url"
             @dataframe_change="redirect_to_config($event); update_filtered(false);"
             @error_occured="error_occured"
+            @close='hide_modal("bv_modal_addData")'
           />
         </b-modal>
         <b-modal id="modal_add_plugin" hide-footer>
@@ -173,6 +174,7 @@ export default {
   computed: {
     table_titles: function() {
       let active_matrices_flattened = [].concat.apply([], this.config.active_matrices); // Flatten the nested array.
+      // return active_matrices_flattened.map(a => ({text: a.title, value: a.id}));
       return active_matrices_flattened.map(a => a.title);
     }
   },
