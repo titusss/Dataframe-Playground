@@ -26,16 +26,31 @@ def main(query, df):
                     else:
                         df_mask[i] = not any_column
             df = df[df_mask]
-        elif block_type == "transformation":
+        elif block_type == "replace":
             # print(block["forms"]["target_value"])
             # df.loc[df_mask, filter_area] = block["forms"]["target_value"]
             df[filter_area] = df[filter_area].where(~df_mask, other=block["forms"]["target_value"])
             # df = df.where(~df_mask, other=10)
         elif block_type == "hide":
             df.drop(block["forms"]["target_column"], axis=1, inplace=True)
+        elif block_type == "logarithmic":
+            df[filter_area] = np.round(np.log(df[filter_area].values) / np.log(float(block["forms"]["log_value"])), 3) # NOTE: PERFORMANCE: Be careful with rounding when it comes to precision and performance. Maybe use pandas rounding function.
+            df.replace([np.inf, -np.inf], np.nan, inplace=True)
+            df.fillna(np.nan, inplace=True)
+        elif block_type == "fold_change":
+            df[filter_area] = np.round(df[filter_area].div(df[block["forms"]["target_column"]].values,axis=0), 3)
+            try:
+                # For relative gene expression. NOTE: Dividing first and calculating the log AFTER might loose precision.
+                # Alternative would be to calculate log(df) - log(target_column).
+                df[filter_area] = np.round(np.log(df[filter_area].values) / np.log(float(block["forms"]["log_value"])), 3) # NOTE: PERFORMANCE: Be careful with rounding when it comes to precision and performance. Maybe use pandas rounding function.
+            except:
+                pass
+            df.replace([np.inf, -np.inf], np.nan, inplace=True)
+            df.fillna(np.nan, inplace=True)
     return df
 
 def setup_query_parameters(forms, df):
+    # NOTE: This should be reworked. There should be at least 4 functions: 1 for "Filters", 1 for "Hide", 1 for "Transformation", 1 for "Replace"
     any_column = True # If this is set to False, all columns must satisfy the filter value.
     try:
         if forms["filter_area"] == "all columns":
@@ -52,11 +67,19 @@ def setup_query_parameters(forms, df):
             if comparison_operator == operator.eq:
                 filter_area = list(df.columns)
             else:
-                filter_area = list(df.select_dtypes(include=[np.number]).columns)
+                filter_area = list(df.select_dtypes(include=[np.number]).columns) # Only columns with numeric values can be compared when the comparison operator is not equal (=).
         else:
             filter_area = forms["filter_area"]
     except KeyError:
-        filter_area = list(df.select_dtypes(include=[np.number]).columns)
+        try:
+            string = '(' + forms["target_table"] + ') '
+            try:
+                filter_area = [col for col in list(df.columns) if col.startswith(string) and col != forms["target_column"]] # If there is a target_table, it'll search for columns that start with '(target_table) '
+            except KeyError:
+                filter_area = [col for col in list(df.columns) if col.startswith(string)]
+            any_column = False
+        except KeyError:
+            filter_area = list(df.select_dtypes(include=[np.number]).columns)
     return comparison_operator, filter_area, any_column
 
 def filter_for(forms, properties, df, comparison_operator, filter_area):
