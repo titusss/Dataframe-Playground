@@ -8,6 +8,7 @@ def main(df):
     output.name = "output.txt"
     output.seek(0)  
     upload_url = "https://amp.pharm.mssm.edu/clustergrammer/matrix_upload/" # Define the path to the visualizing sertver endpoint.
+    # upload_url = "https://clustergrammer-web-44nub6ij6q-ew.a.run.app/clustergrammer/matrix_upload/" Custom Docker Container.
     response = requests.post(upload_url, files={'file': output})
     print(response.text)
     vis_link = response.text.replace("http://","https://")

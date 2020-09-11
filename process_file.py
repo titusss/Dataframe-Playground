@@ -180,10 +180,10 @@ def make_preview_matrices(active_matrices):
     flattened_active_matrices = copy.deepcopy(sum(active_matrices, []))
     for matrix in flattened_active_matrices:
         preview_matrices.append(matrix)
-    for topMatrix in range(len(active_matrices[0])):
-        preview_matrices.append(make_single_matrix(topMatrix+2, 1, active_matrices[0][topMatrix]['width'], 2, "", False, False))
-    for bottomMatrix in range(len(active_matrices[0])):
-        preview_matrices.append(make_single_matrix(bottomMatrix+2, len(active_matrices)+2, active_matrices[len(active_matrices)-1][bottomMatrix]['width'], 2, "", False, False))
+    # for topMatrix in range(len(active_matrices[0])):
+    #     preview_matrices.append(make_single_matrix(topMatrix+2, 1, active_matrices[0][topMatrix]['width'], 2, "", False, False))
+    # for bottomMatrix in range(len(active_matrices[0])):
+    #     preview_matrices.append(make_single_matrix(bottomMatrix+2, len(active_matrices)+2, active_matrices[len(active_matrices)-1][bottomMatrix]['width'], 2, "", False, False))
     for leftMatrix in range(len(active_matrices)):
         preview_matrices.append(make_single_matrix(1, leftMatrix+2, 2, active_matrices[leftMatrix][0]['height'], "", False, False))
     for rightMatrix in range(len(active_matrices)):
