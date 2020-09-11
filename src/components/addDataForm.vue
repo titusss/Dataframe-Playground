@@ -13,7 +13,7 @@
       <b-container class="bv-example-row">
         <b-row>
           <b-col>
-            <h2 style="cursor:help; display:inline-block;" id="upload-dataset-popover-target">Add Data</h2>
+            <h2 style="cursor:help; display:inline-block;" id="upload-dataset-popover-target">Add Data<span style="font-size:1rem;"><sup><b-icon style="cursor:help;" icon="question-circle-fill"></b-icon></sup></span></h2>
               <b-popover target="upload-dataset-popover-target" triggers="hover" placement="top"><template v-slot:title>Upload a dataset</template>Upload various datasets from our databases or your local machine. If you give datasets the same title, the tool will automatically merge them without data-loss. The first column and all columns with non-numeric values will be turned into index columns. <strong>Uploading multiple tables requires at least 1 matching index column in every table.</strong></b-popover>
             <b-form @submit="onSubmit" @reset="onReset" v-if="show">
               <!-- <b-form-group id="input-group-4" label="Type:" label-for="checkboxes-4">
@@ -197,7 +197,7 @@
             </b-form>
           </b-col>
           <b-col class="center">
-            <h2 style="cursor:help;" v-b-popover.hover.top="'Choose where your dataframe should be placed. Select an existing matrix to replace it after uploading or to perform transformations.'" title="Place your data">Matrix Preview</h2>
+            <h2 style="cursor:help;" v-b-popover.hover.top="'Choose where your dataframe should be placed. Select an existing matrix to replace it with your uploaded data or to remove it.'" title="Place your data">Matrix Preview<span style="font-size:1rem;"><sup><b-icon style="cursor:help;" icon="question-circle-fill"></b-icon></sup></span></h2>
             <matrix
               @delete="delete_matrix"
               v-bind:matrices="matrices"
