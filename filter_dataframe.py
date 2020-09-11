@@ -45,6 +45,7 @@ def main(query, df):
                 df[filter_area] = np.round(np.log(df[filter_area].values) / np.log(float(block["forms"]["log_value"])), 3) # NOTE: PERFORMANCE: Be careful with rounding when it comes to precision and performance. Maybe use pandas rounding function.
             except:
                 pass
+            df.drop(block["forms"]["target_column"], axis=1, inplace=True) # Remove base columns.
             df.replace([np.inf, -np.inf], np.nan, inplace=True)
             df.fillna(np.nan, inplace=True)
     return df
