@@ -4,6 +4,7 @@
 node_modules
 /dist
 __pycache__/
+uninstall.txt
 
 # Plotly credentials
 .plotly
