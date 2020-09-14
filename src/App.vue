@@ -19,7 +19,9 @@
       </div>
     </div>
     <b-alert variant="info" show dismissible><strong class="alert-heading">Major Update v0.1.1-parquet</strong>
-      Expect new bugs and perfomance hits. Please notify us if something changed for the worse. Thanks :)</b-alert>
+      Expect new bugs and perfomance hits. Please notify us if something changed for the worse. Thanks :)
+      <hr>
+      Caution: Infinity or NaN values are temporarily displayed as '0'.</b-alert>
     <!-- <b-progress v-if="loading.state" :value="loading.bar.value" :variant="loading.bar.variant" :key="loading.bar.variant" height="6px"></b-progress> -->
     <!-- <div class="loading" v-if="loading"><b-spinner label="Spinning"></b-spinner><span>Loading ...</span></div> -->
     <div v-if="!this.initializing">
