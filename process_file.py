@@ -30,8 +30,6 @@ def convert_to_df(input_file, extension, metadata,):
         return "Error"
     # df.fillna(np.nan, inplace=True)
     df.columns = df.columns.str.replace('.', '_') # Dot's mess with the df. Replace it with an underscore: _
-    df = np.round(df, 4)
-    print('df: ', df)
     return df
 
 def insert_update_entry(entry, collection, metadata):
