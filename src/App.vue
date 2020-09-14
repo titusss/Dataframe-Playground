@@ -15,8 +15,11 @@
       <div>
         <div class="ball-grid-pulse"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <h5 class="title initial_load_text">Loading Session</h5>
+        <small>v0.1.1-parquet</small>
       </div>
     </div>
+    <b-alert variant="info" show dismissible><strong class="alert-heading">Major Update v0.1.1-parquet</strong>
+      Expect new bugs and perfomance hits. Please notify us if something changed for the worse. Thanks :)</b-alert>
     <!-- <b-progress v-if="loading.state" :value="loading.bar.value" :variant="loading.bar.variant" :key="loading.bar.variant" height="6px"></b-progress> -->
     <!-- <div class="loading" v-if="loading"><b-spinner label="Spinning"></b-spinner><span>Loading ...</span></div> -->
     <div v-if="!this.initializing">
@@ -158,7 +161,7 @@ export default {
   },
   data() {
     return {
-      backend_url: 'https://hiri-test-service-dks4e6fxka-ew.a.run.app',
+      backend_url: 'https://hiri-webtool-frontend-44nub6ij6q-ez.a.run.app:5000',
       loading: {
         state: true,
         increment: 10,
