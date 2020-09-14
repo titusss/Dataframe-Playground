@@ -161,6 +161,7 @@ export default {
   },
   data() {
     return {
+      ignore: true,
       backend_url: 'https://hiri-webtool-backend-v011-44nub6ij6q-ez.a.run.app:5000',
       loading: {
         state: true,
