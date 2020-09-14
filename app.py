@@ -10,6 +10,7 @@ import process_file
 import visualize
 from pymongo import MongoClient
 from bson.json_util import loads, dumps, ObjectId
+from io import BytesIO
 
 # variables
 UPLOAD_FOLDER = '/static'  # NOTE: Change this to /uploads in production
@@ -98,7 +99,7 @@ ERROR_MESSAGES = {
     },
 }
 # MongoDB
-client = MongoClient(os.environ.get("MONGO_CONNECTION_STRING"))
+client = MongoClient()
 db = client.test
 visualizations = db.visualizations
 plugins = db.plugins
@@ -139,7 +140,7 @@ def export_df():
             {"_id": ObjectId(url)}, {'_id': False})
         dataframe_dict = {}
         try:
-            df_filtered = pd.DataFrame.from_dict(db_entry['filtered_dataframe'])
+            df_filtered = pd.read_parquet(BytesIO(db_entry['filtered_dataframe']))
             dataframe_dict["filtered"] = {}
             dataframe_dict["filtered"]["df"] = df_filtered
             dataframe_dict["filtered"]["name"] = "Filtered Data"
@@ -147,10 +148,10 @@ def export_df():
             pass
         dataframe_dict["unfiltered"] = {}
         try:
-            dataframe_dict["unfiltered"]["df"] = pd.DataFrame.from_dict(db_entry['transformed_dataframe'])
+            dataframe_dict["unfiltered"]["df"] = pd.read_parquet(BytesIO(db_entry['transformed_dataframe']))
         except KeyError: # This is probably unnecessary, as every entry should have a transformed_dataframe, in theory.
             print("NOTE: db_entry['transformed_dataframe'] not found, using db_entry['dataframe'] instead.")
-            dataframe_dict["unfiltered"]["df"] = pd.DataFrame.from_dict(db_entry['dataframe'])
+            dataframe_dict["unfiltered"]["df"] = pd.read_parquet(BytesIO(db_entry['dataframe']))
         dataframe_dict["unfiltered"]["name"] = "Source Data"
         if export_form["file_type"] == 'excel':
             res = df_to_excel(dataframe_dict)
@@ -206,12 +207,13 @@ def search_query():
         url = json.loads(request.form['url'])
         db_entry = db.visualizations.find_one(
             {"_id": ObjectId(url)}, {'_id': False})
-        df = pd.DataFrame.from_dict(db_entry['transformed_dataframe'])
+        df = pd.read_parquet(BytesIO(db_entry['transformed_dataframe']))
         # print('query: ', query)
         filtered_df = filter_dataframe.main(query, df)
+        print(filtered_df)
         mongo_update = {
             '$set': {
-                'filtered_dataframe': filtered_df.replace({np.nan: None}).to_dict('records'),
+                'filtered_dataframe': df_to_parquet(filtered_df.replace({np.nan: None})),
                 'vis_links': [],
                 'query': query
             }
@@ -263,11 +265,11 @@ def make_vis_link():
             {"_id": ObjectId(url)}, {'_id': False})
         # CHANGE: Right now every new visualization creates a new MongoDB entry
         if len(db_entry['filtered_dataframe']) > 0:
-            vis_link = visualize.route(db.plugins, pd.DataFrame.from_dict(
-            db_entry['filtered_dataframe']), plugin)
+            vis_link = visualize.route(db.plugins, pd.read_parquet(
+            BytesIO(db_entry['filtered_dataframe'])), plugin)
         else:
-            vis_link = visualize.route(db.plugins, pd.DataFrame.from_dict(
-            db_entry['transformed_dataframe']), plugin)
+            vis_link = visualize.route(db.plugins, pd.read_parquet(
+            BytesIO(db_entry['transformed_dataframe'])), plugin)
         db.visualizations.update_one({'_id': ObjectId(url)}, {
             '$push': {'vis_links': vis_link}})
         print(vis_link)
@@ -323,6 +325,14 @@ def respond_config():
             db_entry['_id'] = str(db_entry['_id'])
             db_entry['plugins'] = [plugin for plugin in db.plugins.find(
                 {'_id': {'$in': db_entry['plugins_id']}})]
+            import pandas as pd
+            # print(pd.read_parquet(db_entry['transformed_dataframe']).to_dict('records'))
+            print('######')
+            db_entry['transformed_dataframe'] = pd.read_parquet(BytesIO(db_entry['transformed_dataframe'])).to_dict('records')
+            try:
+                db_entry['filtered_dataframe'] = pd.read_parquet(BytesIO(db_entry['filtered_dataframe'])).to_dict('records')
+            except:
+                pass
             return Response(dumps({'db_entry': db_entry}, allow_nan=True), mimetype="application/json")
         else:
             print('undefined')
@@ -397,5 +407,13 @@ def make_preview(input_file, extension, dataList, remove_id):
     for i in range(len(MATRICES)):
         MATRIX.append(MATRICES[i])
     return DATAFRAME
+
+def df_to_parquet(df):
+    from bson.binary import Binary
+    output = BytesIO()
+    df.to_parquet(output)
+    output.seek(0)
+    # df = pd.read_parquet(BytesIO(test))
+    return Binary(output.getvalue())
 
 client.close()
