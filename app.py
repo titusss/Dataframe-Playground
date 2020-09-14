@@ -197,6 +197,10 @@ def upload_db_entry(db_entry, mongo_update, url):
         print(db_entry['active_plugin_id'])
     return db_entry_id
 
+@app.route('/query', methods=['GET'])
+def status():
+    return "alive"
+
 @app.route('/query', methods=['POST'])
 def search_query():
     try:
@@ -210,7 +214,6 @@ def search_query():
         df = pd.read_parquet(BytesIO(db_entry['transformed_dataframe']))
         # print('query: ', query)
         filtered_df = filter_dataframe.main(query, df)
-        print(filtered_df)
         mongo_update = {
             '$set': {
                 'filtered_dataframe': df_to_parquet(filtered_df.replace({np.nan: None})),
