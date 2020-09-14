@@ -197,7 +197,7 @@ def upload_db_entry(db_entry, mongo_update, url):
         print(db_entry['active_plugin_id'])
     return db_entry_id
 
-@app.route('/query', methods=['GET'])
+@app.route('/status', methods=['GET'])
 def status():
     return "alive"
 
