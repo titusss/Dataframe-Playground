@@ -34,9 +34,12 @@ def main(query, df):
         elif block_type == "hide":
             df.drop(block["forms"]["target_column"], axis=1, inplace=True)
         elif block_type == "logarithmic":
+            print(df)
             df[filter_area] = np.round(np.log(df[filter_area].values) / np.log(float(block["forms"]["log_value"])), 3) # NOTE: PERFORMANCE: Be careful with rounding when it comes to precision and performance. Maybe use pandas rounding function.
+            print(df)
             df.replace([np.inf, -np.inf], np.nan, inplace=True)
-            df.fillna(np.nan, inplace=True)
+            df.fillna(0, inplace=True)
+            print(df)
         elif block_type == "fold_change":
             df[filter_area] = np.round(df[filter_area].div(df[block["forms"]["target_column"]].values,axis=0), 3)
             try:
@@ -47,7 +50,7 @@ def main(query, df):
                 pass
             df.drop(block["forms"]["target_column"], axis=1, inplace=True) # Remove base columns.
             df.replace([np.inf, -np.inf], np.nan, inplace=True)
-            df.fillna(np.nan, inplace=True)
+            df.fillna(0, inplace=True)
     return df
 
 def setup_query_parameters(forms, df):
