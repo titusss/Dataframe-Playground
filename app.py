@@ -99,7 +99,7 @@ ERROR_MESSAGES = {
     },
 }
 # MongoDB
-client = MongoClient(os.environ.get("MONGO_CONNECTION_STRING"))
+client = MongoClient("mongodb+srv://pymongo-user:K5l3XACp2wg5QuO4@cluster0.hxih0.gcp.mongodb.net/test?retryWrites=true&w=majority")
 db = client.test
 visualizations = db.visualizations
 plugins = db.plugins
@@ -395,9 +395,10 @@ def upload_file(request, extension_whitelist, metadata):
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-@app.rout('/intermiada')
-def respind:
-    return os.environ.get("MONGO_CONNECTION_STRING")
+@app.route('/intermiada')
+def respind():
+    print('reached')
+    return 'yay' + str(os.environ.get("MONGO_CONNECTION_STRING"))
 
 @app.route('/matrix/<matrix_id>', methods=['GET', 'POST'])
 def remove_matrix(matrix_id):
