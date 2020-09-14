@@ -99,7 +99,7 @@ ERROR_MESSAGES = {
     },
 }
 # MongoDB
-client = MongoClient()
+client = MongoClient(os.environ.get("MONGO_CONNECTION_STRING"))
 db = client.test
 visualizations = db.visualizations
 plugins = db.plugins
