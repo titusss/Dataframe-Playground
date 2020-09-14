@@ -400,7 +400,7 @@ def respind():
     print('reached')
     return 'yay' + str(os.environ.get("MONGO_CONNECTION_STRING"))
 
-@app.rout('/coll')
+@app.route('/coll')
 def respond_coll():
     return str(db) + ' ' + str(visualizations)
 
