@@ -341,6 +341,7 @@ def respond_config():
             print('undefined')
             import copy
             db_entry = copy.deepcopy(DB_ENTRY_MOCKUP)
+            print(db_entry)
             db_entry['plugins'] = [plugin for plugin in db.plugins.find(
                 {'_id': {'$in': db_entry['plugins_id']}})]
             return Response(dumps({'db_entry': db_entry}, allow_nan=True), mimetype="application/json")
