@@ -129,7 +129,6 @@ def allowed_file(filename, extension_whitelist):
 #     print('hello world')
 #     return "Hello world!"
 
-
 @app.route('/export', methods=['POST'])
 def export_df():
     try:
@@ -395,6 +394,10 @@ def upload_file(request, extension_whitelist, metadata):
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.rout('/intermiada')
+def respind:
+    return os.environ.get("MONGO_CONNECTION_STRING")
 
 @app.route('/matrix/<matrix_id>', methods=['GET', 'POST'])
 def remove_matrix(matrix_id):
