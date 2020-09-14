@@ -1,7 +1,8 @@
 import uuid
 import pandas as pd
-from bson.json_util import ObjectId
+from bson.json_util import ObjectId, dumps
 import numpy as np
+from io import BytesIO
 
 max_preview_rows = 12
 max_preview_columns = 8
@@ -29,6 +30,8 @@ def convert_to_df(input_file, extension, metadata,):
         return "Error"
     # df.fillna(np.nan, inplace=True)
     df.columns = df.columns.str.replace('.', '_') # Dot's mess with the df. Replace it with an underscore: _
+    df = np.round(df, 4)
+    print('df: ', df)
     return df
 
 def insert_update_entry(entry, collection, metadata):
@@ -94,7 +97,7 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
             import transform_dataframe
             for matrix in sum(db_entry['active_matrices'], []):
                 if matrix['id'] == metadata['matrix_id']:
-                    df_old = pd.DataFrame.from_dict(matrix['dataframe'])
+                    df_old = pd.read_parquet(BytesIO(matrix['dataframe']))
                     try:
                         df_old.rename(columns=lambda title: remove_df_title(title), inplace=True) # Remove the title from the old base df.
                     except:
@@ -102,7 +105,7 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
                     break
             df = transform_dataframe.main(transformation_type, metadata, df_old, df)
         df = rename_df_columns(df, metadata["title"])
-        db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.replace({np.nan: None}).to_dict('records'))
+        db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df_to_parquet(df.replace({np.nan: None})))
         db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
     else: # If you create a new visualization
         df = convert_to_df(input_file, extension, metadata)
@@ -119,12 +122,20 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
     return db_entry_id
 
 def merge_db_entry(db_entry, flattened_am):
-    df_merged = pd.DataFrame.from_dict(flattened_am[0]['dataframe'])
+    df_merged = pd.read_parquet(BytesIO(flattened_am[0]['dataframe']))
     for i in range(len(flattened_am)): # Looping through. This could be replaced in the future by merging only with the single transformed_dataframe.
-        df_merged = pd.merge(df_merged, pd.DataFrame.from_dict(flattened_am[i]['dataframe']), how='outer') # NOTE: Performance
+        df_merged = pd.merge(df_merged, pd.read_parquet(BytesIO(flattened_am[i]['dataframe'])), how='outer') # NOTE: Performance
     # df_merged.fillna(np.nan, inplace=True) # Replace NA values with 0
-    db_entry['transformed_dataframe'] = df_merged.replace({np.nan: None}).to_dict('records')
+    db_entry['transformed_dataframe'] = df_to_parquet(df_merged.replace({np.nan: None}))
     return db_entry
+
+def df_to_parquet(df):
+    from bson.binary import Binary
+    output = BytesIO()
+    df.to_parquet(output)
+    output.seek(0)
+    # df = pd.read_parquet(BytesIO(test))
+    return Binary(output.getvalue())
 
 def new_db_entry(df, metadata, pre_configured_plugins):
     db_entry = {}
@@ -132,8 +143,8 @@ def new_db_entry(df, metadata, pre_configured_plugins):
     db_entry['active_matrices'] = [[]]
     db_entry['plugins_id'] = pre_configured_plugins
     # db_entry['active_plugin_id'] = ""
-    db_entry['transformed_dataframe'] = df.to_dict('records')
-    db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df.to_dict('records'))
+    db_entry['transformed_dataframe'] = df_to_parquet(df)
+    db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df_to_parquet(df))
     return db_entry
 
 def make_active_matrix(metadata, df, active_matrices, dataframe): # NOTE: Why is there a df and a dataframe argument?
