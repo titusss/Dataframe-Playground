@@ -18,7 +18,7 @@ def relative_expression(metadata, df_old, df_new):
     # df_transformed = df_transformed.dropna()
     # df_transformed = df_transformed.replace({np.nan: None})
     
-    df_transformed.fillna(np.nan, inplace=True)
+    df_transformed.fillna(0, inplace=True)
     print('df_transformed: ', df_transformed)
     df_old[df_transformed.columns] = df_transformed
     df_transformed = df_old
