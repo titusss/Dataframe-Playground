@@ -395,15 +395,6 @@ def upload_file(request, extension_whitelist, metadata):
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-@app.route('/intermiada')
-def respind():
-    print('reached')
-    return 'yay' + str(os.environ.get("MONGO_CONNECTION_STRING"))
-
-@app.route('/coll')
-def respond_coll():
-    return str(db) + ' ' + str(visualizations)
-
 @app.route('/matrix/<matrix_id>', methods=['GET', 'POST'])
 def remove_matrix(matrix_id):
     metadata = json.loads(request.form['form'])
