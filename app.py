@@ -100,6 +100,7 @@ ERROR_MESSAGES = {
 }
 # MongoDB
 client = MongoClient(os.environ.get("MONGO_CONNECTION_STRING"))
+# client = MongoClient() # For offline testing.
 db = client.test
 visualizations = db.visualizations
 plugins = db.plugins
@@ -335,6 +336,10 @@ def respond_config():
                 db_entry['filtered_dataframe'] = pd.read_parquet(BytesIO(db_entry['filtered_dataframe'])).to_dict('records')
             except:
                 pass
+            # For size benchmarks
+            # import bson
+            # print('######### Size of document')
+            # print(len(bson.BSON.encode(db_entry)))
             return Response(dumps({'db_entry': db_entry}, allow_nan=True), mimetype="application/json")
         else:
             print('undefined')
