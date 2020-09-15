@@ -12,6 +12,8 @@ COMPARISON_OPERATORS = {
 
 def main(query, df):
     # print(query)
+    # import experimental_features
+    # df = experimental_features.adjust_numeric_dtype(df) # This reduces the dataframe's size by around 50% but increases computation time by 30% and needs rounding due to lower FP precision
     for block in query:
         block_type = block["properties"]["type"]
         comparison_operator, filter_area, any_column = setup_query_parameters(block["forms"], df)
@@ -32,14 +34,15 @@ def main(query, df):
             df[filter_area] = df[filter_area].where(~df_mask, other=block["forms"]["target_value"])
             # df = df.where(~df_mask, other=10)
         elif block_type == "hide":
-            df.drop(block["forms"]["target_column"], axis=1, inplace=True)
+            if block["forms"]["target_column"] == "all columns":
+                target_area = list(df.columns)
+            else:
+                target_area = block["forms"]["target_column"]
+            df.drop(target_area, axis=1, inplace=True)
         elif block_type == "logarithmic":
-            print(df)
             df[filter_area] = np.round(np.log(df[filter_area].values) / np.log(float(block["forms"]["log_value"])), 3) # NOTE: PERFORMANCE: Be careful with rounding when it comes to precision and performance. Maybe use pandas rounding function.
-            print(df)
             df.replace([np.inf, -np.inf], np.nan, inplace=True)
             df.fillna(0, inplace=True)
-            print(df)
         elif block_type == "fold_change":
             df[filter_area] = np.round(df[filter_area].div(df[block["forms"]["target_column"]].values,axis=0), 3)
             try:
@@ -51,6 +54,12 @@ def main(query, df):
             df.drop(block["forms"]["target_column"], axis=1, inplace=True) # Remove base columns.
             df.replace([np.inf, -np.inf], np.nan, inplace=True)
             df.fillna(0, inplace=True)
+        elif block_type == "round":
+            if block["forms"]["target_column"] == "all columns":
+                target_area = list(df.columns)
+            else:
+                target_area = block["forms"]["target_column"]
+            df[filter_area] = np.round(df[filter_area], int(block["forms"]["round_value"]))
     return df
 
 def setup_query_parameters(forms, df):
