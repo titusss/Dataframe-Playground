@@ -11,7 +11,7 @@ active_matrices = [[]]
 
 def convert_to_df(input_file, extension, metadata,):
     print(metadata["database_columns"])
-    
+    import experimental_features
     if extension == ".xlsx":
         df = pd.read_excel(input_file)
     elif extension == ".csv":
@@ -30,6 +30,7 @@ def convert_to_df(input_file, extension, metadata,):
         return "Error"
     # df.fillna(np.nan, inplace=True)
     df.columns = df.columns.str.replace('.', '_') # Dot's mess with the df. Replace it with an underscore: _
+    df = experimental_features.adjust_numeric_dtype(df)
     return df
 
 def insert_update_entry(entry, collection, metadata):
@@ -211,8 +212,3 @@ def make_single_matrix(x, y, width, height, title, active, dataframe):
         'dataframe': dataframe
     }
     return ADD_MATRIX
-
-def method1(list,search_age):
-    for name,age in list.iteritems():
-        if age == search_age:
-            return dataframe
