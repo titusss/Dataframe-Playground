@@ -2,6 +2,30 @@
   "items": {
     "transformations": {
       "Basic": {
+        "Round Values": {
+          "properties": {
+            "type": "round",
+            "query": "integer"
+          },
+          "items": {
+            "target_column": {
+              "label": "Round values in column",
+              "type": "b-form-select",
+              "options": ["all columns"],
+              "id": "hide_column",
+              "selected": "all columns"
+            },
+            "round_value": {
+              "label": "to decimal place",
+              "type": "int-input",
+              "formula": false,
+              "id": "change_values_round-value",
+              "selected": 3,
+              "min": 0,
+              "max": 1001
+            }
+          }
+        },
         "Change Values": {
           "properties": {
             "type": "replace",
@@ -53,9 +77,9 @@
             "target_column": {
               "label": "Hide column",
               "type": "b-form-select",
-              "options": [],
+              "options": ["all columns"],
               "id": "hide_column",
-              "selected": null
+              "selected": "all columns"
             }
           }
         }
@@ -98,9 +122,12 @@
             },
             "log_value": {
               "label": "to logarithmic with base",
-              "type": "log-base-input",
+              "type": "int-input",
+              "formula": true,
               "id": "change_values_log-base",
-              "selected": 2
+              "selected": 2,
+              "min": null,
+              "max": 1001
             }
           }
         },
@@ -126,9 +153,12 @@
             },
             "log_value": {
               "label": "in logarithmic with base",
-              "type": "log-base-input",
+              "type": "int-input",
               "id": "change_values_log-base",
-              "selected": 2
+              "selected": 2,
+              "formula": true,
+              "min": null,
+              "max": 1001
             }
           }
         }

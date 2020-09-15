@@ -23,9 +23,9 @@
               required
             ></input_autocomplete>
             <!-- log-input and -preview -->
-            <div v-if="form.type === 'log-base-input'">
-              <b-form-input :id="form.id" v-model="form.selected" size="sm" class="mb-2 mr-sm-2 mb-sm-0 short-form" :style="form.style" type="number" max="1001" required></b-form-input>
-              <div class="log-preview">
+            <div v-if="form.type === 'int-input'">
+              <b-form-input :id="form.id" v-model="form.selected" size="sm" class="mb-2 mr-sm-2 mb-sm-0 short-form" :style="form.style" type="number" :min="form.min" :max="form.max" required></b-form-input>
+              <div v-if="form.formula" class="log-preview">
                 <b-badge variant="dark" class="log-preview-badge">
                   <span class="supsub">
                     <span class="base formula">
@@ -292,18 +292,25 @@ export default {
           // Edit: I now use try with an empty catch. If Python likes that, how bad can it be in JS....haha?
           try {
             query_source[query_cat][query].items["filter_area"]["options"] = categories;
+            console.log("a");
           } catch (e) {
-            console.log("o");
+            console.log("not found");
           }
           try {
-            query_source[query_cat][query].items["target_column"]["options"] = this.df_categories;
+            if (query_source[query_cat][query].items["target_column"]["selected"] !== null) {
+              query_source[query_cat][query].items["target_column"]["options"] = [].concat([query_source[query_cat][query].items["target_column"]["selected"]], this.df_categories);
+            } else {
+              query_source[query_cat][query].items["target_column"]["options"] = this.df_categories;
+            }
+            console.log("b");
           } catch (e) {
-            console.log("o");
+            console.log("not found");
           }
           try {
             query_source[query_cat][query].items["target_table"]["options"] = this.table_titles;
+            console.log("c");
           } catch (e) {
-            console.log("o");
+            console.log("not found");
           }
         }
       }

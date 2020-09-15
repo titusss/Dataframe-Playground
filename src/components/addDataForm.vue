@@ -23,7 +23,7 @@
             </b-form-radio-group>
               </b-form-group>-->
               <b-form-group id="input-group-2" label="Title:" label-for="input-2">
-                <b-form-input id="input-2" v-model="form.title"></b-form-input>
+                <b-form-input id="input-2" v-model="form.title" required></b-form-input>
               </b-form-group>
               <!-- <b-form-group
                 id="group-cat-amount"
@@ -140,7 +140,7 @@
                           :state="Boolean(form.source.file)"
                           placeholder="Choose a file or drop it here..."
                           drop-placeholder="Drop file here..."
-                          accept=".txt, .xlsx"
+                          accept=".txt, .xlsx, .csv"
                         ></b-form-file>
                       </b-form-group>
                       <b-form inline>
