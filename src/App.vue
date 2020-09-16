@@ -15,10 +15,10 @@
       <div>
         <div class="ball-grid-pulse"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <h5 class="title initial_load_text">Loading Session</h5>
-        <small>v0.2.1-dtype</small>
+        <small>v0.2.3-nan</small>
       </div>
     </div>
-    <b-alert variant="info" show dismissible><strong class="alert-heading">Major Update v0.2.1-dtype</strong>
+    <b-alert variant="info" show dismissible><strong class="alert-heading">Major Update v0.2.3-nan</strong>
       Expect new bugs and perfomance hits. Please notify us if something changed for the worse.
       <hr>
       Caution: 1) FP reduction. Limited floating point precision. 2) Infinity or NaN values are temporarily displayed as '0'.</b-alert>
@@ -164,6 +164,7 @@ export default {
   data() {
     return {
       backend_url: 'https://hiri-webtool-backend-v011-44nub6ij6q-ez.a.run.app',
+      // backend_url: 'http://localhost:5000',
       loading: {
         state: true,
         increment: 10,
