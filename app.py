@@ -11,6 +11,8 @@ import visualize
 from pymongo import MongoClient
 from bson.json_util import loads, dumps, ObjectId
 from io import BytesIO
+import pandas as pd
+import numpy as np
 
 # variables
 UPLOAD_FOLDER = '/static'  # NOTE: Change this to /uploads in production
@@ -133,7 +135,6 @@ def allowed_file(filename, extension_whitelist):
 @app.route('/export', methods=['POST'])
 def export_df():
     try:
-        import pandas as pd
         export_form = json.loads(request.form['export_form'])
         url = json.loads(request.form['url'])
         db_entry = db.visualizations.find_one(
@@ -164,7 +165,6 @@ def export_df():
 
 def df_to_excel(dataframe_dict):
     from io import BytesIO
-    import pandas as pd
     output = BytesIO()
     writer = pd.ExcelWriter(output, engine='xlsxwriter')
     # Load the filtered, and unfiltered dataframe as excel sheets.
@@ -178,7 +178,6 @@ def df_to_excel(dataframe_dict):
 
 def df_to_csv(dataframe_dict, seperator):
     # CSV doesn't support multi-sheets, so only one dataframe can be exported.
-    import pandas as pd
     if len(dataframe_dict["filtered"]["df"].index) == 0: # If the dataframe is not filtered, export the unfiltered one.
         df = dataframe_dict["unfiltered"]["df"]
     else:
@@ -205,8 +204,6 @@ def status():
 def search_query():
     try:
         import filter_dataframe
-        import pandas as pd
-        import numpy as np
         query = json.loads(request.form['query'])
         url = json.loads(request.form['url'])
         db_entry = db.visualizations.find_one(
@@ -260,7 +257,6 @@ def set_active_plugin():
 @app.route('/visualization', methods=['POST'])
 def make_vis_link():
     try:
-        import pandas as pd
         plugin = json.loads(request.form['plugin'])
         url = json.loads(request.form['url'])
         print('url: ', url, 'plugin: ', plugin)
@@ -284,7 +280,6 @@ def make_vis_link():
 
 @app.route('/plugins', methods=['POST'])
 def add_plugin():
-    import pandas as pd
     from pymongo import MongoClient
     from bson.json_util import ObjectId
     metadata = json.loads(request.form['form'])
@@ -328,12 +323,13 @@ def respond_config():
             db_entry['_id'] = str(db_entry['_id'])
             db_entry['plugins'] = [plugin for plugin in db.plugins.find(
                 {'_id': {'$in': db_entry['plugins_id']}})]
-            import pandas as pd
-            # print(pd.read_parquet(db_entry['transformed_dataframe']).to_dict('records'))
             print('######')
-            db_entry['transformed_dataframe'] = pd.read_parquet(BytesIO(db_entry['transformed_dataframe'])).to_dict('records')
+            if type(db_entry['transformed_dataframe']) == bytes: # The mockup db_entry stores the empty transformed_dataframe as a list, so don't convert that one.
+                # PERFORMANCE: We have to replace NaN cells with None for JSON.
+                db_entry['transformed_dataframe'] = pd.read_parquet(BytesIO(db_entry['transformed_dataframe'])).replace({np.nan: None}).to_dict('records')
             try:
-                db_entry['filtered_dataframe'] = pd.read_parquet(BytesIO(db_entry['filtered_dataframe'])).to_dict('records')
+                # PERFORMANCE: We have to replace NaN cells with None for JSON.
+                db_entry['filtered_dataframe'] = pd.read_parquet(BytesIO(db_entry['filtered_dataframe'])).replace({np.nan: None}).to_dict('records')
             except:
                 pass
             # For size benchmarks
