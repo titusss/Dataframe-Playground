@@ -95,7 +95,7 @@
         >
         <template v-slot:button-content><b-icon icon="plus-circle-fill"></b-icon> Add Filter </template>
         <b-dropdown-group v-for="(filter_template_group, index) in filter_templates.items.templates" :key="index" :header="index" id="dropdown-group-numeric">
-          <b-dropdown-item v-for="(template, index) in filter_template_group" :key="index" v-on:click="add_query_block(template, index)">{{ index }}</b-dropdown-item>
+          <b-dropdown-item v-for="(template, index) in filter_template_group" :key="index" v-on:click="add_query_block(template, index, guidGenerator())">{{ index }}</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
         </b-dropdown-group>
       </b-dropdown>
@@ -105,7 +105,7 @@
         >
         <template v-slot:button-content> <b-icon icon="intersect"></b-icon> Load Filter </template>
         <b-dropdown-group v-for="(filter_preset_group, index) in filter_templates.items.presets" :key="index" :header="index" id="dropdown-group-numeric">
-          <b-dropdown-item v-for="(preset, index) in filter_preset_group" :key="index" v-on:click="add_query_block(preset, index)">{{ index }}</b-dropdown-item>
+          <b-dropdown-item v-for="(preset, index) in filter_preset_group" :key="index" v-on:click="add_query_block(preset, index, guidGenerator())">{{ index }}</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
         </b-dropdown-group>
       </b-dropdown>
@@ -116,7 +116,7 @@
         >
         <template v-slot:button-content> <b-icon icon="calculator-fill"></b-icon>Transform Data </template>
         <b-dropdown-group v-for="(filter_preset_group, index) in filter_templates.items.transformations" :key="index" :header="index" id="dropdown-group-numeric">
-          <b-dropdown-item v-for="(preset, index) in filter_preset_group" :key="index" v-on:click="add_query_block(preset, index)">{{ index }}</b-dropdown-item>
+          <b-dropdown-item v-for="(preset, index) in filter_preset_group" :key="index" v-on:click="add_query_block(preset, index, guidGenerator())">{{ index }}</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
         </b-dropdown-group>
       </b-dropdown>
@@ -157,14 +157,14 @@ export default {
     },
   },
   methods: {
-    get_text_from_value(obj) {
-      console.log(obj.options.length)
-      for(var i=0;i<obj.options.length;i++) {
-        if(obj.options[i].value === obj.selected) {
-          return obj.options[i].text
-        }
-      }
-    },
+    // get_text_from_value(obj) {
+    //   console.log(obj.options.length)
+    //   for(var i=0;i<obj.options.length;i++) {
+    //     if(obj.options[i].value === obj.selected) {
+    //       return obj.options[i].text
+    //     }
+    //   }
+    // },
     deep_copy(input) {
       let output, value, key;
       if (typeof input !== "object" || input === null) {
@@ -192,22 +192,24 @@ export default {
                   block.items[form].selected = selected_parent.name;
                 }
               }
-              this.add_query_block(block, block_name);
+              this.add_query_block(block, block_name, this.server_queries[i]["id"]);
               break template_type;
             }
           }
         }
       }
     },
-    add_query_block(block, index) {
+    add_query_block(block, index, id) {
       let added_block = {};
       added_block["forms"] = this.deep_copy(block);
-      added_block["id"] = this.id;
       added_block["logic"] = true;
       added_block["block_name"] = index;
+      added_block["id"] = id;
       this.query.push([added_block]);
-      this.id++;
       // console.log(this.query);
+    },
+    guidGenerator() {
+      return Math.random()*1001|0;
     },
     restructure_query() {
       let structured_query = [];
@@ -217,6 +219,7 @@ export default {
           // console.log(this.query[array][sub_array]);
           structured_query_block["name"] = this.query[array][sub_array]["block_name"];
           structured_query_block["properties"] = this.query[array][sub_array]["forms"]["properties"];
+          structured_query_block["id"] = this.query[array][sub_array]["id"];
           structured_query_block["forms"] = {};
           for (let form in this.query[array][sub_array]["forms"]["items"]) {
             structured_query_block["forms"][form] = this.query[array][sub_array]["forms"]["items"][form]["selected"];
@@ -240,6 +243,13 @@ export default {
       const index = this.query.indexOf(block_array);
       if (index > -1) {
         this.query.splice(index, 1);
+      }
+      for (let i in this.server_queries) { // Optional: Push filter query as soon as a filter is removed
+        if (this.server_queries[i]["id"] === block_array[0]["id"]) {
+          this.loading = true;
+          this.post_query();
+          break
+        }
       }
     },
     post_query() {
@@ -327,7 +337,6 @@ export default {
   data() {
     return {
       loading: false,
-      id: 0,
       salmonella_go_terms,
       salmonella_kegg_terms,
       salmonella_cog_categories,
