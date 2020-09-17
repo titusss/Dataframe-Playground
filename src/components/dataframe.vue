@@ -156,7 +156,7 @@ table#dataframe-table .flip-list {
   transition: transform 1s;
 }
 table {
-  font-family: "SF Mono", "Courier New", Courier, monospace;
+  font-family: "SF Mono", -apple-system, "Courier New", Courier, monospace;
   font-size: 0.8rem;
 }
 .card {

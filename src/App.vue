@@ -15,11 +15,11 @@
       <div>
         <div class="ball-grid-pulse"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <h5 class="title initial_load_text">Loading Session</h5>
-        <small>v0.2.3-nan</small>
+        <small>v0.2.4-tab</small>
       </div>
     </div>
-    <b-alert variant="info" show dismissible><strong class="alert-heading">Major Update v0.2.3-nan</strong>
-      Expect new bugs and perfomance hits. Please notify us if something changed for the worse.
+    <b-alert variant="info" show dismissible><strong class="alert-heading">Update v0.2.4-tab</strong>
+      Tab delimiter now available for CSV uploads in dropdown.
       <hr>
       Caution: 1) FP reduction. Limited floating point precision. 2) Infinity or NaN values are temporarily displayed as '0'.</b-alert>
     <!-- <b-progress v-if="loading.state" :value="loading.bar.value" :variant="loading.bar.variant" :key="loading.bar.variant" height="6px"></b-progress> -->
