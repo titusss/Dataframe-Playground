@@ -114,10 +114,10 @@
                           class="seperator-group mb-2 mr-sm-2 mb-sm-0"
                           label-align-sm="left"
                           label="Decimal Character:"
-                          label-for="dropdown-csv-sep"
+                          label-for="#dropdown-decimal-del"
                         >
                           <b-form-input
-                            id="dropdown-csv-sep"
+                            id="dropdown-decimal-del"
                             class="seperator-field"
                             size="sm"
                             type="text"
@@ -151,22 +151,24 @@
                           label-for="dropdown-csv-sep"
                         >
                           <b-form-input
+                            list="input-list"
                             id="dropdown-csv-sep"
                             class="seperator-field mb-2 mr-sm-2 mb-sm-0"
                             size="sm"
-                            type="text"
-                            maxlength="1"
+                            autocomplete="off"
+                            maxlength="2"
                             v-model="form.formatting.file.csv_seperator"
                           ></b-form-input>
+                          <b-form-datalist id="input-list" :options="csv_sep_list"></b-form-datalist>
                         </b-form-group>
                         <b-form-group
                           class="seperator-group mb-2 mr-sm-2 mb-sm-0"
                           label-align-sm="left"
                           label="Decimal Character:"
-                          label-for="dropdown-csv-sep"
+                          label-for="dropdown-decimal-del"
                         >
                           <b-form-input
-                            id="dropdown-csv-sep"
+                            id="dropdown-decimal-del"
                             class="seperator-field"
                             size="sm"
                             type="text"
@@ -232,6 +234,7 @@ export default {
   },
   data() {
     return {
+      csv_sep_list: [{value: "\t", text: 'Tab' },{value: ' ', text: 'Space' }],
       test: ['test'],
       datasets,
       animate: true,
@@ -419,7 +422,11 @@ export default {
 }
 #dropdown-csv-sep {
   margin-left: 0.5rem;
-  width: 30px;
+  width: 60px;
+}
+#dropdown-decimal-del {
+  margin-left: 0.5rem;
+  width: 40px;
 }
 .margin-right {
   margin-right: .5rem;
