@@ -60,6 +60,14 @@ def main(query, df):
             else:
                 target_area = block["forms"]["target_column"]
             df[filter_area] = np.round(df[filter_area], int(block["forms"]["round_value"]))
+        elif block_type == "transcript_length":
+            metadata = {
+                "start_column_title": filter_area,
+                "end_column_title": block["forms"]["target_column"],
+                "new_column_title": block["forms"]["target_value"]
+            }
+            import transform_dataframe
+            df = transform_dataframe.main("count_transcript_length", metadata, df)
     return df
 
 def setup_query_parameters(forms, df):
