@@ -103,7 +103,7 @@
         <b-popover id="tutorial_popover" :no-fade="true" triggers placement="rightbottom" target="load-query-dropdown" title="3. Load preset filters"
           >Load pre-filled filters to search for pathogenicity islands, sORF, or just faulty data.</b-popover
         >
-        <template v-slot:button-content> <b-icon icon="intersect"></b-icon> Load Filter </template>
+        <template v-slot:button-content> <b-icon icon="intersect"></b-icon> Load Preset </template>
         <b-dropdown-group v-for="(filter_preset_group, index) in filter_templates.items.presets" :key="index" :header="index" id="dropdown-group-numeric">
           <b-dropdown-item v-for="(preset, index) in filter_preset_group" :key="index" v-on:click="add_query_block(preset, index, guidGenerator())">{{ index }}</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>

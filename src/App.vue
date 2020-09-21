@@ -15,10 +15,10 @@
       <div>
         <div class="ball-grid-pulse"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <h5 class="title initial_load_text">Loading Session</h5>
-        <small>v0.2.5-tab</small>
+        <small>v0.2.7-length</small>
       </div>
     </div>
-    <b-alert variant="info" show dismissible><strong class="alert-heading">Update v0.2.5-tab</strong>
+    <b-alert variant="info" show dismissible><strong class="alert-heading">Update v0.2.7-length</strong>
       Tab delimiter now available for CSV uploads in dropdown.
       <hr>
       Caution: 1) FP reduction. Limited floating point precision. 2) Infinity or NaN values are temporarily displayed as '0'.</b-alert>
