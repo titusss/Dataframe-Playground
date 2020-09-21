@@ -31,10 +31,10 @@
                     <span class="base formula">
                       log
                       <sub class="subscript">
-                        <strong class="formula-strong"> {{form.selected}}</strong>
+                        <strong class="formula-strong"> {{ form.selected }}</strong>
                       </sub>
                       <!-- <span v-if="!form_block.forms.items.target_column" class="base formula"> ({{get_text_from_value(form_block.forms.items.target_table)}})</span> -->
-                      <span v-if="!form_block.forms.items.target_column" class="base formula">  ({{form_block.forms.items.target_table.selected}})</span>
+                      <span v-if="!form_block.forms.items.target_column" class="base formula"> ({{ form_block.forms.items.target_table.selected }})</span>
                       <span v-else class="base formula"> (Fold-Change)</span>
                     </span>
                   </span>
@@ -209,7 +209,7 @@ export default {
       // console.log(this.query);
     },
     guidGenerator() {
-      return Math.random()*1001|0;
+      return (Math.random() * 1001) | 0;
     },
     restructure_query() {
       let structured_query = [];
@@ -244,11 +244,12 @@ export default {
       if (index > -1) {
         this.query.splice(index, 1);
       }
-      for (let i in this.server_queries) { // Optional: Push filter query as soon as a filter is removed
+      for (let i in this.server_queries) {
+        // Optional: Push filter query as soon as a filter is removed
         if (this.server_queries[i]["id"] === block_array[0]["id"]) {
           this.loading = true;
           this.post_query();
-          break
+          break;
         }
       }
     },
@@ -293,34 +294,35 @@ export default {
       this.filter_templates.items.templates["Filter by annotation"]["GO Namespace"].items.filter_annotation.source.items = this.salmonella_go_terms.items;
       this.filter_templates.items.templates["Filter by annotation"]["KEGG Pathway"].items.filter_annotation.source.items = this.salmonella_kegg_terms.items;
     },
-    load_categories_json(query_source, categories) {
-      categories.unshift("any column", "all columns");
+    load_categories_json(query_source) {
       for (let query_cat in query_source) {
         for (let query in query_source[query_cat]) {
           // Performance: It might be useful to check for a common condition and then do another nested
           // if else, instead of checking every entry for two diffferent conditions.
-          // Edit: I now use try with an empty catch. If Python likes that, how bad can it be in JS....haha?
-          try {
-            query_source[query_cat][query].items["filter_area"]["options"] = categories;
-            console.log("a");
-          } catch (e) {
-            console.log("not found");
+          // It also might be useful to just restructure this mess.
+          if (query_source[query_cat][query].items["filter_area"]) {
+            if (query_source[query_cat][query].items["filter_area"]["options"].length > 0) {
+              if (query_source[query_cat][query].items["filter_area"]["options"].value == null) {
+                query_source[query_cat][query].items["filter_area"]["options"] = query_source[query_cat][query].items["filter_area"]["options"].concat(this.df_categories);
+              }
+              else {
+                query_source[query_cat][query].items["filter_area"]["options"] = [].concat([query_source[query_cat][query].items["filter_area"]["selected"]], this.df_categories);
+              }
+            }
           }
-          try {
-            if (query_source[query_cat][query].items["target_column"]["selected"] !== null) {
-              query_source[query_cat][query].items["target_column"]["options"] = [].concat([query_source[query_cat][query].items["target_column"]["selected"]], this.df_categories);
+          if (query_source[query_cat][query].items["target_column"]) {
+            if (query_source[query_cat][query].items["target_column"]["options"].length > 0) {
+              if (query_source[query_cat][query].items["target_column"]["options"].value == null) {
+                query_source[query_cat][query].items["target_column"]["options"] = query_source[query_cat][query].items["target_column"]["options"].concat(this.df_categories);
+              } else {
+                query_source[query_cat][query].items["target_column"]["options"] = [].concat([query_source[query_cat][query].items["target_column"]["selected"]], this.df_categories);
+              }
             } else {
               query_source[query_cat][query].items["target_column"]["options"] = this.df_categories;
             }
-            console.log("b");
-          } catch (e) {
-            console.log("not found");
           }
-          try {
+          if (query_source[query_cat][query].items["target_table"]) {
             query_source[query_cat][query].items["target_table"]["options"] = this.table_titles;
-            console.log("c");
-          } catch (e) {
-            console.log("not found");
           }
         }
       }
@@ -328,9 +330,9 @@ export default {
   },
   created() {
     console.log(this.table_titles);
-    this.load_categories_json(this.filter_templates.items.templates, this.df_categories.slice(0)); // The slice is needed to preserve the old df_categories
-    this.load_categories_json(this.filter_templates.items.presets, this.df_categories.slice(0));
-    this.load_categories_json(this.filter_templates.items.transformations, this.df_categories.slice(0));
+    this.load_categories_json(this.filter_templates.items.templates);
+    this.load_categories_json(this.filter_templates.items.presets);
+    this.load_categories_json(this.filter_templates.items.transformations);
     this.load_autocomplete_json();
     this.convert_server_query_blocks(this.filter_templates.items);
   },
