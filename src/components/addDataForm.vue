@@ -130,7 +130,7 @@
                     <b-tab title="Upload file">
                       <b-form-group
                         id="input-group-4"
-                        description="Upload a .csv (CSV), .txt (TSV), or .xlsx (Excel) file from your machine."
+                        description="Upload a .csv, .txt (tab-seperated), .tsv, or .xlsx (Excel) file from your machine."
                       >
                         <b-form-file
                           id="upload_form"
@@ -140,7 +140,7 @@
                           :state="Boolean(form.source.file)"
                           placeholder="Choose a file or drop it here..."
                           drop-placeholder="Drop file here..."
-                          accept=".txt, .xlsx, .csv"
+                          accept=".txt, .xlsx, .csv, .tsv"
                         ></b-form-file>
                       </b-form-group>
                       <b-form inline>
