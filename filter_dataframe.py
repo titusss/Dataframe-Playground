@@ -40,20 +40,21 @@ def main(query, df):
                 target_area = block["forms"]["target_column"]
             df.drop(target_area, axis=1, inplace=True)
         elif block_type == "logarithmic":
-            df[filter_area] = np.round(np.log(df[filter_area].values) / np.log(float(block["forms"]["log_value"])), 3) # NOTE: PERFORMANCE: Be careful with rounding when it comes to precision and performance. Maybe use pandas rounding function.
+            # df[filter_area] = np.round(np.log(df[filter_area].values) / np.log(float(block["forms"]["log_value"])), 3) # NOTE: PERFORMANCE: Be careful with rounding when it comes to precision and performance. Maybe use pandas rounding function.
+            df[filter_area] = np.log(df[filter_area].values) / np.log(float(block["forms"]["log_value"]))
             df.replace([np.inf, -np.inf], np.nan, inplace=True)
-            df.fillna(0, inplace=True)
         elif block_type == "fold_change":
-            df[filter_area] = np.round(df[filter_area].div(df[block["forms"]["target_column"]].values,axis=0), 3)
+            # df[filter_area] = np.round(df[filter_area].div(df[block["forms"]["target_column"]].values,axis=0), 3) # NOTE: PERFORMANCE: Be careful with rounding when it comes to precision and performance. Maybe use pandas rounding function.
+            df[filter_area] = df[filter_area].div(df[block["forms"]["target_column"]].values,axis=0)
             try:
                 # For relative gene expression. NOTE: Dividing first and calculating the log AFTER might loose precision.
                 # Alternative would be to calculate log(df) - log(target_column).
-                df[filter_area] = np.round(np.log(df[filter_area].values) / np.log(float(block["forms"]["log_value"])), 3) # NOTE: PERFORMANCE: Be careful with rounding when it comes to precision and performance. Maybe use pandas rounding function.
+                # df[filter_area] = np.round(np.log(df[filter_area].values) / np.log(float(block["forms"]["log_value"])), 3) # NOTE: PERFORMANCE: Be careful with rounding when it comes to precision and performance. Maybe use pandas rounding function.
+                df[filter_area] = np.log(df[filter_area].values) / np.log(float(block["forms"]["log_value"]))
             except:
                 pass
             df.drop(block["forms"]["target_column"], axis=1, inplace=True) # Remove base columns.
             df.replace([np.inf, -np.inf], np.nan, inplace=True)
-            df.fillna(0, inplace=True)
         elif block_type == "round":
             if block["forms"]["target_column"] == "all columns":
                 target_area = list(df.columns)

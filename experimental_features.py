@@ -51,8 +51,8 @@ def adjust_numeric_dtype(props):
                     elif mn > np.iinfo(np.int64).min and mx < np.iinfo(np.int64).max:
                         props[col] = props[col].astype(np.int64)    
             # Make float datatypes 32 bit
-            else:
-                props[col] = props[col].astype(np.float32)
+            # else:
+            #     props[col] = props[col].astype(np.float32)
             # Print new column type
             # print("dtype after: ",props[col].dtype)
             # print("******************************")
