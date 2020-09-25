@@ -13,6 +13,7 @@ node_modules
 =======
 __pycache__/
 uninstall.txt
+.~*
 
 # Plotly credentials
 .plotly

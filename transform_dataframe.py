@@ -28,11 +28,13 @@ def main(transformation_type, metadata, df):
 def count_transcript_length(metadata, df):
     print(metadata)
     df[metadata["new_column_title"]] = df[metadata["end_column_title"]] - df[metadata["start_column_title"]]
-    print(df)
+    # print(df)
     return df
 
 def count_to_tpm(metadata, df):
-    print('undefined')
+    df["eff_leng"] = df[metadata["end_column_title"]] - df[metadata["start_column_title"]]
+    rate = np.log(df["filter_area"]) / np.log(df["eff_leng"])
+    
 
 
 

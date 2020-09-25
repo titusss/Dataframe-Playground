@@ -19,7 +19,7 @@ def convert_to_df(input_file, extension, metadata,):
             df = pd.read_csv(input_file, sep=metadata["formatting"]["file"]["csv_seperator"], decimal=metadata["formatting"]["file"]["decimal_character"], error_bad_lines=False, usecols=metadata["database_columns"])
         else:
             df = pd.read_csv(input_file, sep=metadata["formatting"]["file"]["csv_seperator"], decimal=metadata["formatting"]["file"]["decimal_character"], error_bad_lines=False)
-    elif extension == ".txt":
+    elif extension == ".txt" or extension == ".tsv":
         df = pd.read_csv(input_file, sep='\t', decimal=metadata["formatting"]["file"]["decimal_character"], error_bad_lines=False)
     elif extension == "string":
         from io import StringIO
@@ -104,12 +104,12 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
                     break
             df = transform_dataframe.main(transformation_type, metadata, df_old, df)
         df = rename_df_columns(df, metadata["title"])
-        db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df_to_parquet(df.replace({np.nan: None})))
+        db_entry['active_matrices'], added_axis = make_active_matrix(metadata, df, db_entry['active_matrices'], df_to_parquet(df))
         db_entry = merge_db_entry(db_entry, sum(db_entry['active_matrices'], []))
     else: # If you create a new visualization
         df = convert_to_df(input_file, extension, metadata)
         df = rename_df_columns(df, metadata["title"])
-        db_entry = new_db_entry(df.replace({np.nan: None}), metadata, pre_configured_plugins)
+        db_entry = new_db_entry(df, metadata, pre_configured_plugins)
     db_entry['preview_matrices'] = make_preview_matrices(db_entry['active_matrices'])
     db_entry['vis_links'] = []
     db_entry['filtered_dataframe'] = []
@@ -125,7 +125,7 @@ def merge_db_entry(db_entry, flattened_am):
     for i in range(len(flattened_am)): # Looping through. This could be replaced in the future by merging only with the single transformed_dataframe.
         df_merged = pd.merge(df_merged, pd.read_parquet(BytesIO(flattened_am[i]['dataframe'])), how='outer') # NOTE: Performance
     # df_merged.fillna(np.nan, inplace=True) # Replace NA values with 0
-    db_entry['transformed_dataframe'] = df_to_parquet(df_merged.replace({np.nan: None}))
+    db_entry['transformed_dataframe'] = df_to_parquet(df_merged)
     return db_entry
 
 def df_to_parquet(df):
