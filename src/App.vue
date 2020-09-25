@@ -15,13 +15,14 @@
       <div>
         <div class="ball-grid-pulse"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <h5 class="title initial_load_text">Loading Session</h5>
-        <small>v0.2.7-length</small>
+        <small>v0.2.8-tojson</small>
       </div>
     </div>
-    <b-alert variant="info" show dismissible><strong class="alert-heading">Update v0.2.7-length</strong>
-      Tab delimiter now available for CSV uploads in dropdown.
-      <hr>
-      Caution: 1) FP reduction. Limited floating point precision. 2) Infinity or NaN values are temporarily displayed as '0'.</b-alert>
+    <b-alert variant="info" show dismissible><strong class="alert-heading">Update v0.2.7-tojson</strong>
+      FP now double precison again. Added b. theta rna-seq to database. Tab delimiter now available for CSV uploads in dropdown.
+      <!-- <hr>
+      Caution: 1) FP reduction. Limited floating point precision. 2) Infinity or NaN values are temporarily displayed as '0'. -->
+    </b-alert>
     <!-- <b-progress v-if="loading.state" :value="loading.bar.value" :variant="loading.bar.variant" :key="loading.bar.variant" height="6px"></b-progress> -->
     <!-- <div class="loading" v-if="loading"><b-spinner label="Spinning"></b-spinner><span>Loading ...</span></div> -->
     <div v-if="!this.initializing">
@@ -279,6 +280,7 @@ export default {
             this.error_occured(res.data);
           } else {
             this.config = res.data.db_entry;
+            this.parse_dataframe_json();
             this.active_plugin_id = this.config.active_plugin_id
             this.active_vis_link = this.get_active_vis_link(this.active_plugin_id) // PERFORMANCE: Maybe check for "", undefined, or null of active_plugin_id
             this.$nextTick(() => {
@@ -292,6 +294,14 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+    parse_dataframe_json() {
+      if (this.config.transformed_dataframe.length && this.config.transformed_dataframe.length > 0) {
+        this.config.transformed_dataframe = JSON.parse(this.config.transformed_dataframe)
+      }
+      if (this.config.filtered_dataframe && this.config.filtered_dataframe.length > 0) {
+        this.config.filtered_dataframe = JSON.parse(this.config.filtered_dataframe)
+      }
     },
     get_plugins(res) {
       this.hide_modal("modal_add_plugin");
