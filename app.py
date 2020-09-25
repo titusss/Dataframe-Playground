@@ -16,7 +16,7 @@ import numpy as np
 
 # variables
 UPLOAD_FOLDER = '/static'  # NOTE: Change this to /uploads in production
-ALLOWED_EXTENSIONS_MATRIX = {'txt', 'xlsx', 'csv'}
+ALLOWED_EXTENSIONS_MATRIX = {'txt', 'xlsx', 'csv', 'tsv'}
 ALLOWED_EXTENSIONS_ICON = {'svg', 'png', 'jpg', 'jpeg', 'gif'}
 PRE_CONFIGURED_PLUGINS = [ObjectId('5f284a560831e4a42a30d698'), ObjectId('5f284bc60831e4a42a30d699')]
 MATRIX = [
@@ -213,7 +213,7 @@ def search_query():
         filtered_df = filter_dataframe.main(query, df)
         mongo_update = {
             '$set': {
-                'filtered_dataframe': df_to_parquet(filtered_df.replace({np.nan: None})),
+                'filtered_dataframe': df_to_parquet(filtered_df),
                 'vis_links': [],
                 'query': query
             }
@@ -272,7 +272,6 @@ def make_vis_link():
         db.visualizations.update_one({'_id': ObjectId(url)}, {
             '$push': {'vis_links': vis_link}})
         print(vis_link)
-        print('########')
         return Response(dumps({'vis_link': vis_link}, allow_nan=True), mimetype="application/json")
     except Exception as e:
         print(str(e))
@@ -326,10 +325,10 @@ def respond_config():
             print('######')
             if type(db_entry['transformed_dataframe']) == bytes: # The mockup db_entry stores the empty transformed_dataframe as a list, so don't convert that one.
                 # PERFORMANCE: We have to replace NaN cells with None for JSON.
-                db_entry['transformed_dataframe'] = pd.read_parquet(BytesIO(db_entry['transformed_dataframe'])).replace({np.nan: None}).to_dict('records')
+                db_entry['transformed_dataframe'] = pd.read_parquet(BytesIO(db_entry['transformed_dataframe'])).to_json(orient='records')
             try:
                 # PERFORMANCE: We have to replace NaN cells with None for JSON.
-                db_entry['filtered_dataframe'] = pd.read_parquet(BytesIO(db_entry['filtered_dataframe'])).replace({np.nan: None}).to_dict('records')
+                db_entry['filtered_dataframe'] = pd.read_parquet(BytesIO(db_entry['filtered_dataframe'])).to_json(orient='records')
             except:
                 pass
             # For size benchmarks
@@ -341,7 +340,7 @@ def respond_config():
             print('undefined')
             import copy
             db_entry = copy.deepcopy(DB_ENTRY_MOCKUP)
-            print(db_entry)
+            # print(db_entry)
             db_entry['plugins'] = [plugin for plugin in db.plugins.find(
                 {'_id': {'$in': db_entry['plugins_id']}})]
             return Response(dumps({'db_entry': db_entry}, allow_nan=True), mimetype="application/json")
@@ -358,8 +357,8 @@ def add_matrix():
         metadata = json.loads(request.form['form'])
         print("metadata: ", metadata)
         if metadata['source']['database'] != None: # NOTE: Unelegant. Determine decimal and seperator characters of database csv's.
-            metadata['formatting']['file']['csv_seperator'] = '\t'
-            metadata['formatting']['file']['decimal_character'] = ','
+            metadata['formatting']['file']['csv_seperator'] = metadata['source']['database']['seperator']
+            metadata['formatting']['file']['decimal_character'] = metadata['source']['database']['decimal_character'] # This is because all database files were exported with german decimals
         source, extension = upload_file(request, ALLOWED_EXTENSIONS_MATRIX, metadata)
         db_entry_id = process_file.add_matrix(source, metadata, extension, db, PRE_CONFIGURED_PLUGINS)
         return Response(dumps({'db_entry_id': db_entry_id}, allow_nan=True), mimetype="application/json")
