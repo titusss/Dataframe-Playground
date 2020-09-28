@@ -321,6 +321,39 @@ export default {
               query_source[query_cat][query].items["target_column"]["options"] = this.df_categories;
             }
           }
+           if (query_source[query_cat][query].items["start_column"]) {
+            if (query_source[query_cat][query].items["start_column"]["options"].length > 0) {
+              if (query_source[query_cat][query].items["start_column"]["options"].value == null) {
+                query_source[query_cat][query].items["start_column"]["options"] = query_source[query_cat][query].items["start_column"]["options"].concat(this.df_categories);
+              } else {
+                query_source[query_cat][query].items["start_column"]["options"] = [].concat([query_source[query_cat][query].items["start_column"]["selected"]], this.df_categories);
+              }
+            } else {
+              query_source[query_cat][query].items["start_column"]["options"] = this.df_categories;
+            }
+          }
+            if (query_source[query_cat][query].items["end_column"]) {
+            if (query_source[query_cat][query].items["end_column"]["options"].length > 0) {
+              if (query_source[query_cat][query].items["end_column"]["options"].value == null) {
+                query_source[query_cat][query].items["end_column"]["options"] = query_source[query_cat][query].items["end_column"]["options"].concat(this.df_categories);
+              } else {
+                query_source[query_cat][query].items["end_column"]["options"] = [].concat([query_source[query_cat][query].items["end_column"]["selected"]], this.df_categories);
+              }
+            } else {
+              query_source[query_cat][query].items["end_column"]["options"] = this.df_categories;
+            }
+          }
+            if (query_source[query_cat][query].items["counts_column"]) {
+            if (query_source[query_cat][query].items["counts_column"]["options"].length > 0) {
+              if (query_source[query_cat][query].items["counts_column"]["options"].value == null) {
+                query_source[query_cat][query].items["counts_column"]["options"] = query_source[query_cat][query].items["counts_column"]["options"].concat(this.df_categories);
+              } else {
+                query_source[query_cat][query].items["counts_column"]["options"] = [].concat([query_source[query_cat][query].items["counts_column"]["selected"]], this.df_categories);
+              }
+            } else {
+              query_source[query_cat][query].items["counts_column"]["options"] = this.df_categories;
+            }
+          }
           if (query_source[query_cat][query].items["target_table"]) {
             query_source[query_cat][query].items["target_table"]["options"] = this.table_titles;
           }
