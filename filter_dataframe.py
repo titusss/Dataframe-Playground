@@ -69,6 +69,14 @@ def main(query, df):
             }
             import transform_dataframe
             df = transform_dataframe.main("count_transcript_length", metadata, df)
+        elif block_type == "calculate_tpm":
+            metadata = {
+                "start_column_title": block["forms"]["start_column"],
+                "end_column_title": block["forms"]["end_column"],
+                "counts_column": block["forms"]["counts_column"]
+            }
+            import transform_dataframe
+            df = transform_dataframe.main("calculate_tpm", metadata, df)
     return df
 
 def setup_query_parameters(forms, df):
