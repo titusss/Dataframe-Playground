@@ -101,8 +101,8 @@ ERROR_MESSAGES = {
     },
 }
 # MongoDB
-# client = MongoClient(os.environ.get("MONGO_CONNECTION_STRING"))
-client = MongoClient() # For offline testing.
+client = MongoClient(os.environ.get("MONGO_CONNECTION_STRING"))
+# client = MongoClient() # For offline testing.
 db = client.test
 visualizations = db.visualizations
 plugins = db.plugins
