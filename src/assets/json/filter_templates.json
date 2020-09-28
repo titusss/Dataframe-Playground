@@ -192,7 +192,42 @@
               "label": "in new column with name",
               "type": "b-form-input",
               "id": "change_values_target-value",
-              "selected": "Transcript length"
+              "selected": ""
+            }
+          }
+        },
+        "Calculate TPM": {
+          "properties": {
+            "type": "calculate_tpm",
+            "query": "column"
+          },
+          "items": {
+            "counts_column": {
+              "label": "Calculate TPM for column ",
+              "type": "b-form-select",
+              "options": [
+                {"value": null, "text": "Select counts column"}
+              ],
+              "id": "filter_values_area",
+              "selected": null
+            },
+            "start_column": {
+              "label": "Transcript start column",
+              "type": "b-form-select",
+              "options": [
+                {"value": null, "text": "Select 'start' column"}
+              ],
+              "id": "filter_values_area",
+              "selected": null
+            },
+            "end_column": {
+              "label": "Transcript end column",
+              "type": "b-form-select",
+              "options": [
+                {"value": null, "text": "Select 'end' column" }
+              ],
+              "id": "filter_values_area",
+              "selected": null
             }
           }
         }
