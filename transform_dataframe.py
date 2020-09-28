@@ -26,19 +26,20 @@ def main(transformation_type, metadata, df):
 #     return df_transformed
 
 def count_transcript_length(metadata, df):
-    print(metadata)
     df[metadata["new_column_title"]] = df[metadata["end_column_title"]] - df[metadata["start_column_title"]]
-    # print(df)
     return df
 
-def count_to_tpm(metadata, df):
-    df["eff_leng"] = df[metadata["end_column_title"]] - df[metadata["start_column_title"]]
-    rate = np.log(df["filter_area"]) / np.log(df["eff_leng"])
+def calculate_tpm(metadata, df):
+    transcript_length = df[metadata["end_column_title"]] - df[metadata["start_column_title"]]
+    import numpy as np
+    tpm_column_name = "TPM" + metadata["counts_column"]
+    df[tpm_column_name] = df[metadata["counts_column"]] / transcript_length * (1 / (df[metadata["counts_column"]].sum()) * (df[metadata["counts_column"]] / transcript_length)) * 1e6
+    return df
     
-
 
 
 TRANSFORMATION_FUNCTIONS = {
     # "relative_expression": relative_expression,
-    "count_transcript_length": count_transcript_length
+    "count_transcript_length": count_transcript_length,
+    "calculate_tpm": calculate_tpm
 }
