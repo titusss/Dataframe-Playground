@@ -15,11 +15,11 @@
       <div>
         <div class="ball-grid-pulse"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <h5 class="title initial_load_text">Loading Session</h5>
-        <small>v0.2.8-tojson</small>
+        <small>v0.3.0-transformations</small>
       </div>
     </div>
-    <b-alert variant="info" show dismissible><strong class="alert-heading">Update v0.2.7-tojson</strong>
-      FP now double precison again. Added b. theta rna-seq to database. Tab delimiter now available for CSV uploads in dropdown.
+    <b-alert variant="info" show dismissible><strong class="alert-heading">Update v0.3.0-tpm</strong>
+      New B. Theta RNA-Seq data availabe. Transcript length calculation and TPM calculation availabe under transformations.
       <!-- <hr>
       Caution: 1) FP reduction. Limited floating point precision. 2) Infinity or NaN values are temporarily displayed as '0'. -->
     </b-alert>
