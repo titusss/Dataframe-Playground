@@ -11,6 +11,7 @@ COMPARISON_OPERATORS = {
 }
 
 def main(query, df):
+    unfiltered_df = df.copy()
     # print(query)
     # import experimental_features
     # df = experimental_features.adjust_numeric_dtype(df) # This reduces the dataframe's size by around 50% but increases computation time by 30% and needs rounding due to lower FP precision
@@ -76,7 +77,7 @@ def main(query, df):
                 "counts_column": block["forms"]["counts_column"]
             }
             import transform_dataframe
-            df = transform_dataframe.main("calculate_tpm", metadata, df)
+            df = transform_dataframe.main("calculate_tpm", metadata, df, unfiltered_df)
     return df
 
 def setup_query_parameters(forms, df):
