@@ -15,13 +15,13 @@
       <div>
         <div class="ball-grid-pulse"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <h5 class="title initial_load_text">Loading Session</h5>
-        <small>v0.3.0-transformations</small>
+        <small>v0.4.0-organisms</small>
       </div>
     </div>
-    <b-alert variant="info" show dismissible><strong class="alert-heading">Update v0.3.0-tpm</strong>
-      New B. Theta RNA-Seq data availabe. Transcript length calculation and TPM calculation availabe under transformations.
-      <!-- <hr>
-      Caution: 1) FP reduction. Limited floating point precision. 2) Infinity or NaN values are temporarily displayed as '0'. -->
+    <b-alert variant="info" show dismissible><strong class="alert-heading">Major Update v0.4.0-tpm</strong>
+      Organism selection now available when starting new session. Bacteroides Theta. set now available with annotation browsing.
+      <hr>
+      Expect many bugs and performance hits.
     </b-alert>
     <!-- <b-progress v-if="loading.state" :value="loading.bar.value" :variant="loading.bar.variant" :key="loading.bar.variant" height="6px"></b-progress> -->
     <!-- <div class="loading" v-if="loading"><b-spinner label="Spinning"></b-spinner><span>Loading ...</span></div> -->
@@ -57,6 +57,19 @@
             </div>
             <div class="cell_title_sp">
               <h5 class="title">Select the visualization</h5>
+            </div>
+            <div
+              class="cell_select_plugin field plugins"
+              id="select_organism_parent"
+              v-if="!this.$route.query.config"
+            >
+              <organism_selection
+                @click.native="set_local_organism(organism.id)"
+                v-for="organism in organisms.items"
+                :key="organism.id"
+                :organism="organism"
+                :active_organism_id="config.active_organism_id"
+              />
             </div>
             <div
               class="cell_select_plugin field plugins"
@@ -98,6 +111,7 @@
               v-bind:server_queries="this.config.query"
               v-bind:backend_url="backend_url"
               v-bind:table_titles="table_titles"
+              v-bind:active_organism="configure_active_organism"
               v-if="!this.loading.state"
             />
           </div>
@@ -123,6 +137,7 @@
             v-bind:plugins="this.config.plugins"
             v-bind:df_categories="Object.keys(this.config.transformed_dataframe)"
             v-bind:backend_url="backend_url"
+            v-bind:local_active_organism_id="this.config.active_organism_id"
             @dataframe_change="redirect_to_config($event); update_filtered(false);"
             @error_occured="error_occured"
             @close='hide_modal("bv_modal_addData")'
@@ -148,6 +163,8 @@ import toolbar from "./components/toolbar";
 import dataframe from "./components/dataframe";
 import loading from "./components/loading";
 import error_alert from "./components/error_alert";
+import organism_selection from "./components/organism_selection";
+import organisms from "./assets/json/organisms.json"
 export default {
   name: "App",
   components: {
@@ -160,12 +177,14 @@ export default {
     toolbar,
     dataframe,
     loading,
-    error_alert
+    error_alert,
+    organism_selection
   },
   data() {
     return {
       backend_url: 'https://hiri-webtool-backend-v011-44nub6ij6q-ez.a.run.app',
       // backend_url: 'http://localhost:5000',
+      organisms,
       loading: {
         state: true,
         increment: 10,
@@ -191,15 +210,24 @@ export default {
       let active_matrices_flattened = [].concat.apply([], this.config.active_matrices); // Flatten the nested array.
       // return active_matrices_flattened.map(a => ({text: a.title, value: a.id}));
       return active_matrices_flattened.map(a => a.title);
+    },
+     configure_active_organism: function() {
+      let active_organism
+      for(var organism in this.organisms.items) {
+        if(this.organisms.items[organism].id == this.config.active_organism_id) {
+          active_organism = this.organisms.items[organism]
+        }
+      }
+      console.log(active_organism)
+      return active_organism
     }
   },
   watch: {
     $route: "load_config",
   },
   methods: {
-    test() {
-      const plugin = this.get_active_plugin(this.config.active_plugin_id)
-      this.generate_vis_link(plugin);
+    set_local_organism(organism_id) {
+      this.config.active_organism_id = organism_id
     },
     select_plugin(plugin) {
       if (this.config.active_matrices.length > 0) {
@@ -327,6 +355,7 @@ export default {
         this.active_vis_link = null;
         this.active_plugin_id = null;
         this.load_config();
+        console.log(this.config);
       } else {
         this.$router.push({
           path: "/",

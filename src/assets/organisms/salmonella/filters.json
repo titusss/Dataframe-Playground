@@ -12,6 +12,7 @@
               "label": "Round values in column",
               "type": "b-form-select",
               "options": ["all columns"],
+              "default_options": ["all columns"],
               "id": "hide_column",
               "selected": "all columns"
             },
@@ -38,6 +39,7 @@
               "options": [
                 "any column", "all columns"
               ],
+              "default_options": ["any column", "all columns"],
               "id": "filter_values_area",
               "selected": "any column"
             },
@@ -52,6 +54,7 @@
                 "= equal to",
                 "!= not"
               ],
+              "default_options": [],
               "id": "change_values_logical-operator",
               "selected": null
             },
@@ -78,6 +81,7 @@
               "label": "Hide column",
               "type": "b-form-select",
               "options": ["all columns"],
+              "default_options": ["all columns"],
               "id": "hide_column",
               "selected": "all columns"
             }
@@ -95,6 +99,7 @@
               "label": "Show fold-change between table",
               "type": "b-form-select",
               "options": [],
+              "default_options": [],
               "id": "change_values_target-table",
               "selected": null
             },
@@ -102,6 +107,7 @@
               "label": "and base column",
               "type": "b-form-select",
               "options": [],
+              "default_options": [],
               "id": "change_values_base-column",
               "selected": null
             }
@@ -117,6 +123,7 @@
               "label": "Convert the table",
               "type": "b-form-select",
               "options": [],
+              "default_options": [],
               "id": "change_values_target-table",
               "selected": null
             },
@@ -141,6 +148,7 @@
               "label": "Show fold-change between table",
               "type": "b-form-select",
               "options": [],
+              "default_options": [],
               "id": "change_values_target-table",
               "selected": null
             },
@@ -148,6 +156,7 @@
               "label": "and base column",
               "type": "b-form-select",
               "options": [],
+              "default_options": [],
               "id": "change_values_base-column",
               "selected": null
             },
@@ -176,6 +185,7 @@
               "options": [
                 {"value": null, "text": "Select 'start' column"}
               ],
+              "default_options": [{"value": null, "text": "Select 'start' column"}],
               "id": "filter_values_area",
               "selected": null
             },
@@ -185,6 +195,7 @@
               "options": [
                 {"value": null, "text": "Select 'end' column" }
               ],
+              "default_options": [{"value": null, "text": "Select 'end' column" }],
               "id": "filter_values_area",
               "selected": null
             },
@@ -208,6 +219,7 @@
               "options": [
                 {"value": null, "text": "Select counts column"}
               ],
+              "default_options": [{"value": null, "text": "Select counts column"}],
               "id": "filter_values_area",
               "selected": null
             },
@@ -217,6 +229,7 @@
               "options": [
                 {"value": null, "text": "Select 'start' column"}
               ],
+              "default_options": [{"value": null, "text": "Select 'start' column"}],
               "id": "filter_values_area",
               "selected": null
             },
@@ -226,6 +239,7 @@
               "options": [
                 {"value": null, "text": "Select 'end' column" }
               ],
+              "default_options": [{"value": null, "text": "Select 'end' column" }],
               "id": "filter_values_area",
               "selected": null
             }
@@ -252,6 +266,7 @@
                 ">= more or equal to",
                 "<= less or equal to"
               ],
+              "default_options": [],
               "id": "filter_values_logical-operator",
               "selected": null
             },
@@ -267,6 +282,7 @@
                 "any column", "all columns"
               ],
               "id": "filter_values_area",
+              "default_options": ["any column", "all columns"],
               "selected": "any column"
             }
           }
@@ -296,6 +312,7 @@
               "options": [
                 "any column", "all columns"
               ],
+              "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -324,6 +341,7 @@
               "options": [
                 "any column", "all columns"
               ],
+              "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -352,6 +370,7 @@
               "options": [
                 "any column", "all columns"
               ],
+              "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -380,6 +399,7 @@
               "options": [
                 "any column", "all columns"
               ],
+              "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -407,6 +427,7 @@
               "options": [
                 "any column", "all columns"
               ],
+              "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -432,6 +453,7 @@
               "options": [
                 "any column", "all columns"
               ],
+              "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -455,6 +477,7 @@
               "options": [
                 "any column", "all columns"
               ],
+              "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -478,6 +501,7 @@
               "options": [
                 "any column", "all columns"
               ],
+              "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -501,6 +525,7 @@
               "options": [
                 "any column", "all columns"
               ],
+              "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -524,6 +549,7 @@
               "options": [
                 "any column", "all columns"
               ],
+              "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -547,6 +573,7 @@
               "options": [
                 "any column", "all columns"
               ],
+              "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -570,6 +597,7 @@
               "options": [
                 "any column", "all columns"
               ],
+              "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -593,6 +621,7 @@
               "options": [
                 "any column", "all columns"
               ],
+              "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -616,6 +645,7 @@
               "options": [
                 "any column", "all columns"
               ],
+              "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -640,6 +670,7 @@
                 "= equal to",
                 "!= not"
               ],
+              "default_options": [],
               "id": "change_values_logical-operator",
               "selected": "= equal to"
             },

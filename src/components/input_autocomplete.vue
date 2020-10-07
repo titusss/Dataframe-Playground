@@ -19,9 +19,16 @@
 <script>
 export default {
   props: {
+    server_term: Object,
     term_id: String,
     terms_list: Array,
     terms_key: String
+  },
+  created() {
+    if(this.server_term) {  
+      this.term_name_selected(this.server_term)
+      this.query = this.server_term.name
+    }
   },
   data() {
     return {
@@ -32,10 +39,8 @@ export default {
   },
   methods: {
     term_name_selected(event) {
-      console.log(this.query);
       this.last_valid = event.name;
       this.invalid = false;
-      console.log(event)
       this.$emit("update:term_id", event.id);
     }
   },

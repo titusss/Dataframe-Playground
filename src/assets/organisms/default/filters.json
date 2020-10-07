@@ -1,0 +1,331 @@
+{
+  "items": {
+    "transformations": {
+      "Basic": {
+        "Round Values": {
+          "properties": {
+            "type": "round",
+            "query": "integer"
+          },
+          "items": {
+            "target_column": {
+              "label": "Round values in column",
+              "type": "b-form-select",
+              "default_options": ["all columns"],
+              "options": ["all columns"],
+              "id": "hide_column",
+              "selected": "all columns"
+            },
+            "round_value": {
+              "label": "to decimal place",
+              "type": "int-input",
+              "formula": false,
+              "id": "change_values_round-value",
+              "selected": 3,
+              "min": 0,
+              "max": 1001
+            }
+          }
+        },
+        "Change Values": {
+          "properties": {
+            "type": "replace",
+            "query": "expression"
+          },
+          "items": {
+            "filter_area": {
+              "label": "Change values in ",
+              "type": "b-form-select",
+              "default_options": ["any column", "all columns"],
+              "options": [
+                "any column", "all columns"
+              ],
+              "id": "filter_values_area",
+              "selected": "any column"
+            },
+            "logical_operator": {
+              "label": "that are",
+              "type": "b-form-select",
+              "default_options": [],
+              "options": [
+                "< less than",
+                "> more than",
+                ">= more or equal to",
+                "<= less or equal to",
+                "= equal to",
+                "!= not"
+              ],
+              "id": "change_values_logical-operator",
+              "selected": null
+            },
+            "filter_value": {
+              "type": "b-form-input",
+              "id": "change_values_current-value",
+              "selected": null
+            },
+            "target_value": {
+              "label": "to",
+              "type": "b-form-input",
+              "id": "change_values_target-value",
+              "selected": null
+            }
+          }
+        },
+        "Hide Column": {
+          "properties": {
+            "type": "hide",
+            "query": "column"
+          },
+          "items": {
+            "target_column": {
+              "label": "Hide column",
+              "type": "b-form-select",
+              "default_options": ["all columns"],
+              "options": ["all columns"],
+              "id": "hide_column",
+              "selected": "all columns"
+            }
+          }
+        }
+      },
+      "Calculations": {
+        "Calculate fold change": {
+          "properties": {
+            "type": "fold_change",
+            "query": "column"
+          },
+          "items": {
+            "target_table": {
+              "label": "Show fold-change between table",
+              "type": "b-form-select",
+              "default_options": [],
+              "options": [],
+              "id": "change_values_target-table",
+              "selected": null
+            },
+            "target_column": {
+              "label": "and base column",
+              "type": "b-form-select",
+              "default_options": [],
+              "options": [],
+              "id": "change_values_base-column",
+              "selected": null
+            }
+          }
+        },
+        "Convert to log": {
+          "properties": {
+            "type": "logarithmic",
+            "query": "log_value"
+          },
+          "items": {
+            "target_table": {
+              "label": "Convert the table",
+              "type": "b-form-select",
+              "default_options": [],
+              "options": [],
+              "id": "change_values_target-table",
+              "selected": null
+            },
+            "log_value": {
+              "label": "to logarithmic with base",
+              "type": "int-input",
+              "formula": true,
+              "id": "change_values_log-base",
+              "selected": 2,
+              "min": null,
+              "max": 1001
+            }
+          }
+        },
+        "Calculate log fold change": {
+          "properties": {
+            "type": "fold_change",
+            "query": "column"
+          },
+          "items": {
+            "target_table": {
+              "label": "Show fold-change between table",
+              "type": "b-form-select",
+              "default_options": [],
+              "options": [],
+              "id": "change_values_target-table",
+              "selected": null
+            },
+            "target_column": {
+              "label": "and base column",
+              "type": "b-form-select",
+              "default_options": [],
+              "options": [],
+              "id": "change_values_base-column",
+              "selected": null
+            },
+            "log_value": {
+              "label": "in logarithmic with base",
+              "type": "int-input",
+              "id": "change_values_log-base",
+              "selected": 2,
+              "formula": true,
+              "min": null,
+              "max": 1001
+            }
+          }
+        }
+      },
+      "Read Metrics": {
+        "Calculate Transcript Length": {
+          "properties": {
+            "type": "transcript_length",
+            "query": "column"
+          },
+          "items": {
+            "filter_area": {
+              "label": "Calculate length between transcript start column ",
+              "type": "b-form-select",
+              "default_options": [{"value": null, "text": "Select 'start' column"}],
+              "options": [
+                {"value": null, "text": "Select 'start' column"}
+              ],
+              "id": "filter_values_area",
+              "selected": null
+            },
+            "target_column": {
+              "label": "and transcript end column",
+              "type": "b-form-select",
+              "default_options": [{"value": null, "text": "Select 'end' column" }],
+              "options": [
+                {"value": null, "text": "Select 'end' column" }
+              ],
+              "id": "filter_values_area",
+              "selected": null
+            },
+            "target_value": {
+              "label": "in new column with name",
+              "type": "b-form-input",
+              "id": "change_values_target-value",
+              "selected": ""
+            }
+          }
+        },
+        "Calculate TPM": {
+          "properties": {
+            "type": "calculate_tpm",
+            "query": "column"
+          },
+          "items": {
+            "counts_column": {
+              "label": "Calculate TPM for column ",
+              "type": "b-form-select",
+              "default_options": [{"value": null, "text": "Select counts column"}],
+              "options": [
+                {"value": null, "text": "Select counts column"}
+              ],
+              "id": "filter_values_area",
+              "selected": null
+            },
+            "start_column": {
+              "label": "Transcript start column",
+              "type": "b-form-select",
+              "default_options": [{"value": null, "text": "Select 'start' column"}],
+              "options": [
+                {"value": null, "text": "Select 'start' column"}
+              ],
+              "id": "filter_values_area",
+              "selected": null
+            },
+            "end_column": {
+              "label": "Transcript end column",
+              "type": "b-form-select",
+              "default_options": [{"value": null, "text": "Select 'end' column" }],
+              "options": [
+                {"value": null, "text": "Select 'end' column" }
+              ],
+              "id": "filter_values_area",
+              "selected": null
+            }
+          }
+        }
+      }
+    },
+    "templates": {
+      "Filter": {
+        "Filter values": {
+          "properties": {
+            "type": "filter",
+            "query": "expression"
+          },
+          "items": {
+            "logical_operator": {
+              "label": "Show rows with values that are",
+              "type": "b-form-select",
+              "default_options": [],
+              "options": [
+                "= equal to",
+                "!= not",
+                "< less than",
+                "> more than",
+                ">= more or equal to",
+                "<= less or equal to"
+              ],
+              "id": "filter_values_logical-operator",
+              "selected": null
+            },
+            "filter_value": {
+              "type": "b-form-input",
+              "id": "filter_values_value",
+              "selected": null
+            },
+            "filter_area": {
+              "label": "for ",
+              "type": "b-form-select",
+              "default_options": ["any column", "all columns"],
+              "options": [
+                "any column", "all columns"
+              ],
+              "id": "filter_values_area",
+              "selected": "any column"
+            }
+          }
+        }
+      }
+    },
+    "presets": {
+      "Data Cleanup": {
+        "Remove faulty data": {
+          "properties": {
+            "type": "filter",
+            "query": "expression"
+          },
+          "items": {
+            "logical_operator": {
+              "label": "Change values that are",
+              "type": "b-form-select",
+              "default_options": [],
+              "options": [
+                "< less than",
+                "> more than",
+                ">= more or equal to",
+                "<= less or equal to",
+                "= equal to",
+                "!= not"
+              ],
+              "id": "change_values_logical-operator",
+              "selected": "= equal to"
+            },
+            "filter_value": {
+              "type": "b-form-input",
+              "id": "change_values_current-value",
+              "selected": "NaN, undefined"
+            },
+            "target_value": {
+              "label": "to",
+              "type": "b-form-input",
+              "id": "change_values_target-value",
+              "selected": " "
+            }
+          }
+        }
+      }
+    }
+  }
+}
