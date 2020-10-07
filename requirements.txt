@@ -1,3 +1,4 @@
+pyarrow>=1.0.1
 appnope==0.1.0
 attrs==19.3.0
 backcall==0.1.0
@@ -43,7 +44,7 @@ plotly==4.7.1
 prometheus-client==0.7.1
 prompt-toolkit==3.0.5
 ptyprocess==0.6.0
-pyarrow>=1.0.1
+
 Pygments==2.6.1
 pymongo==3.10.1
 pyparsing==2.4.7
