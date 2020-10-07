@@ -34,6 +34,9 @@ def convert_to_df(input_file, extension, metadata,):
     return df
 
 def insert_update_entry(entry, collection, metadata):
+    # NOTE: WARNING: This function aims to prevent any updates on locked sessions. 
+    # Be very careful when touching this!
+    # More secure methods to avoid unwanted updates are welcome.
     if entry['locked'] == True: # Insert new entry if visualization is locked or new
         entry['locked'] = False
         db_entry_id = collection.insert_one(entry).inserted_id
@@ -114,6 +117,7 @@ def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
     db_entry['vis_links'] = []
     db_entry['filtered_dataframe'] = []
     db_entry['active_plugin_id'] = ''
+    db_entry['active_organism_id'] = metadata['local_active_organism_id']
     if metadata['db_entry_id'] == '': # Enter new DB entry when creating a new visualization
         db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
     else: # Update existing DB entry when modifying an existing visualization
