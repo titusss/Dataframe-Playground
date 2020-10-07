@@ -56,7 +56,8 @@
               <!-- <b-button variant="secondary"><b-icon icon="table"></b-icon>Upload</b-button> -->
             </div>
             <div class="cell_title_sp">
-              <h5 class="title">Select the visualization</h5>
+              <h5 v-if="config.plugins && this.$route.query.config" class="title">Select the visualization</h5>
+              <h5 v-else class="title">Choose the organism to analyze</h5>
             </div>
             <div
               class="cell_select_plugin field plugins"
@@ -74,7 +75,7 @@
             <div
               class="cell_select_plugin field plugins"
               id="select_plugin_parent"
-              v-if="config.plugins"
+              v-if="config.plugins && this.$route.query.config"
             >
               <b-popover
                 id="tutorial_popover"
