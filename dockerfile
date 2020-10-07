@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.8.5
 
 ENV APP_HOME /app
 WORKDIR $APP_HOME
