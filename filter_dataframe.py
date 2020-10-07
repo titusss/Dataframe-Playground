@@ -124,17 +124,19 @@ def filter_for(forms, properties, df, comparison_operator, filter_area):
             df_mask = df[filter_area].isin(filter_value).values
     elif properties["query"] == "annotation_code": # Search for locus tag's that include the entered annotation id (GO, KEGG, COG, etc.)
         import json
-        with open('static/salmonella_annotations.json') as json_file:
-            salmonella_annotations = json.load(json_file)
+        with open('static/gene_annotations.json') as json_file:
+            gene_annotations = json.load(json_file)
         df_genes = df[filter_area].tolist()
+        print(df_genes)
         filter_value = []
         # print(properties["code_type"])
-        for salmonella_locus in salmonella_annotations:
-            try:
-                if salmonella_locus in df_genes and forms["filter_annotation"] in list(salmonella_annotations[salmonella_locus][properties["code_type"]]):
-                    filter_value.append(salmonella_locus)
-            except TypeError:
-                pass
+        for gene_locus in gene_annotations:
+            print(gene_locus)
+            print(forms["filter_annotation"])
+            print(list(gene_annotations[gene_locus][properties["code_type"]]))
+            if gene_locus in df_genes and forms["filter_annotation"] in list(gene_annotations[gene_locus][properties["code_type"]]):
+                print(gene_locus)
+                filter_value.append(gene_locus)
         df_mask = df[filter_area].isin(filter_value)
     else: # If the filter does not rely on a mask (e.g. dropping a column)
         df_mask = None

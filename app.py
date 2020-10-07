@@ -35,7 +35,8 @@ DB_ENTRY_MOCKUP = {
     'preview_matrices': MATRIX,
     'vis_links': [],
     'plugins_id': PRE_CONFIGURED_PLUGINS,
-    'active_plugin_id': ''
+    'active_plugin_id': '',
+    'active_organism_id': 'bacteroides-thetaiotaomicron-e2ad6b25-40cb-4594-8685-f4fcb3ceb0e7'
 }
 
 ERROR_MESSAGES = {
@@ -206,6 +207,7 @@ def search_query():
         import filter_dataframe
         query = json.loads(request.form['query'])
         url = json.loads(request.form['url'])
+        print(query)
         db_entry = db.visualizations.find_one(
             {"_id": ObjectId(url)}, {'_id': False})
         df = pd.read_parquet(BytesIO(db_entry['transformed_dataframe']))
@@ -311,42 +313,38 @@ def add_plugin():
 @app.route('/config', methods=['GET', 'POST'])
 def respond_config():
     print('responding...')
-    try:
-        if request.form['url'] != 'undefined':
-            # import bson
-            # from pymongo import MongoClient
-            db_entry_id = ObjectId(loads(request.form['url']))
-            print('Object_ID: ', db_entry_id)
-            db_entry = db.visualizations.find_one({"_id": db_entry_id})
-            # print(len(bson.BSON.encode(db_entry)))
-            db_entry['_id'] = str(db_entry['_id'])
-            db_entry['plugins'] = [plugin for plugin in db.plugins.find(
-                {'_id': {'$in': db_entry['plugins_id']}})]
-            print('######')
-            if type(db_entry['transformed_dataframe']) == bytes: # The mockup db_entry stores the empty transformed_dataframe as a list, so don't convert that one.
-                # PERFORMANCE: We have to replace NaN cells with None for JSON.
-                db_entry['transformed_dataframe'] = pd.read_parquet(BytesIO(db_entry['transformed_dataframe'])).to_json(orient='records')
-            try:
-                # PERFORMANCE: We have to replace NaN cells with None for JSON.
-                db_entry['filtered_dataframe'] = pd.read_parquet(BytesIO(db_entry['filtered_dataframe'])).to_json(orient='records')
-            except:
-                pass
-            # For size benchmarks
-            # import bson
-            # print('######### Size of document')
-            # print(len(bson.BSON.encode(db_entry)))
-            return Response(dumps({'db_entry': db_entry}, allow_nan=True), mimetype="application/json")
-        else:
-            print('undefined')
-            import copy
-            db_entry = copy.deepcopy(DB_ENTRY_MOCKUP)
-            # print(db_entry)
-            db_entry['plugins'] = [plugin for plugin in db.plugins.find(
-                {'_id': {'$in': db_entry['plugins_id']}})]
-            return Response(dumps({'db_entry': db_entry}, allow_nan=True), mimetype="application/json")
-    except Exception as e:
-        print(str(e))
-        return respond_error(ERROR_MESSAGES['config_error']['expected']['type'], str(e))
+    if request.form['url'] != 'undefined':
+        # import bson
+        # from pymongo import MongoClient
+        db_entry_id = ObjectId(loads(request.form['url']))
+        print('Object_ID: ', db_entry_id)
+        db_entry = db.visualizations.find_one({"_id": db_entry_id})
+        # print(len(bson.BSON.encode(db_entry)))
+        db_entry['_id'] = str(db_entry['_id'])
+        db_entry['plugins'] = [plugin for plugin in db.plugins.find(
+            {'_id': {'$in': db_entry['plugins_id']}})]
+        print('######')
+        if type(db_entry['transformed_dataframe']) == bytes: # The mockup db_entry stores the empty transformed_dataframe as a list, so don't convert that one.
+            # PERFORMANCE: We have to replace NaN cells with None for JSON.
+            db_entry['transformed_dataframe'] = pd.read_parquet(BytesIO(db_entry['transformed_dataframe'])).to_json(orient='records')
+        try:
+            # PERFORMANCE: We have to replace NaN cells with None for JSON.
+            db_entry['filtered_dataframe'] = pd.read_parquet(BytesIO(db_entry['filtered_dataframe'])).to_json(orient='records')
+        except:
+            pass
+        # For size benchmarks
+        # import bson
+        # print('######### Size of document')
+        # print(len(bson.BSON.encode(db_entry)))
+        return Response(dumps({'db_entry': db_entry}, allow_nan=True), mimetype="application/json")
+    else:
+        print('undefined')
+        import copy
+        db_entry = copy.deepcopy(DB_ENTRY_MOCKUP)
+        # print(db_entry)
+        db_entry['plugins'] = [plugin for plugin in db.plugins.find(
+            {'_id': {'$in': db_entry['plugins_id']}})]
+        return Response(dumps({'db_entry': db_entry}, allow_nan=True), mimetype="application/json")
 
 def respond_error(error_type, error_message):
     return Response(dumps({'error_type': error_type, 'error_message': error_message}, allow_nan=True), mimetype="application/json")
