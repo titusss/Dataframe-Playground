@@ -227,7 +227,8 @@ export default {
   props: {
     matrices: Array,
     df_categories: Array,
-    backend_url: String
+    backend_url: String,
+    local_active_organism_id: String,
   },
   components: {
     matrix
@@ -334,6 +335,7 @@ export default {
       if (this.$route.query.config) {
         this.form.db_entry_id = this.$route.query.config;
       }
+      this.form.local_active_organism_id = this.local_active_organism_id
       var data = new FormData();
       data.append("file", payload);
       data.append("form", JSON.stringify(this.form));

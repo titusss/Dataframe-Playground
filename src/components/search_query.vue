@@ -16,6 +16,7 @@
               :id="form.id"
               v-model="form.selected"
               v-bind:term_id="form.selected"
+              v-bind:server_term="form.server_selected"
               v-on:update:term_id="form.selected = $event"
               v-bind:terms_list="form.source.items"
               v-bind:terms_key="form.source.key"
@@ -94,7 +95,7 @@
           >You can add multiple filters to search for all kinds of values, including GO terms, KEGG pathways, and COG categories.</b-popover
         >
         <template v-slot:button-content><b-icon icon="plus-circle-fill"></b-icon> Add Filter </template>
-        <b-dropdown-group v-for="(filter_template_group, index) in filter_templates.items.templates" :key="index" :header="index" id="dropdown-group-numeric">
+        <b-dropdown-group v-for="(filter_template_group, index) in filters.items.templates" :key="index" :header="index" id="dropdown-group-numeric">
           <b-dropdown-item v-for="(template, index) in filter_template_group" :key="index" v-on:click="add_query_block(template, index, guidGenerator())">{{ index }}</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
         </b-dropdown-group>
@@ -104,7 +105,7 @@
           >Load pre-filled filters to search for pathogenicity islands, sORF, or just faulty data.</b-popover
         >
         <template v-slot:button-content> <b-icon icon="intersect"></b-icon> Load Preset </template>
-        <b-dropdown-group v-for="(filter_preset_group, index) in filter_templates.items.presets" :key="index" :header="index" id="dropdown-group-numeric">
+        <b-dropdown-group v-for="(filter_preset_group, index) in filters.items.presets" :key="index" :header="index" id="dropdown-group-numeric">
           <b-dropdown-item v-for="(preset, index) in filter_preset_group" :key="index" v-on:click="add_query_block(preset, index, guidGenerator())">{{ index }}</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
         </b-dropdown-group>
@@ -115,7 +116,7 @@
           >Load pre-filled filters to search for pathogenicity islands, sORF, or just faulty data.</b-popover
         >
         <template v-slot:button-content> <b-icon icon="calculator-fill"></b-icon>Transform Data </template>
-        <b-dropdown-group v-for="(filter_preset_group, index) in filter_templates.items.transformations" :key="index" :header="index" id="dropdown-group-numeric">
+        <b-dropdown-group v-for="(filter_preset_group, index) in filters.items.transformations" :key="index" :header="index" id="dropdown-group-numeric">
           <b-dropdown-item v-for="(preset, index) in filter_preset_group" :key="index" v-on:click="add_query_block(preset, index, guidGenerator())">{{ index }}</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
         </b-dropdown-group>
@@ -135,10 +136,7 @@
 import axios from "axios";
 import input_autocomplete from "./input_autocomplete";
 import loading from "./loading";
-import salmonella_go_terms from "../assets/salmonella/filter_values/salmonella_go_terms_name_namespace.json";
-import salmonella_kegg_terms from "../assets/salmonella/filter_values/salmonella_kegg_terms.json";
-import salmonella_cog_categories from "../assets/salmonella/filter_values/salmonella_cog_categories.json";
-import filter_templates from "../assets/json/filter_templates.json";
+
 export default {
   name: "search_query",
   props: {
@@ -146,16 +144,17 @@ export default {
     server_queries: Array,
     backend_url: String,
     table_titles: Array,
+    active_organism: Object,
   },
   components: {
     input_autocomplete,
     loading,
   },
-  watch: {
-    query: function() {
-      console.log(this.query);
-    },
-  },
+  // watch: {
+  //   query: function() {
+  //     console.log(this.query);
+  //   }
+  // },
   methods: {
     // get_text_from_value(obj) {
     //   console.log(obj.options.length)
@@ -190,6 +189,7 @@ export default {
                   // Convert annotation id's to annotation name
                   let selected_parent = block.items[form].source.items.find((item) => item.id === block.items[form].selected);
                   block.items[form].selected = selected_parent.name;
+                  block.items[form].server_selected = selected_parent
                 }
               }
               this.add_query_block(block, block_name, this.server_queries[i]["id"]);
@@ -289,10 +289,10 @@ export default {
       this.post_query();
     },
     load_autocomplete_json() {
-      this.filter_templates.items.templates["Filter by annotation"]["COG Category"].items.filter_annotation.source.items = this.salmonella_cog_categories.items;
-      this.filter_templates.items.templates["Filter by annotation"]["GO Term"].items.filter_annotation.source.items = this.salmonella_go_terms.items;
-      this.filter_templates.items.templates["Filter by annotation"]["GO Namespace"].items.filter_annotation.source.items = this.salmonella_go_terms.items;
-      this.filter_templates.items.templates["Filter by annotation"]["KEGG Pathway"].items.filter_annotation.source.items = this.salmonella_kegg_terms.items;
+      this.filters.items.templates["Filter by annotation"]["COG Category"].items.filter_annotation.source.items = this.pathways.cog;
+      this.filters.items.templates["Filter by annotation"]["GO Term"].items.filter_annotation.source.items = this.pathways.go;
+      // this.filter_templates.items.templates["Filter by annotation"]["GO Namespace"].items.filter_annotation.source.items = this.salmonella_go_terms.items;
+      this.filters.items.templates["Filter by annotation"]["KEGG Pathway"].items.filter_annotation.source.items = this.pathways.kegg;
     },
     load_categories_json(query_source) {
       for (let query_cat in query_source) {
@@ -301,58 +301,15 @@ export default {
           // if else, instead of checking every entry for two diffferent conditions.
           // It also might be useful to just restructure this mess.
           if (query_source[query_cat][query].items["filter_area"]) {
-            if (query_source[query_cat][query].items["filter_area"]["options"].length > 0) {
-              if (query_source[query_cat][query].items["filter_area"]["options"].value == null) {
-                query_source[query_cat][query].items["filter_area"]["options"] = query_source[query_cat][query].items["filter_area"]["options"].concat(this.df_categories);
-              }
-              else {
-                query_source[query_cat][query].items["filter_area"]["options"] = [].concat([query_source[query_cat][query].items["filter_area"]["selected"]], this.df_categories);
-              }
-            }
-          }
-          if (query_source[query_cat][query].items["target_column"]) {
-            if (query_source[query_cat][query].items["target_column"]["options"].length > 0) {
-              if (query_source[query_cat][query].items["target_column"]["options"].value == null) {
-                query_source[query_cat][query].items["target_column"]["options"] = query_source[query_cat][query].items["target_column"]["options"].concat(this.df_categories);
-              } else {
-                query_source[query_cat][query].items["target_column"]["options"] = [].concat([query_source[query_cat][query].items["target_column"]["selected"]], this.df_categories);
-              }
-            } else {
-              query_source[query_cat][query].items["target_column"]["options"] = this.df_categories;
-            }
-          }
-           if (query_source[query_cat][query].items["start_column"]) {
-            if (query_source[query_cat][query].items["start_column"]["options"].length > 0) {
-              if (query_source[query_cat][query].items["start_column"]["options"].value == null) {
-                query_source[query_cat][query].items["start_column"]["options"] = query_source[query_cat][query].items["start_column"]["options"].concat(this.df_categories);
-              } else {
-                query_source[query_cat][query].items["start_column"]["options"] = [].concat([query_source[query_cat][query].items["start_column"]["selected"]], this.df_categories);
-              }
-            } else {
-              query_source[query_cat][query].items["start_column"]["options"] = this.df_categories;
-            }
-          }
-            if (query_source[query_cat][query].items["end_column"]) {
-            if (query_source[query_cat][query].items["end_column"]["options"].length > 0) {
-              if (query_source[query_cat][query].items["end_column"]["options"].value == null) {
-                query_source[query_cat][query].items["end_column"]["options"] = query_source[query_cat][query].items["end_column"]["options"].concat(this.df_categories);
-              } else {
-                query_source[query_cat][query].items["end_column"]["options"] = [].concat([query_source[query_cat][query].items["end_column"]["selected"]], this.df_categories);
-              }
-            } else {
-              query_source[query_cat][query].items["end_column"]["options"] = this.df_categories;
-            }
-          }
-            if (query_source[query_cat][query].items["counts_column"]) {
-            if (query_source[query_cat][query].items["counts_column"]["options"].length > 0) {
-              if (query_source[query_cat][query].items["counts_column"]["options"].value == null) {
-                query_source[query_cat][query].items["counts_column"]["options"] = query_source[query_cat][query].items["counts_column"]["options"].concat(this.df_categories);
-              } else {
-                query_source[query_cat][query].items["counts_column"]["options"] = [].concat([query_source[query_cat][query].items["counts_column"]["selected"]], this.df_categories);
-              }
-            } else {
-              query_source[query_cat][query].items["counts_column"]["options"] = this.df_categories;
-            }
+            query_source[query_cat][query].items["filter_area"]["options"] = [].concat(query_source[query_cat][query].items["filter_area"]["default_options"], this.df_categories)
+          } if (query_source[query_cat][query].items["target_column"]) {
+            query_source[query_cat][query].items["target_column"]["options"] = [].concat(query_source[query_cat][query].items["target_column"]["default_options"], this.df_categories)
+          } if (query_source[query_cat][query].items["start_column"]) {
+            query_source[query_cat][query].items["start_column"]["options"] = [].concat(query_source[query_cat][query].items["start_column"]["default_options"], this.df_categories);
+          } if (query_source[query_cat][query].items["end_column"]) {
+            query_source[query_cat][query].items["end_column"]["options"] = [].concat(query_source[query_cat][query].items["end_column"]["default_options"], this.df_categories);
+          } if (query_source[query_cat][query].items["counts_column"]) {
+            query_source[query_cat][query].items["counts_column"]["options"] = [].concat(query_source[query_cat][query].items["counts_column"]["default_options"], this.df_categories);
           }
           if (query_source[query_cat][query].items["target_table"]) {
             query_source[query_cat][query].items["target_table"]["options"] = this.table_titles;
@@ -362,21 +319,26 @@ export default {
     },
   },
   created() {
-    console.log(this.table_titles);
-    this.load_categories_json(this.filter_templates.items.templates);
-    this.load_categories_json(this.filter_templates.items.presets);
-    this.load_categories_json(this.filter_templates.items.transformations);
+    this.filters = require(`../assets/organisms${this.active_organism.path}/filters.json`)
+    try {
+      this.pathways = require(`../assets/organisms${this.active_organism.path}/pathways.json`)
+    }
+    catch(e) {
+      console.log("No pathway.json found for this organism. Ignore this if the selected organism doesn't have annotation pathways.")
+    }
     this.load_autocomplete_json();
-    this.convert_server_query_blocks(this.filter_templates.items);
+    for(var query_type in this.filters.items) {
+      this.load_categories_json(this.filters.items[query_type])
+    }
+    this.convert_server_query_blocks(this.filters.items);
   },
   data() {
     return {
+      test: 5,
       loading: false,
-      salmonella_go_terms,
-      salmonella_kegg_terms,
-      salmonella_cog_categories,
-      filter_templates,
       query: [],
+      filters: null,
+      pathways: null
     };
   },
 };
