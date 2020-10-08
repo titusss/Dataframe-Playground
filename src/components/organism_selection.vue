@@ -1,11 +1,11 @@
 <template>
   <div class="wrapper">
-    <span class="dot" v-bind:class="{check_activated:this.organism.id == this.active_organism_id}">
+    <span class="dot" v-bind:class="{check_activated:this.organism.id == this.local_active_organism_id}">
       <b-icon class="check-icon" icon="check"></b-icon>
     </span>
     <div
       class="organism_card organism_selected"
-      v-bind:class="{organism_selected_expanded:this.organism.id == this.active_organism_id}"
+      v-bind:class="{organism_selected_expanded:this.organism.id == this.local_active_organism_id}"
     >
       <img :src="this.image_url" alt />
       <div class>
@@ -28,7 +28,7 @@ export default {
   name: "organism_selection",
   props: {
     organism: Object,
-    active_organism_id: String
+    local_active_organism_id: String
   },
   created() {
     this.image_url = require(`../assets/organisms${this.organism.path}/icon.svg`);

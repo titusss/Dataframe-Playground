@@ -14,7 +14,7 @@
         <b-row>
           <b-col>
             <h2 style="cursor:help; display:inline-block;" id="upload-dataset-popover-target">Add Data<span style="font-size:1rem;"><sup><b-icon style="cursor:help;" icon="question-circle-fill"></b-icon></sup></span></h2>
-              <b-popover target="upload-dataset-popover-target" triggers="hover" placement="top"><template v-slot:title>Upload a dataset</template>Upload various datasets from our databases or your local machine. If you give datasets the same title, the tool will automatically merge them without data-loss. The first column and all columns with non-numeric values will be turned into index columns. <strong>Uploading multiple tables requires at least 1 matching index column in every table.</strong></b-popover>
+              <b-popover target="upload-dataset-popover-target" triggers="hover" placement="top"><template v-slot:title>Upload a dataset</template>Upload various datasets from our databases or your local machine. If you give datasets the same title, the tool will automatically merge them without data-loss. The first column and all columns with non-numeric values will be turned into index columns. <strong>Uploading multiple tables requires 1 or more index column with the same column name.</strong></b-popover>
             <b-form @submit="onSubmit" @reset="onReset" v-if="show">
               <!-- <b-form-group id="input-group-4" label="Type:" label-for="checkboxes-4">
             <b-form-radio-group v-model="form.type" id="checkboxes-4" required>
@@ -52,7 +52,7 @@
                         <b-form-select
                           id="input-3"
                           v-model="form.source.database"
-                          :options="datasets"
+                          :options="datasets_options"
                         ></b-form-select>
                       </b-form-group>
                       <b-form-group
@@ -229,6 +229,7 @@ export default {
     df_categories: Array,
     backend_url: String,
     local_active_organism_id: String,
+    active_organism: Object,
   },
   components: {
     matrix
@@ -246,6 +247,8 @@ export default {
       activeMatrix: null,
       timer: null,
       bar_value: 1,
+      datasets_options: [],
+      default_dataset_option: {"value": null, "text": "Please select a dataset"},
       form: {
         title: "",
         x: 2,
@@ -298,16 +301,30 @@ export default {
       return this.form.source.database.columns.slice(1).filter(opt => this.form.database_columns.indexOf(opt) === -1)
     }
   },
-  // created() {
+  created() {
+    this.refine_dataset_options()
   //   // console.log(this.plugins);
   //   // this.fetch_matrices();
   //   // console.log("proped matrices: ", this.matrices);
-  // },
+  },
   beforeDestroy() {
     clearInterval(this.timer);
     this.timer = null;
   },
   methods: {
+    refine_dataset_options() {
+      this.datasets_options.push(this.default_dataset_option)
+      for(var i in this.active_organism.datasets) {
+        if(this.active_organism.datasets[i] === "$all_datasets") {
+          for(var dataset in this.datasets) {
+            this.datasets_options.push(this.datasets[dataset])
+          }
+          break
+        } else {
+          this.datasets_options.push(this.datasets[this.active_organism.datasets[i]])
+        }
+      }
+    },
     change_transformation(obj) {
       // console.log(obj);
       this.form.transformation = obj;

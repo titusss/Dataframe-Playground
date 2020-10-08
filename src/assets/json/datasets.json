@@ -1,6 +1,5 @@
-[
-  {"value": null, "text": "Please select a dataset"},
-  {
+{
+  "Bacteroides theta RNA-seq": {
     "label": "Bacteroides theta RNA-seq",
     "options": [
       {
@@ -17,7 +16,7 @@
       }
     ]
   },
-  {
+  "SalCom Salmonella enterica Typhimurium Gene Expression Compendium": {
     "label": "SalCom Salmonella enterica Typhimurium Gene Expression Compendium",
     "options": [
       {
@@ -52,7 +51,7 @@
       }
     ]
   },
-  {
+  "Salmonella Small Proteins": {
     "label": "Salmonella Small Proteins",
     "options": [
       {
@@ -92,4 +91,4 @@
       }
     ]
   }
-]
+}
