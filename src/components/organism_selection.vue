@@ -1,10 +1,12 @@
 <template>
   <div class="wrapper">
+    <span class="dot" v-bind:class="{check_activated:this.organism.id == this.active_organism_id}">
+      <b-icon class="check-icon" icon="check"></b-icon>
+    </span>
     <div
       class="organism_card organism_selected"
       v-bind:class="{organism_selected_expanded:this.organism.id == this.active_organism_id}"
     >
-      
       <img :src="this.image_url" alt />
       <div class>
         <h5>{{organism.name}}</h5>
@@ -55,6 +57,36 @@ p {
 h4 {
   margin: 0;
 }
+.dot {
+  z-index: 100;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 24px;
+  width: 24px;
+  background-color: #007bff;
+  /* border: 3px solid #007bff; */
+  box-shadow: 1px 3px 8px #21252942;
+  border-radius: 50%;
+  display: inline-block;
+  transform: translate(40%, -35%) scale(0.01);
+  transition: transform 350ms cubic-bezier(.34,.35,.17,1.5);
+}
+.check-icon {
+  fill: #fff;
+  width: 18px;
+  height: 18px;
+  margin: 3px;
+}
+.check_activated {
+  background-color: #007bff;
+}
+
+.check_activated {
+  transform: translate(40%, -35%) scale(1);
+}
+
+
 .wrapper {
   position: relative;
   transition: transform 250ms ease, box-shadow 250ms ease;
@@ -71,6 +103,7 @@ h4 {
   align-items: center;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(1, 1fr);
+  color: #9a9a9a;
   padding: 1.3rem;
   border-radius: 1rem;
   text-align: left;
