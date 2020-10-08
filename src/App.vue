@@ -15,13 +15,13 @@
       <div>
         <div class="ball-grid-pulse"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <h5 class="title initial_load_text">Loading Session</h5>
-        <small>v0.4.1-organisms</small>
+        <small>v0.4.2-organisms</small>
       </div>
     </div>
-    <b-alert variant="info" show dismissible><strong class="alert-heading">Major Update v0.4.1-tpm</strong>
+    <b-alert variant="info" show dismissible><strong class="alert-heading">Major Update v0.4.2-organisms</strong>
       Organism selection now available when starting new session. Bacteroides Theta. set now available with annotation browsing.
       <hr>
-      Expect many bugs and performance hits.
+      Old sessions will fail to load. Dataset availability is now dependent on the selected organism. Expect many bugs and performance hits.
     </b-alert>
     <!-- <b-progress v-if="loading.state" :value="loading.bar.value" :variant="loading.bar.variant" :key="loading.bar.variant" height="6px"></b-progress> -->
     <!-- <div class="loading" v-if="loading"><b-spinner label="Spinning"></b-spinner><span>Loading ...</span></div> -->
@@ -77,7 +77,7 @@
                 v-for="organism in organisms.items"
                 :key="organism.id"
                 :organism="organism"
-                :active_organism_id="config.active_organism_id"
+                :local_active_organism_id="config.active_organism_id"
               />
             </div>
             <div
@@ -146,7 +146,8 @@
             v-bind:plugins="this.config.plugins"
             v-bind:df_categories="Object.keys(this.config.transformed_dataframe)"
             v-bind:backend_url="backend_url"
-            v-bind:local_active_organism_id="this.config.active_organism_id"
+            v-bind:local_active_organism_id="config.active_organism_id"
+            v-bind:active_organism="configure_active_organism"
             @dataframe_change="redirect_to_config($event); update_filtered(false);"
             @error_occured="error_occured"
             @close='hide_modal("bv_modal_addData")'
