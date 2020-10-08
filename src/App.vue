@@ -15,10 +15,10 @@
       <div>
         <div class="ball-grid-pulse"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <h5 class="title initial_load_text">Loading Session</h5>
-        <small>v0.4.0-organisms</small>
+        <small>v0.4.1-organisms</small>
       </div>
     </div>
-    <b-alert variant="info" show dismissible><strong class="alert-heading">Major Update v0.4.0-tpm</strong>
+    <b-alert variant="info" show dismissible><strong class="alert-heading">Major Update v0.4.1-tpm</strong>
       Organism selection now available when starting new session. Bacteroides Theta. set now available with annotation browsing.
       <hr>
       Expect many bugs and performance hits.
@@ -57,13 +57,21 @@
             </div>
             <div class="cell_title_sp">
               <h5 v-if="config.plugins && this.$route.query.config" class="title">Select the visualization</h5>
-              <h5 v-else class="title">Choose the organism to analyze</h5>
+              <h5 v-else class="title">Specify the organism that best fits your data</h5>
             </div>
             <div
               class="cell_select_plugin field plugins"
               id="select_organism_parent"
               v-if="!this.$route.query.config"
             >
+              <b-popover
+                id="tutorial_popover"
+                :no-fade="true"
+                triggers
+                placement="bottom"
+                target="select_organism_parent"
+                title="Configure the organism"
+              >Specify an organism before uploading if you want to upload biological data to use specific features. The application offers a wide range of general-purpose features for non-biological data.</b-popover>
               <organism_selection
                 @click.native="set_local_organism(organism.id)"
                 v-for="organism in organisms.items"
