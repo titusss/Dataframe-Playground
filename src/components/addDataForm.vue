@@ -47,7 +47,7 @@
                     <b-tab title="Datasets" active>
                       <b-form-group
                         id="input-group-3"
-                        description="Use various experimental results (e.g. Salmonella RNA-seq) for organisms from our global database."
+                        description="Use our database of experimental results (e.g. Salmonella RNA-seq) for the organism you specified."
                       >
                         <b-form-select
                           id="input-3"
