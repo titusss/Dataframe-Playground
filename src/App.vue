@@ -15,11 +15,11 @@
       <div>
         <div class="ball-grid-pulse"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <h5 class="title initial_load_text">Loading Session</h5>
-        <small>v0.4.2-organisms</small>
+        <small>v0.4.3-organisms</small>
       </div>
     </div>
-    <b-alert variant="info" show dismissible><strong class="alert-heading">Major Update v0.4.2-organisms</strong>
-      Organism selection now available when starting new session. Bacteroides Theta. set now available with annotation browsing.
+    <b-alert variant="info" show dismissible><strong class="alert-heading">Major Update v0.4.3-organisms</strong>
+      Bacteroides Theta. set now has 'name' column with sRNAs. Organism selection now available when starting new session.
       <hr>
       Old sessions will fail to load. Dataset availability is now dependent on the selected organism. Expect many bugs and performance hits.
     </b-alert>
@@ -71,7 +71,7 @@
                 placement="bottom"
                 target="select_organism_parent"
                 title="Configure the organism"
-              >Specify an organism before uploading if you want to upload biological data to use specific features. The application offers a wide range of general-purpose features for non-biological data.</b-popover>
+              >Specify an organism before uploading if you want to upload biological data and use specific features. The application offers a wide range of general-purpose features for non-biological data.</b-popover>
               <organism_selection
                 @click.native="set_local_organism(organism.id)"
                 v-for="organism in organisms.items"
@@ -228,7 +228,7 @@ export default {
           active_organism = this.organisms.items[organism]
         }
       }
-      console.log(active_organism)
+      // console.log(active_organism)
       return active_organism
     }
   },
