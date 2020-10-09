@@ -31,7 +31,15 @@ export default {
     local_active_organism_id: String
   },
   created() {
-    this.image_url = require(`../assets/organisms${this.organism.path}/icon.svg`);
+    try { // This try catch try catch block allows for svg, png, and jpeg organism icons.
+      this.image_url = require(`../assets/organisms${this.organism.path}/icon.svg`);
+    } catch(e) {
+      try {
+        this.image_url = require(`../assets/organisms${this.organism.path}/icon.png`);
+      } catch(f) {
+        this.image_url = require(`../assets/organisms${this.organism.path}/icon.jpg`);
+      }
+    }
   },
   data() {
     return {
