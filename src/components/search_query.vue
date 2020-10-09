@@ -275,7 +275,7 @@ export default {
               setTimeout(() => {
                 // This forces the loading bar to stay alive for 2 additional seconds, to compensate the delay between backend work and frontend rendering of the dataframe table. This isn't very good.
                 this.loading = false;
-              }, 2000);
+              }, 2500);
             });
           }
         })
