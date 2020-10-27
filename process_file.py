@@ -53,7 +53,6 @@ def insert_update_entry(entry, collection, metadata):
 def remove_matrix(mockup_db_entry, metadata, db, remove_id):
     print('remove_id', remove_id)
     from pymongo import MongoClient
-    import visualize
     db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
     db_entry['active_matrices'] = [[i for i in nested if i['id'] != remove_id] for nested in db_entry['active_matrices']] # remove entries matching the remove_id
     db_entry['active_matrices'] = [j for j in db_entry['active_matrices'] if j != []] # remove empty subarrays
@@ -90,7 +89,6 @@ def remove_df_title(title):
 # NOTE: This is a giant pile of 'mess'. Currently there only exists one dataframe and any kind of addition or subtractions means completely rebuilding this df from every source df in active_matrices.
 def add_matrix(input_file, metadata, extension, db, pre_configured_plugins):
     from pymongo import MongoClient
-    import visualize
     if metadata['db_entry_id'] != '': # If you edit an existing visualization
         db_entry = db.visualizations.find_one({"_id": ObjectId(metadata['db_entry_id'])}, {'_id': False})
         df = convert_to_df(input_file, extension, metadata)
