@@ -18,7 +18,7 @@ import numpy as np
 UPLOAD_FOLDER = '/static'  # NOTE: Change this to /uploads in production
 ALLOWED_EXTENSIONS_MATRIX = {'txt', 'xlsx', 'csv', 'tsv'}
 ALLOWED_EXTENSIONS_ICON = {'svg', 'png', 'jpg', 'jpeg', 'gif'}
-PRE_CONFIGURED_PLUGINS = [ObjectId('5f284a560831e4a42a30d698'), ObjectId('5f284bc60831e4a42a30d699'), ObjectId('5f984ac1b478a2c8653ed827')]
+PRE_CONFIGURED_PLUGINS = [ObjectId('5f984ac1b478a2c8653ed827'), ObjectId('5f284a560831e4a42a30d698'), ObjectId('5f284bc60831e4a42a30d699')]
 MATRIX = [
     {
         "id": uuid.uuid4().hex,
