@@ -1,7 +1,8 @@
-def main(df):
+def main(parameters):
     import requests
     import pandas as pd
     from io import StringIO
+    df = parameters["df"]
     dataframe = prepare_df(df) # Define the path to the file you want to visualize.
     output = StringIO()
     dataframe.to_csv(output, sep='\t', index=False)

@@ -1,5 +1,5 @@
-def main(df):
-    file_path = transform_data(df) # Define the path to the transformed file you want to visualize.
+def main(parameters):
+    file_path = transform_data(parameters["df"]) # Define the path to the transformed file you want to visualize.
     upload_url = "" # Define the path to the visualizing server endpoint.
 
     return upload_url, file_path
