@@ -18,7 +18,7 @@ import numpy as np
 UPLOAD_FOLDER = '/static'  # NOTE: Change this to /uploads in production
 ALLOWED_EXTENSIONS_MATRIX = {'txt', 'xlsx', 'csv', 'tsv'}
 ALLOWED_EXTENSIONS_ICON = {'svg', 'png', 'jpg', 'jpeg', 'gif'}
-PRE_CONFIGURED_PLUGINS = [ObjectId('5f284a560831e4a42a30d698'), ObjectId('5f284bc60831e4a42a30d699')]
+PRE_CONFIGURED_PLUGINS = [ObjectId('5f284a560831e4a42a30d698'), ObjectId('5f284bc60831e4a42a30d699'), ObjectId('5f984ac1b478a2c8653ed827')]
 MATRIX = [
     {
         "id": uuid.uuid4().hex,
@@ -267,10 +267,10 @@ def make_vis_link():
         # CHANGE: Right now every new visualization creates a new MongoDB entry
         if len(db_entry['filtered_dataframe']) > 0:
             vis_link = visualize.route(db.plugins, pd.read_parquet(
-            BytesIO(db_entry['filtered_dataframe'])), plugin)
+            BytesIO(db_entry['filtered_dataframe'])), plugin, ObjectId(url))
         else:
             vis_link = visualize.route(db.plugins, pd.read_parquet(
-            BytesIO(db_entry['transformed_dataframe'])), plugin)
+            BytesIO(db_entry['transformed_dataframe'])), plugin, ObjectId(url))
         db.visualizations.update_one({'_id': ObjectId(url)}, {
             '$push': {'vis_links': vis_link}})
         print(vis_link)
