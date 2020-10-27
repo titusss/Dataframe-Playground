@@ -15,13 +15,13 @@
       <div>
         <div class="ball-grid-pulse"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <h5 class="title initial_load_text">Loading Session</h5>
-        <small>v0.4.3-organisms</small>
+        <small>v0.5.0-heatmap</small>
       </div>
     </div>
-    <b-alert variant="info" show dismissible><strong class="alert-heading">Major Update v0.4.3-organisms</strong>
-      Bacteroides Theta. set now has 'name' column with sRNAs. Organism selection now available when starting new session.
+    <b-alert variant="info" show dismissible><strong class="alert-heading">Major Update v0.5.0-heatmap</strong>
+      Added new custom 3D heatmap plugin for visualizing datasets of over 1,000,000 cells in real-time.
       <hr>
-      Old sessions will fail to load. Dataset availability is now dependent on the selected organism. Expect many bugs and performance hits.
+      The heatmap is in Alpha and only supports very few features currently.
     </b-alert>
     <!-- <b-progress v-if="loading.state" :value="loading.bar.value" :variant="loading.bar.variant" :key="loading.bar.variant" height="6px"></b-progress> -->
     <!-- <div class="loading" v-if="loading"><b-spinner label="Spinning"></b-spinner><span>Loading ...</span></div> -->
