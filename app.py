@@ -353,7 +353,6 @@ def respond_error(error_type, error_message):
 def add_matrix():
     try:
         metadata = json.loads(request.form['form'])
-        print("metadata: ", metadata)
         if metadata['source']['database'] != None: # NOTE: Unelegant. Determine decimal and seperator characters of database csv's.
             metadata['formatting']['file']['csv_seperator'] = metadata['source']['database']['seperator']
             metadata['formatting']['file']['decimal_character'] = metadata['source']['database']['decimal_character'] # This is because all database files were exported with german decimals
@@ -400,14 +399,6 @@ def remove_matrix(matrix_id):
     db_entry_id = process_file.remove_matrix(
         DB_ENTRY_MOCKUP, metadata, db, matrix_id)
     return Response(dumps({'db_entry_id': db_entry_id}, allow_nan=True), mimetype="application/json")
-
-def make_preview(input_file, extension, dataList, remove_id):
-    MATRIX.clear()
-    MATRICES, DATAFRAME, db_data_id = process_file.process_upload(
-        input_file, extension.lower(), dataList, remove_id)
-    for i in range(len(MATRICES)):
-        MATRIX.append(MATRICES[i])
-    return DATAFRAME
 
 def df_to_parquet(df):
     from bson.binary import Binary
