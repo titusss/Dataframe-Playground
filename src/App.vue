@@ -73,7 +73,7 @@
                 title="Configure the organism"
               >Specify an organism before uploading if you want to upload biological data and use specific features. The application offers a wide range of general-purpose features for non-biological data.</b-popover>
               <organism_selection
-                @click.native="set_local_organism(organism.id)"
+                @click.native="set_local_organism(organism.id), show_modal('bv_modal_addData')"
                 v-for="organism in organisms.items"
                 :key="organism.id"
                 :organism="organism"
@@ -238,6 +238,7 @@ export default {
   methods: {
     set_local_organism(organism_id) {
       this.config.active_organism_id = organism_id
+      
     },
     select_plugin(plugin) {
       if (this.config.active_matrices.length > 0) {
