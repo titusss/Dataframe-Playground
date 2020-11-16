@@ -17,6 +17,7 @@
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",
     "vue-typeahead-bootstrap": "^2.3.0"
+    "vue-bootstrap-typeahead": "^0.2.6",
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.2.0",
