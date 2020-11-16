@@ -1,22 +1,18 @@
-FROM node:lts-alpine
+FROM python:3.8.5
 
-# install simple http server for serving static content
-RUN npm install -g http-server
+ENV APP_HOME /app
+WORKDIR $APP_HOME
+COPY . ./
 
-# make the 'app' folder the current working directory
-WORKDIR /app
+# COPY . /app
+# WORKDIR /app
 
-# copy both 'package.json' and 'package-lock.json' (if available)
-COPY package*.json ./
+RUN pip install -r requirements.txt
+RUN pip install gunicorn
+CMD ["python", "plotly_authentification.py"]
 
-# install project dependencies
-RUN npm install
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
 
-# copy project files and folders to the current working directory (i.e. 'app' folder)
-COPY . .
-
-# build app for production with minification
-RUN npm run build
-
-EXPOSE 8080
-CMD [ "http-server", "dist" ]
+# EXPOSE 5000
+# ENTRYPOINT ["python"]
+# CMD ["app.py"]
