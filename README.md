@@ -4,17 +4,17 @@
 
 # Dataframe Playground
 
-Simple data mining without any coding in your browser. Chained filters, interactive data visualizations with external web apps, and many special features for bioinformatics. Share the URL to display your data in an interactive environment.
+Simple data mining without any coding in your browser. Chained filters, interactive data visualizations, and many special features for bioinformatics. Shareable URLs for presenting your data in an interactive environment.
 
 ## 🧮 Features
 
 ### 🔬 Basic
-* Filter values (> Greater, < Smaller than, = Equal to, != Not)
-* Filter chaining (Multiple conditions need to be satisfied)
-* Data visualization with expandable list of external plugins (Plotly, Clustergrammer, High-Performance Heatmap)
-* Conditionally change values (e.g. Change cells with value x to y)
+* Conditionally filter values (> Greater, < Smaller than, = Equal to, != Not)
+* Chain conditions (Multiple filters)
+* Quickly visualize results with expandable list of external plugins (Plotly, Clustergrammer, High-Performance Heatmap)
+* Conditionally change values (Change cells with values=x to y)
 * Calculate Fold-Changes
-* Convert values to logarithmic (with custom base)
+* Convert to Log (Custom bases)
 * Merge datasets
 * Download results as Excel, CSV
 
@@ -30,10 +30,10 @@ Simple data mining without any coding in your browser. Chained filters, interact
 * Data in a locked session can be interactively explored by receipients
 
 ## 🛠️ Local installation
-This web-app consists of a Vue.js frontend communicating with a Python backend over flask. Sessions are stored in a MongoDB. The application requires a running backend `flask run` and frontend `npm run serve`.
+> This web-app consists of a Vue.js frontend communicating with a Python backend over flask. Sessions are stored in a MongoDB. ℹ️ The application always requires a running backend `flask run` and frontend `npm run serve`.
 
 ### Environment variables
-Make sure to have an environment variable `mongostring` set to your MongoDB access token (e.g. `mongodb+srv://user:1234567abcde@cluster.abc.def.mongodb.net/abd?retryWrites=true&w=majority`) and accessible to the python virtual environment of the backend.
+> ℹ️ Make sure to have the environment variable `mongostring` set to your MongoDB access token (e.g. `mongodb+srv://user:1234567abcde@cluster.abc.def.mongodb.net/abd?retryWrites=true&w=majority`) and accessible to the python virtual environment of the backend.
 
 ### Install backend
 Clone repo and go to backend directory
@@ -72,6 +72,6 @@ Launch frontend
 ```
 npm run serve
 ```
-Open the address shown in the terminal where you executed the line above with your web browser.
+> Open the address shown in the terminal where you executed the line above with your web browser.
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
