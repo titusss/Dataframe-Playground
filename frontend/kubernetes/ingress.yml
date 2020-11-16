@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hiri-heatmap-ingress
+  namespace: hiri
+spec:
+  rules:
+  - host: dataframe-playground.test.fedcloud.eu
+    http:
+      paths:
+      - backend:
+          serviceName: dataframe-playground-vue-js
+          servicePort: 8080
+        path: /
+        pathType: ImplementationSpecific
+

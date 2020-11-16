@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dataframe-playground-vue-js
+  labels:
+    app: dataframe-playground-vue-js
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dataframe-playground-vue-js
+  template:
+    metadata:
+      labels:
+        app: dataframe-playground-vue-js
+    spec:
+      containers:
+      - name: dataframe-playground-vue-js
+        image: {{image_name_placeholder}}
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+      - name: githubdockerregistry

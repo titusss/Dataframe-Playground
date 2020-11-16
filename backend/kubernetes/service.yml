@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dataframe-playground-flask-server
+spec:
+  selector:
+    app: dataframe-playground-flask-server
+  ports:
+    - protocol: TCP
+      port: 80
+  type: ClusterIP
