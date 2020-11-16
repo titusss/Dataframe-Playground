@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: high-performance-heatmap-flask-server
+  name: dataframe-playground-flask-server
   labels:
-    app: high-performance-heatmap-flask-server
+    app: dataframe-playground-flask-server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: high-performance-heatmap-flask-server
+      app: dataframe-playground-flask-server
   template:
     metadata:
       labels:
-        app: high-performance-heatmap-flask-server
+        app: dataframe-playground-flask-server
     spec:
       containers:
-      - name: high-performance-heatmap-flask-server
+      - name: dataframe-playground-flask-server
         image: {{image_name_placeholder}}
         ports:
         - containerPort: 80
         env:
-        - name: testend
+        - name: mongocredential
           value: mongo_connection_placeholder
       imagePullSecrets:
       - name: githubdockerregistry
