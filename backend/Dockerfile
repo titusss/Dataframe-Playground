@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-FROM python:3
-=======
 FROM python:3.8.5
->>>>>>> Moved backend to dedicated Container folder.
 
 ENV APP_HOME /app
 WORKDIR $APP_HOME
@@ -13,12 +9,9 @@ COPY . ./
 
 RUN pip install -r requirements.txt
 RUN pip install gunicorn
-<<<<<<< HEAD
-=======
 CMD ["python", "plotly_authentification.py"]
->>>>>>> Moved backend to dedicated Container folder.
 
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
+CMD exec gunicorn --bind :80 --workers 1 --threads 8 --timeout 0 app:app
 
 # EXPOSE 5000
 # ENTRYPOINT ["python"]

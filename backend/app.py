@@ -1,11 +1,7 @@
 # To-Do: Configure CORS to only allow specific requests. Very important!
 
 import os
-<<<<<<< HEAD
-from flask import Flask, flash, request, redirect, url_for, jsonify, send_from_directory, Response
-=======
 from flask import Flask, flash, request, redirect, url_for, jsonify, send_from_directory, Response, send_file
->>>>>>> Moved backend to dedicated Container folder.
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 import uuid
@@ -14,14 +10,6 @@ import process_file
 import visualize
 from pymongo import MongoClient
 from bson.json_util import loads, dumps, ObjectId
-<<<<<<< HEAD
-
-# variables
-UPLOAD_FOLDER = '/static'  # NOTE: Change this to /uploads in production
-ALLOWED_EXTENSIONS_MATRIX = {'txt', 'xlsx', 'csv'}
-ALLOWED_EXTENSIONS_ICON = {'svg', 'png', 'jpg', 'jpeg', 'gif'}
-PRE_CONFIGURED_PLUGINS = [ObjectId('5ed6374fdaf88ae74e38f105'), ObjectId('5f2049b2fda27751b4c96def')]
-=======
 from io import BytesIO
 import pandas as pd
 import numpy as np
@@ -31,7 +19,6 @@ UPLOAD_FOLDER = '/static'  # NOTE: Change this to /uploads in production
 ALLOWED_EXTENSIONS_MATRIX = {'txt', 'xlsx', 'csv', 'tsv'}
 ALLOWED_EXTENSIONS_ICON = {'svg', 'png', 'jpg', 'jpeg', 'gif'}
 PRE_CONFIGURED_PLUGINS = [ObjectId('5f984ac1b478a2c8653ed827'), ObjectId('5f284a560831e4a42a30d698'), ObjectId('5f284bc60831e4a42a30d699')]
->>>>>>> Moved backend to dedicated Container folder.
 MATRIX = [
     {
         "id": uuid.uuid4().hex,
@@ -47,13 +34,9 @@ DB_ENTRY_MOCKUP = {
     'transformed_dataframe': [],
     'preview_matrices': MATRIX,
     'vis_links': [],
-<<<<<<< HEAD
-    'plugins_id': PRE_CONFIGURED_PLUGINS
-=======
     'plugins_id': PRE_CONFIGURED_PLUGINS,
     'active_plugin_id': '',
     'active_organism_id': 'bacteroides-thetaiotaomicron-e2ad6b25-40cb-4594-8685-f4fcb3ceb0e7'
->>>>>>> Moved backend to dedicated Container folder.
 }
 
 ERROR_MESSAGES = {
@@ -114,23 +97,14 @@ ERROR_MESSAGES = {
         },
         'unexpected': {
             'type': 'Unexpected Upload Error',
-<<<<<<< HEAD
-            'message': 'An unexpected error has occured while uploading the data.'
-=======
             'message': 'An unexpected error has occured while uploading the data. Did you select the target matrix in the preview?'
->>>>>>> Moved backend to dedicated Container folder.
         }
     },
 }
 # MongoDB
-<<<<<<< HEAD
-client = MongoClient()
-db = client.projectname
-=======
 client = MongoClient(os.environ.get("MONGO_CONNECTION_STRING"))
 # client = MongoClient() # For offline testing.
 db = client.test
->>>>>>> Moved backend to dedicated Container folder.
 visualizations = db.visualizations
 plugins = db.plugins
 
@@ -159,47 +133,6 @@ def allowed_file(filename, extension_whitelist):
 #     print('hello world')
 #     return "Hello world!"
 
-<<<<<<< HEAD
-
-@app.route('/export', methods=['POST'])
-def export_df():
-    try:
-        # import pandas as pd
-        # export_form = json.loads(request.form['export_form'])
-        # url = json.loads(request.form['url'])
-        # db_entry = db.visualizations.find_one(
-        #     {"_id": ObjectId(url)}, {'_id': False})
-        # dataframe_dict = {}
-        # try:
-        #     df_filtered = pd.DataFrame.from_dict(
-        #         db_entry['filtered_dataframe'])
-        #     dataframe_dict["filtered"] = {}
-        #     dataframe_dict["filtered"]["df"] = df_filtered
-        #     dataframe_dict["filtered"]["name"] = "Filtered Data"
-        # except KeyError:
-        #     pass
-        # dataframe_dict["unfiltered"] = {}
-        # dataframe_dict["unfiltered"]["df"] = pd.DataFrame.from_dict(
-        #     db_entry['transformed_dataframe'])
-        # dataframe_dict["unfiltered"]["name"] = "Source Data"
-        # if export_form["file_type"] == 'excel':
-        #     res = df_to_excel(dataframe_dict)
-        # elif export_form["file_type"] == 'csv':
-        #     res = df_to_csv(dataframe_dict, export_form['csv_seperator'])
-        # return res
-        return respond_error(ERROR_MESSAGES["export_error"]["expected"]["type"], ERROR_MESSAGES["export_error"]["expected"]["message"])
-    except ValueError:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['export_error']['expected']['type'], ERROR_MESSAGES['export_error']['expected']['message'])
-    else:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['export_error']['unexpected']['type'], ERROR_MESSAGES['export_error']['unexpected']['message'])
-
-
-def df_to_excel(dataframe_dict):
-    from io import BytesIO
-    import pandas as pd
-=======
 @app.route('/export', methods=['POST'])
 def export_df():
     try:
@@ -233,28 +166,10 @@ def export_df():
 
 def df_to_excel(dataframe_dict):
     from io import BytesIO
->>>>>>> Moved backend to dedicated Container folder.
     output = BytesIO()
     writer = pd.ExcelWriter(output, engine='xlsxwriter')
     # Load the filtered, and unfiltered dataframe as excel sheets.
     for dataframe_parent in dataframe_dict:
-<<<<<<< HEAD
-        dataframe_dict[dataframe_parent]["df"].to_excel(
-            writer, sheet_name=dataframe_dict[dataframe_parent]["name"], index=False)
-    writer.close()
-    output.seek(0)
-    return Response(output, mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-disposition": "attachment; filename=filename.xlsx"})
-
-
-def df_to_csv(dataframe_dict, seperator):
-    # CSV doesn't support multi-sheets, so only one dataframe can be exported.
-    try:
-        df = dataframe_dict["filtered"]["df"]
-    except KeyError:
-        df = dataframe_dict["unfiltered"]["df"]
-    return Response(df.to_csv(sep=seperator, index=False, encoding='utf-8'), mimetype="text/csv", headers={"Content-disposition": "attachment; filename=filename.csv"})
-
-=======
         dataframe_dict[dataframe_parent]["df"].to_excel(writer, sheet_name=dataframe_dict[dataframe_parent]["name"], index=False)
     writer.close()
     output.seek(0)
@@ -269,19 +184,11 @@ def df_to_csv(dataframe_dict, seperator):
     else:
         df = dataframe_dict["filtered"]["df"]
     return Response(df.to_csv(sep=seperator, index=False, encoding='utf-8'), mimetype="text/csv", headers={"Content-disposition": "attachment; filename=dataframe.csv"})
->>>>>>> Moved backend to dedicated Container folder.
 
 def upload_db_entry(db_entry, mongo_update, url):
     if 'locked' in db_entry and db_entry['locked'] == True:
         db_entry['locked'] = False
         db_entry_id = db.visualizations.insert_one(db_entry).inserted_id
-<<<<<<< HEAD
-    else:
-        db_entry_id = ObjectId(url)
-        db.visualizations.update_one({'_id': db_entry_id}, mongo_update)
-    return db_entry_id
-
-=======
         print('new entry!')
     else:
         db_entry_id = ObjectId(url)
@@ -293,25 +200,11 @@ def upload_db_entry(db_entry, mongo_update, url):
 @app.route('/status', methods=['GET'])
 def status():
     return "alive"
->>>>>>> Moved backend to dedicated Container folder.
 
 @app.route('/query', methods=['POST'])
 def search_query():
     try:
         import filter_dataframe
-<<<<<<< HEAD
-        import pandas as pd
-        query = json.loads(request.form['query'])
-        url = json.loads(request.form['url'])
-        db_entry = db.visualizations.find_one(
-            {"_id": ObjectId(url)}, {'_id': False})
-        df = pd.DataFrame.from_dict(db_entry['transformed_dataframe'])
-        print('query: ', query)
-        filtered_df = filter_dataframe.main(query, df)
-        mongo_update = {
-            '$set': {
-                'filtered_dataframe': filtered_df.to_dict('records'),
-=======
         query = json.loads(request.form['query'])
         url = json.loads(request.form['url'])
         print(query)
@@ -323,25 +216,11 @@ def search_query():
         mongo_update = {
             '$set': {
                 'filtered_dataframe': df_to_parquet(filtered_df),
->>>>>>> Moved backend to dedicated Container folder.
                 'vis_links': [],
                 'query': query
             }
         }
         db_entry_id = upload_db_entry(db_entry, mongo_update, url)
-<<<<<<< HEAD
-        return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
-    except KeyError:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['query_error']['expected']['type'], ERROR_MESSAGES['query_error']['expected']['message'])
-    else:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['query_error']['unexpected']['type'], ERROR_MESSAGES['query_error']['unexpected']['message'])
-
-
-@app.route('/locked', methods=['POST'])
-def lock_session():
-=======
         return Response(dumps({'db_entry_id': db_entry_id}, allow_nan=True), mimetype="application/json")
     except Exception as e:
         print(str(e))
@@ -350,7 +229,6 @@ def lock_session():
 @app.route('/locked', methods=['POST'])
 def lock_session():
     print('locking')
->>>>>>> Moved backend to dedicated Container folder.
     try:
         from pymongo import MongoClient
         url = json.loads(request.form['url'])
@@ -358,15 +236,6 @@ def lock_session():
         db.visualizations.update_one({'_id': ObjectId(url)}, {
             '$set': {'locked': True}})
         return "success"
-<<<<<<< HEAD
-    except KeyError:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['locking_error']['expected']['type'], ERROR_MESSAGES['locking_error']['expected']['message'])
-    else:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['locking_error']['unexpected']['type'], ERROR_MESSAGES['locking_error']['unexpected']['message'])
-
-=======
     except Exception as e:
         print('###### ERROR')
         return respond_error(ERROR_MESSAGES['locking_error']['expected']['type'], str(e))
@@ -386,41 +255,16 @@ def set_active_plugin():
     except Exception as e:
         print(e)
         return respond_error('Error in active plugin loading', str(e))
->>>>>>> Moved backend to dedicated Container folder.
 
 @app.route('/visualization', methods=['POST'])
 def make_vis_link():
     try:
-<<<<<<< HEAD
-        import pandas as pd
-=======
->>>>>>> Moved backend to dedicated Container folder.
         plugin = json.loads(request.form['plugin'])
         url = json.loads(request.form['url'])
         print('url: ', url, 'plugin: ', plugin)
         db_entry = db.visualizations.find_one(
             {"_id": ObjectId(url)}, {'_id': False})
         # CHANGE: Right now every new visualization creates a new MongoDB entry
-<<<<<<< HEAD
-        vis_link = visualize.route(db.plugins, pd.DataFrame.from_dict(
-            db_entry['transformed_dataframe']), db_entry['cat_amount'], plugin)
-        db.visualizations.update_one({'_id': ObjectId(url)}, {
-            '$push': {'vis_links': vis_link}})
-        print(vis_link)
-        print('########')
-        print(Response({'vis_link': vis_link}))
-        return Response(dumps({'vis_link': vis_link}), mimetype="application/json")
-    except (IndexError, TypeError):
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['visualization_error']['expected']['type'], ERROR_MESSAGES['visualization_error']['expected']['message'])
-    else:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['visualization_error']['unexpected']['type'], ERROR_MESSAGES['visualization_error']['unexpected']['message'])
-
-@app.route('/plugins', methods=['POST'])
-def add_plugin():
-    import pandas as pd
-=======
         if len(db_entry['filtered_dataframe']) > 0:
             vis_link = visualize.route(db.plugins, pd.read_parquet(
             BytesIO(db_entry['filtered_dataframe'])), plugin, ObjectId(url))
@@ -437,7 +281,6 @@ def add_plugin():
 
 @app.route('/plugins', methods=['POST'])
 def add_plugin():
->>>>>>> Moved backend to dedicated Container folder.
     from pymongo import MongoClient
     from bson.json_util import ObjectId
     metadata = json.loads(request.form['form'])
@@ -465,53 +308,11 @@ def add_plugin():
         db_entry_id = ObjectId(metadata['db_entry_id'])
         print('db_entry_id filled id: ', db_entry_id)
     print('db_plugins_id: ', db_plugin_entry_id)
-<<<<<<< HEAD
-    return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
-
-@app.route('/datasets', methods=['GET'])
-def respond_datasets():
-    db_dataset
-=======
     return Response(dumps({'db_entry_id': db_entry_id}, allow_nan=True), mimetype="application/json")
->>>>>>> Moved backend to dedicated Container folder.
 
 @app.route('/config', methods=['GET', 'POST'])
 def respond_config():
     print('responding...')
-<<<<<<< HEAD
-    try:
-        if request.form['url'] != 'undefined':
-            # import bson
-            # from pymongo import MongoClient
-            db_entry_id = ObjectId(loads(request.form['url']))
-            print('Object_ID: ', db_entry_id)
-            db_entry = db.visualizations.find_one({"_id": db_entry_id})
-            # print(len(bson.BSON.encode(db_entry)))
-            db_entry['_id'] = str(db_entry['_id'])
-            db_entry['plugins'] = [plugin for plugin in db.plugins.find(
-                {'_id': {'$in': db_entry['plugins_id']}})]
-            return Response(dumps({'db_entry': db_entry}), mimetype="application/json")
-        else:
-            print('undefined')
-            import copy
-            db_entry = copy.deepcopy(DB_ENTRY_MOCKUP)
-
-            db_entry['plugins'] = [plugin for plugin in db.plugins.find(
-                {'_id': {'$in': db_entry['plugins_id']}})]
-            print(db_entry)
-            return Response(dumps({'db_entry': db_entry}), mimetype="application/json")
-    except KeyError:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['config_error']['expected']['type'], ERROR_MESSAGES['config_error']['expected']['message'])
-    else:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['config_error']['unexpected']['type'], ERROR_MESSAGES['config_error']['unexpected']['message'])
-
-
-def respond_error(error_type, error_message):
-    return Response(dumps({'error_type': error_type, 'error_message': error_message}), mimetype="application/json")
-
-=======
     if request.form['url'] != 'undefined':
         # import bson
         # from pymongo import MongoClient
@@ -547,27 +348,11 @@ def respond_error(error_type, error_message):
 
 def respond_error(error_type, error_message):
     return Response(dumps({'error_type': error_type, 'error_message': error_message}, allow_nan=True), mimetype="application/json")
->>>>>>> Moved backend to dedicated Container folder.
 
 @app.route('/upload', methods=['GET', 'POST'])
 def add_matrix():
     try:
         metadata = json.loads(request.form['form'])
-<<<<<<< HEAD
-        print('metadata: ', metadata)
-        source, extension = upload_file(
-            request, ALLOWED_EXTENSIONS_MATRIX, metadata)
-        db_entry_id = process_file.add_matrix(
-            source, metadata, extension, db, PRE_CONFIGURED_PLUGINS)
-        return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
-    except ValueError:
-        print('###### ERROR')
-        return respond_error(ERROR_MESSAGES['upload_error']['expected']['type'], ERROR_MESSAGES['upload_error']['expected']['message'])
-    else:
-        print('ERROR')
-        return respond_error(ERROR_MESSAGES['upload_error']['unexpected']['type'], ERROR_MESSAGES['upload_error']['unexpected']['message'])
-
-=======
         if metadata['source']['database'] != None: # NOTE: Unelegant. Determine decimal and seperator characters of database csv's.
             metadata['formatting']['file']['csv_seperator'] = metadata['source']['database']['seperator']
             metadata['formatting']['file']['decimal_character'] = metadata['source']['database']['decimal_character'] # This is because all database files were exported with german decimals
@@ -577,17 +362,12 @@ def add_matrix():
     except Exception as e:
         print(str(e))
         return respond_error(ERROR_MESSAGES['upload_error']['expected']['type'], str(e))
->>>>>>> Moved backend to dedicated Container folder.
 
 def respond_data(label, payload):
     response_object = {'status': 'success'}
     response_object[label] = payload
     return response_object
 
-<<<<<<< HEAD
-
-=======
->>>>>>> Moved backend to dedicated Container folder.
 def upload_file(request, extension_whitelist, metadata):
     if 'file' in request.files:
         file = request.files['file']
@@ -598,16 +378,6 @@ def upload_file(request, extension_whitelist, metadata):
         if file and allowed_file(file.filename, extension_whitelist):
             print('true')
             extension = os.path.splitext(file.filename)[1]
-<<<<<<< HEAD
-        print(file)
-        return file, extension
-    # If data is pasted text with "Text" as source
-    elif metadata['source']['text'] != "null":
-        return metadata['source']['text'], "string"
-    return "failure"
-
-
-=======
         return file, extension
     # If data is pasted text with "Text" as source
     elif metadata['source']['text'] != None:
@@ -618,37 +388,16 @@ def upload_file(request, extension_whitelist, metadata):
         return file, extension
     return "failure"
 
->>>>>>> Moved backend to dedicated Container folder.
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-<<<<<<< HEAD
-
-=======
->>>>>>> Moved backend to dedicated Container folder.
 @app.route('/matrix/<matrix_id>', methods=['GET', 'POST'])
 def remove_matrix(matrix_id):
     metadata = json.loads(request.form['form'])
     print('###### metadata: ', metadata)
     db_entry_id = process_file.remove_matrix(
         DB_ENTRY_MOCKUP, metadata, db, matrix_id)
-<<<<<<< HEAD
-    return Response(dumps({'db_entry_id': db_entry_id}), mimetype="application/json")
-
-
-def make_preview(input_file, extension, dataList, remove_id):
-    MATRIX.clear()
-    MATRICES, DATAFRAME, db_data_id = process_file.process_upload(
-        input_file, extension.lower(), dataList, remove_id)
-    for i in range(len(MATRICES)):
-        MATRIX.append(MATRICES[i])
-    return DATAFRAME
-
-
-print('ran')
-client.close()
-=======
     return Response(dumps({'db_entry_id': db_entry_id}, allow_nan=True), mimetype="application/json")
 
 def df_to_parquet(df):
@@ -660,4 +409,3 @@ def df_to_parquet(df):
     return Binary(output.getvalue())
 
 client.close()
->>>>>>> Moved backend to dedicated Container folder.
