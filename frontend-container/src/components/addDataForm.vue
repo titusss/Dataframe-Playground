@@ -260,12 +260,12 @@ export default {
         this.showErrorAlert = true;
       } else {
         const payload = this.form.source.file;
-        this.change_matrix("http://0.0.0.0:5000/upload", payload);
+        this.change_matrix("http://localhost:5000/upload", payload);
         this.$emit("close");
       }
     },
     delete_matrix(deleted_matrix_id) {
-      const path = `http://0.0.0.0:5000/matrix/${deleted_matrix_id}`;
+      const path = `http://localhost:5000/matrix/${deleted_matrix_id}`;
       const payload = null;
       this.change_matrix(path, payload);
     },

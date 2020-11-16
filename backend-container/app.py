@@ -115,7 +115,7 @@ CORS(app, resources={r'/*': {'origins': '*'}})  # enable CORS
 # cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 if __name__ == '__main__':
-    app.run(threaded=True)
+    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
 
 
 def allowed_file(filename, extension_whitelist):

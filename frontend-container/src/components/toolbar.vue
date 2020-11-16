@@ -118,7 +118,7 @@ export default {
     },
     lock_session() {
       this.disabled_lock = true;
-      const path = "http://0.0.0.0:5000/locked";
+      const path = "http://localhost:5000/locked";
       var payload = new FormData();
       payload.append("url", JSON.stringify(this.$route.query.config));
       axios.post(path, payload).then(res => {
@@ -145,7 +145,7 @@ export default {
       payload.append("url", JSON.stringify(this.$route.query.config));
       payload.append("export_form", JSON.stringify(this.export_form));
       axios({
-        url: "http://0.0.0.0:5000/export",
+        url: "http://localhost:5000/export",
         method: "POST",
         // responseType: "blob",
         data: payload

@@ -15,8 +15,21 @@
     "core-js": "^3.6.4",
     "portal-vue": "^2.1.7",
     "vue": "^2.6.11",
+<<<<<<< HEAD:frontend-container/package.json
+<<<<<<< HEAD:frontend-container/package.json
+<<<<<<< HEAD:frontend-container/package.json
     "vue-router": "^3.1.6",
     "vue-typeahead-bootstrap": "^2.3.0"
+=======
+=======
+    "vue-bootstrap-typeahead": "^0.2.6",
+>>>>>>> cd7da06... Added initial predictive gene go annotation search (e.coli):package.json
+    "vue-router": "^3.1.6"
+>>>>>>> bbb249f... Added flask server and sceleton backend:package.json
+=======
+    "vue-router": "^3.1.6",
+    "vue-typeahead-bootstrap": "^2.3.0"
+>>>>>>> a6a7739... Added filtering by KEGG, COG, GO. Compiled JSON's for filtering.:package.json
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.2.0",
