@@ -3,7 +3,6 @@
 *.icloud
 node_modules
 /dist
-<<<<<<< HEAD
 /server/env
 
 # local env files
@@ -22,11 +21,7 @@ uninstall.txt
 # local env files
 .venv.local
 .venv.*.local
-<<<<<<< HEAD
->>>>>>> 7a78dff... Initial docker backend commit.
-=======
 venv
->>>>>>> 0e82bbc... Fixed mask filtering for multiple columns. Improved performance. Added venv to gitignore.
 
 # Log files
 npm-debug.log*
@@ -41,7 +36,6 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
-<<<<<<< HEAD
 
 ### PYTHON GENERIC ###
 
@@ -183,5 +177,3 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-=======
->>>>>>> 7a78dff... Initial docker backend commit.
