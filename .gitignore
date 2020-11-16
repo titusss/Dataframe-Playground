@@ -29,3 +29,6 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Electron
+dist_electron

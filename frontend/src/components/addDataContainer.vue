@@ -19,7 +19,6 @@
 <script>
 import addDataForm from "./addDataForm.vue";
 import matrix from "./matrix.vue";
-import axios from "axios";
 
 export default {
   name: "addDataContainer",
