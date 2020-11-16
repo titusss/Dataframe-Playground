@@ -102,7 +102,7 @@ ERROR_MESSAGES = {
     },
 }
 # MongoDB
-client = MongoClient(os.environ.get("mongostring"))
+client = MongoClient(os.environ.get("mongocredential"))
 # client = MongoClient() # For offline testing.
 db = client.test
 visualizations = db.visualizations
