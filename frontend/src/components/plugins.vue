@@ -108,7 +108,7 @@ h4 {
 }
 
 .plugin_selected > img {
-  filter: brightness(10);
+  filter: brightness(2.5) saturate(0);
 }
 .plugin_selected {
   /* background-color: #007bff; */
