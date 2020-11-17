@@ -1,9 +1,8 @@
 <p align="center">
- <img width="70%" src="docs/resources/header_logo.svg" />
+ <a href="http://dataframe-playground.test.fedcloud.eu/"><img width="70%" src="docs/resources/header_logo.svg" /></a>
 </p>
 
-# Dataframe Playground
-
+<h2 align="center"><a href="http://dataframe-playground.test.fedcloud.eu/">Dataframe Playground</a></h2>
 Simple data mining without any coding in your browser. Chained filters, interactive data visualizations, and many special features for bioinformatics. Shareable URLs for presenting your data in an interactive environment.
 
 ## 🧮 Features
