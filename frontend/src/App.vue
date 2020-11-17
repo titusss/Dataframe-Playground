@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <div class="draggableRegion"></div>
     <error_alert
       :error="error"
       @error_alert_dismissed="error = null"
@@ -8,7 +9,7 @@
     <loading
       v-if="this.loading.state"
       :increment="this.loading.increment"
-      style="position: fixed;z-index: 100;top: 0;left: 0;width: 100vw;"
+      style="position: fixed;z-index: 1900;top: 0;left: 0;width: 100vw;"
     />
     <div v-if="this.initializing" class="initial_load">
       <img src="./assets/hzi-logo.svg" alt="">
@@ -25,7 +26,7 @@
     </b-alert>
     <!-- <b-progress v-if="loading.state" :value="loading.bar.value" :variant="loading.bar.variant" :key="loading.bar.variant" height="6px"></b-progress> -->
     <!-- <div class="loading" v-if="loading"><b-spinner label="Spinning"></b-spinner><span>Loading ...</span></div> -->
-    <div v-if="!this.initializing">
+    <div style="padding-top: 1.5rem;" v-if="!this.initializing">
       <div v-if="loading.state === false">
         <toolbar :locked="config.locked" :backend_url="backend_url" @error_occured="error_occured" />
       </div>
@@ -408,6 +409,17 @@ h5 {
 }
 .popover {
   z-index: 1030 !important;
+}
+button {
+  -webkit-app-region: no-drag !important;
+}
+.draggableRegion {
+  -webkit-app-region: drag;
+  position: fixed;
+  z-index: 1800;
+  height: 1.5rem;
+  width: 100vw;
+  /* backdrop-filter: blur(15px); */
 }
 /* button {
   margin: 5px !important;
