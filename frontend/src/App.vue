@@ -193,7 +193,8 @@ export default {
   },
   data() {
     return {
-      backend_url: 'https://hiri-webtool-backend-v011-44nub6ij6q-ez.a.run.app',
+      // backend_url: 'https://hiri-webtool-backend-v011-44nub6ij6q-ez.a.run.app',
+      backend_url: 'http://dataframe-playground-backend.test.fedcloud.eu',
       // backend_url: 'http://localhost:5000',
       organisms,
       loading: {

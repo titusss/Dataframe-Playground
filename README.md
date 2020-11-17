@@ -1,9 +1,8 @@
 <p align="center">
- <img width="70%" src="docs/resources/header_logo.svg" />
+ <a href="http://dataframe-playground.test.fedcloud.eu/"><img width="70%" src="docs/resources/header_logo.svg" /></a>
 </p>
 
-# Dataframe Playground
-
+<h2 align="center"><a href="http://dataframe-playground.test.fedcloud.eu/">Dataframe Playground</a></h2>
 Simple data mining without any coding in your browser. Chained filters, interactive data visualizations, and many special features for bioinformatics. Shareable URLs for presenting your data in an interactive environment.
 
 ## 🧮 Features
@@ -33,7 +32,7 @@ Simple data mining without any coding in your browser. Chained filters, interact
 > This web-app consists of a Vue.js frontend communicating with a Python backend over flask. Sessions are stored in a MongoDB. ℹ️ The application always requires a running backend `flask run` and frontend `npm run serve`.
 
 ### Environment variables
-> ℹ️ Make sure to have the environment variable `mongostring` set to your MongoDB access token (e.g. `mongodb+srv://user:1234567abcde@cluster.abc.def.mongodb.net/abd?retryWrites=true&w=majority`) and accessible to the python virtual environment of the backend.
+> ℹ️ Make sure to have the environment variable `mongocredential` set to your MongoDB access token (e.g. `mongodb+srv://user:1234567abcde@cluster.abc.def.mongodb.net/abd?retryWrites=true&w=majority`) and accessible to the python virtual environment of the backend.
 
 ### Install backend
 Clone repo and go to backend directory

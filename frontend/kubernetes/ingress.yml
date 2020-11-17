@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: hiri-heatmap-ingress
+  name: dataframe-playground-ingress
   namespace: hiri
 spec:
   rules:
