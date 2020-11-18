@@ -2,7 +2,7 @@
  <a href="http://dataframe-playground.test.fedcloud.eu/"><img width="50%" src="docs/resources/header_logo.svg" /></a>
 </p>
 
-<h2 align="center"><a href="http://dataframe-playground.test.fedcloud.eu/">Dataframe Playground Web App</a></h2>
+<h2 align="center"><a href="http://dataframe-playground.test.fedcloud.eu/">Open Web App</a></h2>
 Simple data mining without any coding in your browser. Chained filters, interactive data visualizations, and many special features for bioinformatics. Shareable URLs for presenting your data in an interactive environment.
 <p align="center"><img width="70%" src="docs/resources/screenshot_01.png" /></p>
 
