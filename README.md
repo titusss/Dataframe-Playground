@@ -3,8 +3,8 @@
 </p>
 
 <h2 align="center"><a href="http://dataframe-playground.test.fedcloud.eu/">Dataframe Playground Web App</a></h2>
-<p align="center">Simple data mining without any coding in your browser. Chained filters, interactive data visualizations, and many special features for bioinformatics. Shareable URLs for presenting your data in an interactive environment.
-<img width="70%" src="docs/resources/screenshot_01.png" /></p>
+Simple data mining without any coding in your browser. Chained filters, interactive data visualizations, and many special features for bioinformatics. Shareable URLs for presenting your data in an interactive environment.
+<img width="70%" src="docs/resources/screenshot_01.png" />
 
 ## 🧮 Features
 
