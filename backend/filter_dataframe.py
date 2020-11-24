@@ -69,7 +69,7 @@ def main(query, df):
                 "new_column_title": block["forms"]["target_value"]
             }
             import transform_dataframe
-            df = transform_dataframe.main("count_transcript_length", metadata, df)
+            df = transform_dataframe.main("count_transcript_length", metadata, df, unfiltered_df)
         elif block_type == "calculate_tpm":
             metadata = {
                 "start_column_title": block["forms"]["start_column"],
