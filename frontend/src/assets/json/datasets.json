@@ -39,7 +39,7 @@
       },
       {
         "text": "25C",
-        "value": {"filename": "salmonella-salcom_growth-curves.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"locus_tag", "common gene name", "25C", "strand","start", "end"], "pre_selected_columns": ["locus_tag","common gene name","25C"]},
+        "value": {"filename": "salmonella-salcom_growth-25c.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"locus_tag", "common gene name", "25C", "strand","start", "end"], "pre_selected_columns": ["locus_tag","common gene name","25C"]},
         "seperator": "\t"
       },
       {
