@@ -117,7 +117,7 @@
             <search_query
               @dataframe_filtered="redirect_to_config($event); update_filtered(true)"
               @error_occured="error_occured"
-              v-bind:df_categories="Object.keys(this.config.transformed_dataframe[0])"
+              v-bind:df_categories="unique_df_categories"
               v-bind:server_queries="this.config.query"
               v-bind:backend_url="backend_url"
               v-bind:table_titles="table_titles"
@@ -218,6 +218,13 @@ export default {
     this.load_config();
   },
   computed: {
+    unique_df_categories: function() {
+      if (this.config.filtered_dataframe) {
+        return [...new Set([...Object.keys(this.config.transformed_dataframe[0]) ,...Object.keys(this.config.filtered_dataframe[0])])];
+      } else {
+        return Object.keys(this.config.transformed_dataframe[0]);
+      }
+    },
     table_titles: function() {
       let active_matrices_flattened = [].concat.apply([], this.config.active_matrices); // Flatten the nested array.
       // return active_matrices_flattened.map(a => ({text: a.title, value: a.id}));
