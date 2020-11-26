@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="draggableRegion"></div>
+    <!-- <div class="draggableRegion"></div> -->
     <error_alert
       :error="error"
       @error_alert_dismissed="error = null"
@@ -16,17 +16,15 @@
       <div>
         <div class="ball-grid-pulse"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <h5 class="title initial_load_text">Loading Session</h5>
-        <small>v0.5.0-heatmap</small>
+        <small>v0.6.0-negative</small>
       </div>
     </div>
-    <b-alert variant="info" show dismissible><strong class="alert-heading">Major Update v0.5.0-heatmap</strong>
-      Added new custom 3D heatmap plugin for visualizing datasets of over 1,000,000 cells in real-time.
-      <hr>
-      The heatmap is in Alpha and only supports very few features currently.
+    <b-alert variant="info" show dismissible><strong class="alert-heading">Update v0.6.0-negative</strong>
+      New Filter presets for B. Theta. HIRI Heatmap supports negative values.
     </b-alert>
     <!-- <b-progress v-if="loading.state" :value="loading.bar.value" :variant="loading.bar.variant" :key="loading.bar.variant" height="6px"></b-progress> -->
     <!-- <div class="loading" v-if="loading"><b-spinner label="Spinning"></b-spinner><span>Loading ...</span></div> -->
-    <div style="padding-top: 1.5rem;" v-if="!this.initializing">
+    <div v-if="!this.initializing">
       <div v-if="loading.state === false">
         <toolbar :locked="config.locked" :backend_url="backend_url" @error_occured="error_occured" />
       </div>

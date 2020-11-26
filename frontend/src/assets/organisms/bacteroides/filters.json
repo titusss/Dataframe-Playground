@@ -600,6 +600,174 @@
               "selected": "any column"
             }
           }
+        },
+        "Filter High-confidence intergenic sRNAs": {
+          "properties": {
+            "type": "filter",
+            "query": "expression"
+          },
+          "items": {
+            "filter_value": {
+              "label": "Show High-confidence intergenic sRNAs ",
+              "type": "b-form-input",
+              "id": "filter_values",
+              "selected": "BTnc005; BTnc022; BTnc026; BTnc032; BTnc033; BTnc034; BTnc035; BTnc037; BTnc048; BTnc049; BTnc060; BTnc064; BTnc067; BTnc079; BTnc081; BTnc095; BTnc098; BTnc114; BTnc122; BTnc129; BTnc145; BTnc149; BTnc151; BTnc159; BTnc160; BTnc162; BTnc164; BTnc166; BTnc167; BTnc173; BTnc175; BTnc180; BTnc183; BTnc191; BTnc201; BTnc208; BTnc228; BTnc229; BTnc231; BTnc253; BTnc263; BTnc001; BTnc023; BTnc107; BTnc119; BTnc130; BTnc146; BTnc264; BTnc267; BTnc270; BTnc274; BTnc276; BTnc280; BTnc286; BTnc301; BTnc318; BTnc324; BTnc334; BTnc350"
+            },
+            "filter_area": {
+              "label": "in ",
+              "type": "b-form-select",
+              "default_options": ["any column", "all columns"],
+              "options": [
+                "any column", "all columns"
+              ],
+              "id": "filter_annotation_area",
+              "selected": "any column"
+            }
+          }
+        },
+        "Filter intergenic sRNAs": {
+          "properties": {
+            "type": "filter",
+            "query": "expression"
+          },
+          "items": {
+            "filter_value": {
+              "label": "Show intergenic sRNAs ",
+              "type": "b-form-input",
+              "id": "filter_values",
+              "selected": "BTnc005; BTnc022; BTnc026; BTnc032; BTnc033; BTnc034; BTnc035; BTnc037; BTnc048; BTnc049; BTnc060; BTnc064; BTnc067; BTnc079; BTnc080; BTnc081; BTnc095; BTnc098; BTnc113; BTnc114; BTnc122; BTnc129; BTnc145; BTnc149; BTnc151; BTnc159; BTnc160; BTnc162; BTnc164; BTnc166; BTnc167; BTnc173; BTnc175; BTnc180; BTnc183; BTnc191; BTnc201; BTnc208; BTnc228; BTnc229; BTnc231; BTnc253; BTnc263; BTnc001; BTnc002; BTnc003; BTnc006; BTnc007; BTnc008; BTnc018; BTnc019; BTnc023; BTnc025; BTnc041; BTnc042; BTnc043; BTnc044; BTnc056; BTnc065; BTnc066; BTnc084; BTnc085; BTnc094; BTnc097; BTnc100; BTnc103; BTnc107; BTnc109; BTnc118; BTnc119; BTnc126; BTnc127; BTnc128; BTnc130; BTnc133; BTnc135; BTnc137; BTnc139; BTnc140; BTnc146; BTnc147; BTnc148; BTnc152; BTnc163; BTnc165; BTnc169; BTnc170; BTnc171; BTnc181; BTnc182; BTnc186; BTnc187; BTnc188; BTnc189; BTnc198; BTnc199; BTnc200; BTnc204; BTnc206; BTnc207; BTnc209; BTnc227; BTnc230; BTnc232; BTnc234; BTnc235; BTnc237; BTnc242; BTnc246; BTnc256; BTnc257; BTnc262; BTnc264; BTnc265; BTnc267; BTnc270; BTnc274; BTnc276; BTnc279; BTnc280; BTnc283; BTnc285; BTnc286; BTnc289; BTnc290; BTnc292; BTnc293; BTnc294; BTnc295; BTnc297; BTnc301; BTnc302; BTnc304; BTnc306; BTnc310; BTnc311; BTnc312; BTnc318; BTnc323; BTnc324; BTnc325; BTnc328; BTnc329; BTnc330; BTnc331; BTnc332; BTnc334; BTnc335; BTnc336; BTnc337; BTnc338; BTnc341; BTnc342; BTnc343; BTnc346; BTnc349; BTnc350; BTnc351; BTnc353; BTnc355; BTnc361; BTnc362; BTnc363; BTnc372; BTnc376; BTnc378; BTnc383; BTnc385; BTnc388"
+            },
+            "filter_area": {
+              "label": "in ",
+              "type": "b-form-select",
+              "default_options": ["any column", "all columns"],
+              "options": [
+                "any column", "all columns"
+              ],
+              "id": "filter_annotation_area",
+              "selected": "any column"
+            }
+          }
+        },
+        "Filter Intra operonic sRNAs": {
+          "properties": {
+            "type": "filter",
+            "query": "expression"
+          },
+          "items": {
+            "filter_value": {
+              "label": "Show Intra operonic sRNAs ",
+              "type": "b-form-input",
+              "id": "filter_values",
+              "selected": "BTnc057; BTnc069; BTnc091; BTnc132; BTnc150; BTnc217"
+            },
+            "filter_area": {
+              "label": "in ",
+              "type": "b-form-select",
+              "default_options": ["any column", "all columns"],
+              "options": [
+                "any column", "all columns"
+              ],
+              "id": "filter_annotation_area",
+              "selected": "any column"
+            }
+          }
+        },
+        "Filter Putative TA system": {
+          "properties": {
+            "type": "filter",
+            "query": "expression"
+          },
+          "items": {
+            "filter_value": {
+              "label": "Show Putative TA system ",
+              "type": "b-form-input",
+              "id": "filter_values",
+              "selected": "BTnc092; BTnc093; BTnc120; BTnc121; BTnc143; BTnc144; BTnc193; BTnc194; BTnc202; BTnc203; BTnc215; BTnc216; BTnc244; BTnc245"
+            },
+            "filter_area": {
+              "label": "in ",
+              "type": "b-form-select",
+              "default_options": ["any column", "all columns"],
+              "options": [
+                "any column", "all columns"
+              ],
+              "id": "filter_annotation_area",
+              "selected": "any column"
+            }
+          }
+        },
+        "Filter cis-antisense RNAs": {
+          "properties": {
+            "type": "filter",
+            "query": "expression"
+          },
+          "items": {
+            "filter_value": {
+              "label": "Show cis-antisense RNAs ",
+              "type": "b-form-input",
+              "id": "filter_values",
+              "selected": "BTnc004; BTnc009; BTnc010; BTnc011; BTnc012; BTnc013; BTnc014; BTnc015; BTnc016; BTnc020; BTnc021; BTnc024; BTnc027; BTnc028b; BTnc030; BTnc031; BTnc040; BTnc047; BTnc053; BTnc054; BTnc055; BTnc070; BTnc071; BTnc072; BTnc074; BTnc075; BTnc076; BTnc077; BTnc078; BTnc082; BTnc083; BTnc086; BTnc096; BTnc106; BTnc110; BTnc111; BTnc112; BTnc116; BTnc117; BTnc123; BTnc125; BTnc131; BTnc136; BTnc141; BTnc154; BTnc155; BTnc156; BTnc157; BTnc158; BTnc161; BTnc168; BTnc172; BTnc174; BTnc176; BTnc178; BTnc179; BTnc196; BTnc197; BTnc210; BTnc212; BTnc213; BTnc218; BTnc220; BTnc221; BTnc222; BTnc225; BTnc226; BTnc233; BTnc236; BTnc238; BTnc239; BTnc240; BTnc241a; BTnc241b; BTnc247; BTnc249; BTnc250; BTnc252; BTnc254; BTnc255; BTnc260; BTnc261; BTnc266; BTnc271; BTnc273; BTnc275; BTnc277; BTnc278; BTnc281; BTnc282; BTnc284; BTnc287; BTnc288; BTnc291; BTnc296; BTnc298; BTnc299; BTnc300; BTnc303; BTnc305; BTnc307; BTnc308; BTnc309; BTnc314; BTnc315; BTnc316; BTnc317; BTnc319; BTnc320; BTnc321; BTnc322; BTnc326; BTnc327; BTnc333; BTnc344; BTnc345; BTnc347; BTnc348; BTnc352; BTnc354; BTnc356; BTnc357; BTnc358; BTnc359; BTnc360; BTnc367; BTnc368; BTnc369; BTnc370; BTnc373; BTnc374; BTnc375; BTnc377; BTnc379; BTnc381; BTnc382; BTnc384; BTnc386; BTnc387; BTnc389; BTnc390; BTnc391; BTnc392; BTnc393; BTnc394"
+            },
+            "filter_area": {
+              "label": "in ",
+              "type": "b-form-select",
+              "default_options": ["any column", "all columns"],
+              "options": [
+                "any column", "all columns"
+              ],
+              "id": "filter_annotation_area",
+              "selected": "any column"
+            }
+          }
+        },
+        "Filter 5' derived sRNAs": {
+          "properties": {
+            "type": "filter",
+            "query": "expression"
+          },
+          "items": {
+            "filter_value": {
+              "label": "Show 5' derived sRNAs ",
+              "type": "b-form-input",
+              "id": "filter_values",
+              "selected": "BTnc000; BTnc089; BTnc108; BTnc142; BTnc184; BTnc211; BTnc219; BTnc259; BTnc364; BTnc371; BTnc380"
+            },
+            "filter_area": {
+              "label": "in ",
+              "type": "b-form-select",
+              "default_options": ["any column", "all columns"],
+              "options": [
+                "any column", "all columns"
+              ],
+              "id": "filter_annotation_area",
+              "selected": "any column"
+            }
+          }
+        },
+        "Filter 3' derived sRNAs": {
+          "properties": {
+            "type": "filter",
+            "query": "expression"
+          },
+          "items": {
+            "filter_value": {
+              "label": "Show 3' derived sRNAs ",
+              "type": "b-form-input",
+              "id": "filter_values",
+              "selected": "BTnc028a; BTnc029; BTnc088; BTnc099; BTnc101; BTnc102; BTnc104; BTnc105; BTnc134; BTnc153; BTnc195; BTnc224; BTnc248; BTnc251; BTnc268; BTnc313; BTnc339; BTnc340; BTnc365; BTnc366; BTnc395"
+            },
+            "filter_area": {
+              "label": "in ",
+              "type": "b-form-select",
+              "default_options": ["any column", "all columns"],
+              "options": [
+                "any column", "all columns"
+              ],
+              "id": "filter_annotation_area",
+              "selected": "any column"
+            }
+          }
         }
       },
       "Data Cleanup": {
