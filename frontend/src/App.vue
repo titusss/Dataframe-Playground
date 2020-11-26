@@ -219,7 +219,7 @@ export default {
   },
   computed: {
     unique_df_categories: function() {
-      if (this.config.filtered_dataframe) {
+      if (this.config.filtered_dataframe[0]) {
         return [...new Set([...Object.keys(this.config.transformed_dataframe[0]) ,...Object.keys(this.config.filtered_dataframe[0])])];
       } else {
         return Object.keys(this.config.transformed_dataframe[0]);
