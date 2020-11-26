@@ -362,6 +362,7 @@ export default {
       this.$bvModal.show(modal_id);
     },
     error_occured(error) {
+      this.loading.state = false;
       this.error = error;
       console.log(this.error);
     },
