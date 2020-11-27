@@ -63,38 +63,43 @@
     "label": "Salmonella Small Proteins",
     "options": [
       {
+        "text": "Additional Transcript Data",
+        "value": {"filename": "salmonella-small-proteins_transcript-data.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"locus tag","gene name","start","end","gene length","amino acid length","strand"]},
+        "seperator": "\t"
+      },
+      {
         "text": "2h Dual RNA Seq",
-        "value": {"filename": "salmonella-small-proteins_2h-dual-rna-seq.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"genes","logFC","logCPM","PValue","FDR"]},
+        "value": {"filename": "salmonella-small-proteins_2h-dual-rna-seq.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"locus tag","logFC","logCPM","PValue","FDR"]},
         "seperator": "\t"
       },
       {
         "text": "4h Dual RNA Seq",
-        "value": {"filename": "salmonella-small-proteins_4h-dual-rna-seq.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"genes","logFC","logCPM","PValue","FDR"]},
+        "value": {"filename": "salmonella-small-proteins_4h-dual-rna-seq.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"locus tag","logFC","logCPM","PValue","FDR"]},
         "seperator": "\t"
       },
       {
         "text": "8h Dual RNA Seq",
-        "value": {"filename": "salmonella-small-proteins_8h-dual-rna-seq.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"genes","logFC","logCPM","PValue","FDR"]},
+        "value": {"filename": "salmonella-small-proteins_8h-dual-rna-seq.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"locus tag","logFC","logCPM","PValue","FDR"]},
         "seperator": "\t"
       },
       {
         "text": "16h Dual RNA Seq",
-        "value": {"filename": "salmonella-small-proteins_16h-dual-rna-seq.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"genes","logFC","logCPM","PValue","FDR"]},
+        "value": {"filename": "salmonella-small-proteins_16h-dual-rna-seq.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"locus tag","logFC","logCPM","PValue","FDR"]},
         "seperator": "\t"
       },
       {
         "text": "24h Dual RNA Seq",
-        "value": {"filename": "salmonella-small-proteins_24h-dual-rna-seq.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"genes","logFC","logCPM","PValue","FDR"]},
+        "value": {"filename": "salmonella-small-proteins_24h-dual-rna-seq.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"locus tag","logFC","logCPM","PValue","FDR"]},
         "seperator": "\t"
       },
       {
         "text": "GradR",
-        "value": {"filename": "salmonella-small-proteins_gradr.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"UniprotID","locus","gene","protein","#aa","norm_to_max fraction 1","norm_to_max fraction 2","norm_to_max fraction 3","norm_to_max fraction 4","norm_to_max fraction 5","norm_to_max fraction 6","norm_to_max fraction 7","norm_to_max fraction 8","norm_to_max fraction 9","norm_to_max fraction 10","norm_to_max fraction 11","norm_to_max fraction 12","norm_to_max fraction 13","norm_to_max fraction 14","norm_to_max fraction 15","norm_to_max fraction 16","norm_to_max fraction 17","norm_to_max fraction 18","norm_to_max fraction 19","norm_to_max fraction 20","norm_to_max fraction P"]},
+        "value": {"filename": "salmonella-small-proteins_gradr.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"UniprotID","locus tag","gene","protein","#aa","norm_to_max fraction 1","norm_to_max fraction 2","norm_to_max fraction 3","norm_to_max fraction 4","norm_to_max fraction 5","norm_to_max fraction 6","norm_to_max fraction 7","norm_to_max fraction 8","norm_to_max fraction 9","norm_to_max fraction 10","norm_to_max fraction 11","norm_to_max fraction 12","norm_to_max fraction 13","norm_to_max fraction 14","norm_to_max fraction 15","norm_to_max fraction 16","norm_to_max fraction 17","norm_to_max fraction 18","norm_to_max fraction 19","norm_to_max fraction 20","norm_to_max fraction P"]},
         "seperator": "\t"
       },
       {
         "text": "TraDIS",
-        "value": {"filename": "salmonella-small-proteins_tradis.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"locus_tag","gene_name","function","logFC","logCPM","PValue","q.value"]},
+        "value": {"filename": "salmonella-small-proteins_tradis.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"locus tag","gene_name","function","logFC","logCPM","PValue","q.value"]},
         "seperator": "\t"
       }
     ]

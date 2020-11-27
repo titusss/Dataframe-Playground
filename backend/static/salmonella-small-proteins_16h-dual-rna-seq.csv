@@ -1,4 +1,4 @@
-genes	logFC	logCPM	PValue	FDR
+locus tag	logFC	logCPM	PValue	FDR
 STsORF61	1,06	3,11	0,30	0,42
 STsORF244	-0,37	4,46	0,52	0,63
 STsORF221	-0,13	3,89	0,86	0,91
