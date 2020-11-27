@@ -10,6 +10,6 @@ def main(parameters):
     categories = list(df.select_dtypes(exclude=[np.number]).columns) # Get all columns that are non numeric
     df.set_index(categories, inplace=True)
     # upload_url = df.iplot(kind='heatmap', filename=str(uuid.uuid4()), asUrl=True, colorscale='RdBu')
-    upload_url = df.iplot(kind='scatter', mode='markers+text', filename=str(uuid.uuid4()), asUrl=True, colorscale='dark2')
+    upload_url = df.iplot(kind='scatter', mode='markers+text', filename=str(uuid.uuid4()), asUrl=True, theme='white')
 
     return upload_url
