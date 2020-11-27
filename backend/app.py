@@ -323,7 +323,6 @@ def respond_config():
         db_entry['_id'] = str(db_entry['_id'])
         db_entry['plugins'] = [plugin for plugin in db.plugins.find(
             {'_id': {'$in': db_entry['plugins_id']}})]
-        print('######')
         if type(db_entry['transformed_dataframe']) == bytes: # The mockup db_entry stores the empty transformed_dataframe as a list, so don't convert that one.
             # PERFORMANCE: We have to replace NaN cells with None for JSON.
             db_entry['transformed_dataframe'] = pd.read_parquet(BytesIO(db_entry['transformed_dataframe'])).to_json(orient='records')

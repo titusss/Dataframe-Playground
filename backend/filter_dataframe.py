@@ -78,6 +78,18 @@ def main(query, df):
             }
             import transform_dataframe
             df = transform_dataframe.main("calculate_tpm", metadata, df, unfiltered_df)
+        elif block_type == "convert_to_index":
+            if block["forms"]["target_column"] == "all columns":
+                target_area = list(df.columns)
+            else:
+                target_area = [block["forms"]["target_column"]]
+            for target_column in target_area:
+                if target_column.startswith("("):
+                    try:
+                        df[target_column] = df[target_column].astype(str)
+                        df.rename(columns={target_column: target_column.split(") ", 1)[1]}, inplace=True)
+                    except IndexError as e:
+                        pass
     return df
 
 def setup_query_parameters(forms, df):
@@ -127,15 +139,10 @@ def filter_for(forms, properties, df, comparison_operator, filter_area):
         with open('static/gene_annotations.json') as json_file:
             gene_annotations = json.load(json_file)
         df_genes = df[filter_area].tolist()
-        print(df_genes)
         filter_value = []
         # print(properties["code_type"])
         for gene_locus in gene_annotations:
-            print(gene_locus)
-            print(forms["filter_annotation"])
-            print(list(gene_annotations[gene_locus][properties["code_type"]]))
             if gene_locus in df_genes and forms["filter_annotation"] in list(gene_annotations[gene_locus][properties["code_type"]]):
-                print(gene_locus)
                 filter_value.append(gene_locus)
         df_mask = df[filter_area].isin(filter_value)
     else: # If the filter does not rely on a mask (e.g. dropping a column)

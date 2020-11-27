@@ -25,8 +25,10 @@ def prepare_df(df):
     # dataframe[dataframe.columns[0:cat_amount]] = dataframe.columns[0:cat_amount] + \
     #     ': ' + dataframe[dataframe.columns[0:cat_amount]].astype(str)
     # Remove the category titles from first row.
-    categories = list(df.select_dtypes(exclude=[np.number]).columns) # Get all columns that are non numerics
-    value_columns = [x for x in list(df.columns) if x not in categories] # Get all columns that are not category columns
+    # categories = list(df.select_dtypes(exclude=[np.number]).columns) # Get all columns that are non numerics
+    # value_columns = [x for x in list(df.columns) if x not in categories] # Get all columns that are not category columns
+    value_columns = [name for name in list(df.columns) if name.startswith('(') and ") " in name]
+    categories = [x for x in list(df.columns) if x not in value_columns] # Get all columns that are not value columns
     dataframe_reordered_columns = categories + value_columns
     dataframe = dataframe[dataframe_reordered_columns] # Put all categories column to the beginning of the dataframe.
     if len(categories) > 0:

@@ -71,6 +71,22 @@
             }
           }
         },
+        "Convert to index column": {
+          "properties": {
+            "type": "convert_to_index",
+            "query": "column"
+          },
+          "items": {
+            "target_column": {
+              "label": "Convert to index column",
+              "type": "b-form-select",
+              "default_options": ["all columns"],
+              "options": ["all columns"],
+              "id": "to_index_column",
+              "selected": "all columns"
+            }
+          }
+        },
         "Hide Column": {
           "properties": {
             "type": "hide",
@@ -434,7 +450,7 @@
           }
         }
       },
-      "Genome Annotation": {
+      "Pathogenicity Islands": {
         "Filter SPI1": {
           "properties": {
             "type": "filter",

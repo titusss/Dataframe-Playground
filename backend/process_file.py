@@ -74,15 +74,15 @@ def remove_matrix(mockup_db_entry, metadata, db, remove_id):
 
 def rename_df_columns(df, title):
     categories = list(df.select_dtypes(np.number).columns)
-    print('categories: ', categories)
     df.columns = ['(' + title + ') ' + x if x in categories else x for x in df.columns] # Append the dataframe title to the column names
     return df
 
 def remove_df_title(title):
-    try:
-        title = title.split(') ', 1)[1]
-    except:
-        pass
+    if title.startswith('('):
+        try:
+            title = title.split(') ', 1)[1]
+        except:
+            pass
     print('title: ', title)
     return title
 

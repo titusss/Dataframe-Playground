@@ -26,12 +26,10 @@ def main(transformation_type, metadata, df, unfiltered_df):
 #     return df_transformed
 
 def count_transcript_length(metadata, df, unfiltered_df):
-    df[metadata["new_column_title"]] = df[metadata["end_column_title"]] - df[metadata["start_column_title"]]
+    df[metadata["new_column_title"]] = (df[metadata["end_column_title"]] - df[metadata["start_column_title"]]) + 1
     return df
 
 def calculate_tpm(metadata, df, unfiltered_df):
-    print(unfiltered_df)
-    print(df)
     transcript_length = df[metadata["end_column_title"]] - df[metadata["start_column_title"]]
     import numpy as np
     args = {metadata["counts_column"] : df[metadata["counts_column"]] / transcript_length * (1 / (unfiltered_df[metadata["counts_column"]].sum()) * (df[metadata["counts_column"]] / transcript_length)) * 1e6}
