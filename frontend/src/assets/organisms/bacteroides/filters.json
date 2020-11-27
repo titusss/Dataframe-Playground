@@ -37,9 +37,7 @@
               "label": "Change values in ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_values_area",
               "selected": "any column"
             },
@@ -47,14 +45,7 @@
               "label": "that are",
               "type": "b-form-select",
               "default_options": [],
-              "options": [
-                "< less than",
-                "> more than",
-                ">= more or equal to",
-                "<= less or equal to",
-                "= equal to",
-                "!= not"
-              ],
+              "options": ["< less than", "> more than", ">= more or equal to", "<= less or equal to", "= equal to", "!= not"],
               "id": "change_values_logical-operator",
               "selected": null
             },
@@ -182,20 +173,16 @@
             "filter_area": {
               "label": "Calculate length between transcript start column ",
               "type": "b-form-select",
-              "default_options": [{"value": null, "text": "Select 'start' column"}],
-              "options": [
-                {"value": null, "text": "Select 'start' column"}
-              ],
+              "default_options": [{ "value": null, "text": "Select 'start' column" }],
+              "options": [{ "value": null, "text": "Select 'start' column" }],
               "id": "filter_values_area",
               "selected": null
             },
             "target_column": {
               "label": "and transcript end column",
               "type": "b-form-select",
-              "default_options": [{"value": null, "text": "Select 'end' column" }],
-              "options": [
-                {"value": null, "text": "Select 'end' column" }
-              ],
+              "default_options": [{ "value": null, "text": "Select 'end' column" }],
+              "options": [{ "value": null, "text": "Select 'end' column" }],
               "id": "filter_values_area",
               "selected": null
             },
@@ -216,30 +203,24 @@
             "counts_column": {
               "label": "Calculate TPM for column ",
               "type": "b-form-select",
-              "default_options": [{"value": null, "text": "Select counts column"}],
-              "options": [
-                {"value": null, "text": "Select counts column"}
-              ],
+              "default_options": [{ "value": null, "text": "Select counts column" }],
+              "options": [{ "value": null, "text": "Select counts column" }],
               "id": "filter_values_area",
               "selected": null
             },
             "start_column": {
               "label": "Transcript start column",
               "type": "b-form-select",
-              "default_options": [{"value": null, "text": "Select 'start' column"}],
-              "options": [
-                {"value": null, "text": "Select 'start' column"}
-              ],
+              "default_options": [{ "value": null, "text": "Select 'start' column" }],
+              "options": [{ "value": null, "text": "Select 'start' column" }],
               "id": "filter_values_area",
               "selected": null
             },
             "end_column": {
               "label": "Transcript end column",
               "type": "b-form-select",
-              "default_options": [{"value": null, "text": "Select 'end' column" }],
-              "options": [
-                {"value": null, "text": "Select 'end' column" }
-              ],
+              "default_options": [{ "value": null, "text": "Select 'end' column" }],
+              "options": [{ "value": null, "text": "Select 'end' column" }],
               "id": "filter_values_area",
               "selected": null
             }
@@ -259,14 +240,7 @@
               "label": "Show rows with values that are",
               "type": "b-form-select",
               "default_options": [],
-              "options": [
-                "= equal to",
-                "!= not",
-                "< less than",
-                "> more than",
-                ">= more or equal to",
-                "<= less or equal to"
-              ],
+              "options": ["= equal to", "!= not", "< less than", "> more than", ">= more or equal to", "<= less or equal to"],
               "id": "filter_values_logical-operator",
               "selected": null
             },
@@ -279,9 +253,7 @@
               "label": "for ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_values_area",
               "selected": "any column"
             }
@@ -310,9 +282,7 @@
               "label": "for ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -339,9 +309,7 @@
               "label": "for ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -368,9 +336,7 @@
               "label": "for ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -397,9 +363,7 @@
               "label": "for ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -425,9 +389,7 @@
               "label": "in ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -449,9 +411,7 @@
               "label": "in ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -473,9 +433,7 @@
               "label": "in ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -497,9 +455,7 @@
               "label": "in ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -521,9 +477,7 @@
               "label": "in ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -545,9 +499,7 @@
               "label": "in ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -569,9 +521,7 @@
               "label": "in ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -593,14 +543,14 @@
               "label": "in ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
           }
-        },
+        }
+      },
+      "Non coding RNA": {
         "Filter High-confidence intergenic sRNAs": {
           "properties": {
             "type": "filter",
@@ -617,9 +567,7 @@
               "label": "in ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -641,9 +589,7 @@
               "label": "in ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -665,9 +611,7 @@
               "label": "in ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -689,9 +633,7 @@
               "label": "in ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -713,9 +655,7 @@
               "label": "in ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -737,9 +677,7 @@
               "label": "in ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -761,9 +699,7 @@
               "label": "in ",
               "type": "b-form-select",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
             }
@@ -781,14 +717,7 @@
               "label": "Change values that are",
               "type": "b-form-select",
               "default_options": [],
-              "options": [
-                "< less than",
-                "> more than",
-                ">= more or equal to",
-                "<= less or equal to",
-                "= equal to",
-                "!= not"
-              ],
+              "options": ["< less than", "> more than", ">= more or equal to", "<= less or equal to", "= equal to", "!= not"],
               "id": "change_values_logical-operator",
               "selected": "= equal to"
             },
