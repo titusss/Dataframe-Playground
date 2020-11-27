@@ -44,7 +44,7 @@ plotly==4.7.1
 prometheus-client==0.7.1
 prompt-toolkit==3.0.5
 ptyprocess==0.6.0
-
+statsmodels==0.12.1
 Pygments==2.6.1
 pymongo==3.10.1
 pyparsing==2.4.7
