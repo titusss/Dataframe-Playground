@@ -15,8 +15,6 @@ def calculate_tpm(metadata, df, unfiltered_df):
     df = df.assign(**args)
     df.rename(columns={metadata["counts_column"]: "TPM "+metadata["counts_column"]}, inplace=True)
     return df
-    
-
 
 TRANSFORMATION_FUNCTIONS = {
     # "relative_expression": relative_expression,

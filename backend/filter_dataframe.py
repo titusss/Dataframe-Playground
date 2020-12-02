@@ -30,15 +30,19 @@ def main(query, df):
                         df_mask[i] = not any_column
             df = df[df_mask]
         elif block_type == "replace":
-            # print(block["forms"]["target_value"])
-            # df.loc[df_mask, filter_area] = block["forms"]["target_value"]
             try:
                 target_value = float(block["forms"]["target_value"])
             except ValueError:
                 target_value = block["forms"]["target_value"]
+            print(filter_area)
+            print(df_mask)
             df[filter_area] = df[filter_area].where(~df_mask, other=target_value)
-            df[filter_area] = pd.to_numeric(df[filter_area], downcast="integer")
-            # df = df.where(~df_mask, other=10)
+            print(df[filter_area])
+            if type(filter_area) == list:
+                for column in filter_area:
+                    df[column] = pd.to_numeric(df[column], downcast="integer", errors="ignore") # If all values of the target column are now numeric, try to change the dtype of that column to numeric
+            else:
+                df[filter_area] = pd.to_numeric(df[filter_area], downcast="integer", errors="ignore")
         elif block_type == "hide":
             if block["forms"]["target_column"] == "all columns":
                 target_area = list(df.columns)
@@ -133,12 +137,27 @@ def setup_query_parameters(forms, df):
 def filter_for(forms, properties, df, comparison_operator, filter_area):
     if properties["query"] == "expression": # Directly search for the entered string
         try: # Filter for integers and floats
-            filter_value = float(forms["filter_value"])
-            df_mask = comparison_operator(df[filter_area].values, filter_value)
+            if forms["filter_value"].lower() != "nan" or forms["filter_value"] == " ":
+                filter_value = float(forms["filter_value"])
+                df_mask = comparison_operator(df[filter_area].values, filter_value)
+            else:
+                raise NameError
             # print('df_mask: ', df_mask)
         except ValueError: # Filter for string or semi-colon-seperated list of strings
             filter_value = str(forms["filter_value"]).split('; ')
             df_mask = df[filter_area].isin(filter_value).values
+        except NameError:
+            # numeric_columns = df.select_dtypes(include=np.number).columns.tolist()
+            # print([filter_area])
+            # if type(filter_area) != list:
+            #     filter_area = [filter_area]
+            # filter_area = [x for x in filter_area if x in numeric_columns]
+            if forms["logical_operator"] == '= equal to':
+                df_mask = pd.isna(df[filter_area].values)
+            elif forms["logical_operator"] == '!= not':
+                df_mask = pd.notna(df[filter_area].values)
+            else:
+                raise ValueError("Must use '= equal to' or '!= not' when searching for NaN values.")
     elif properties["query"] == "annotation_code": # Search for locus tag's that include the entered annotation id (GO, KEGG, COG, etc.)
         import json
         with open('static/gene_annotations.json') as json_file:

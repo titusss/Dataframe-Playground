@@ -721,35 +721,6 @@
             }
           }
         }
-      },
-      "Data Cleanup": {
-        "Remove faulty data": {
-          "properties": {
-            "type": "filter",
-            "query": "expression"
-          },
-          "items": {
-            "logical_operator": {
-              "label": "Change values that are",
-              "type": "b-form-select",
-              "default_options": [],
-              "options": ["< less than", "> more than", ">= more or equal to", "<= less or equal to", "= equal to", "!= not"],
-              "id": "change_values_logical-operator",
-              "selected": "= equal to"
-            },
-            "filter_value": {
-              "type": "b-form-input",
-              "id": "change_values_current-value",
-              "selected": "NaN, undefined"
-            },
-            "target_value": {
-              "label": "to",
-              "type": "b-form-input",
-              "id": "change_values_target-value",
-              "selected": " "
-            }
-          }
-        }
       }
     }
   }
