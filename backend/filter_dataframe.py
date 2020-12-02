@@ -37,6 +37,7 @@ def main(query, df):
             except ValueError:
                 target_value = block["forms"]["target_value"]
             df[filter_area] = df[filter_area].where(~df_mask, other=target_value)
+            df[filter_area] = pd.to_numeric(df[filter_area], downcast="integer")
             # df = df.where(~df_mask, other=10)
         elif block_type == "hide":
             if block["forms"]["target_column"] == "all columns":
