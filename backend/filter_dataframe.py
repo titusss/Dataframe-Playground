@@ -32,7 +32,11 @@ def main(query, df):
         elif block_type == "replace":
             # print(block["forms"]["target_value"])
             # df.loc[df_mask, filter_area] = block["forms"]["target_value"]
-            df[filter_area] = df[filter_area].where(~df_mask, other=block["forms"]["target_value"])
+            try:
+                target_value = float(block["forms"]["target_value"])
+            except ValueError:
+                target_value = block["forms"]["target_value"]
+            df[filter_area] = df[filter_area].where(~df_mask, other=target_value)
             # df = df.where(~df_mask, other=10)
         elif block_type == "hide":
             if block["forms"]["target_column"] == "all columns":
