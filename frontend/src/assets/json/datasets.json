@@ -109,7 +109,7 @@
       },
       {
         "text": "TraDIS",
-        "value": {"filename": "salmonella-small-proteins_tradis.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"locus tag","gene_name","function","logFC","logCPM","PValue","q.value"]},
+        "value": {"filename": "salmonella-small-proteins_tradis.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"locus tag","gene name","function","logFC","logCPM","PValue","q.value"]},
         "seperator": "\t"
       }
     ]
