@@ -1,4 +1,4 @@
-locus tag gene name	gene name	function	logFC	logCPM	PValue	q.value
+locus tag	gene name	function	logFC	logCPM	PValue	q.value
 SL1344_0001	thrL	thr operon leader peptide	-234	2,511	857	1,000
 SL1344_0002	thrA	aspartokinase I/homoserine dehydrogenase I	105	7,097	434	847
 SL1344_0003	thrB	Homoserine kinase	24	5,279	1,000	1,000
