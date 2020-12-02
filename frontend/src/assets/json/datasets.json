@@ -64,7 +64,17 @@
     "options": [
       {
         "text": "Additional Transcript Data",
-        "value": {"filename": "salmonella-small-proteins_transcript-data.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"locus tag","gene name","start","end","gene length","amino acid length","strand"]},
+        "value": {"filename": "salmonella-small-proteins_transcript-data.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"locus tag","gene name","start","end","gene length","amino acid length","strand"], "pre_selected_columns": ["locus tag","gene name","amino acid length"]},
+        "seperator": "\t"
+      },
+      {
+        "text": "Ribo-Seq",
+        "value": {"filename": "salmonella-small-proteins_ribo-seq.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"locus tag","start","end","strand","amino acid length","Ribo-seq"], "pre_selected_columns": ["locus tag","Ribo-seq"]},
+        "seperator": "\t"
+      },
+      {
+        "text": "sPepFinder",
+        "value": {"filename": "salmonella-small-proteins_spepfinder.csv", "seperator": "\t", "decimal_character": ",", "columns": [{"value": null, "text": "All columns"},"locus tag","start","end","strand","amino acid length","sPepFinder"], "pre_selected_columns": ["locus tag","sPepFinder"]},
         "seperator": "\t"
       },
       {
