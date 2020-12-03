@@ -90,7 +90,7 @@ def main(query, df):
             if "all columns" in block["forms"]["target_column"]:
                 target_area = list(df.columns)
             else:
-                target_area = [block["forms"]["target_column"]]
+                target_area = block["forms"]["target_column"]
             for target_column in target_area:
                 if target_column.startswith("("):
                     try:
