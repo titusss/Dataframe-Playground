@@ -269,6 +269,7 @@ export default {
         .then((res) => {
           if (res.data.error_type) {
             self.$emit("error_occured", res.data);
+            this.loading = false;
           } else {
             self.$emit("dataframe_filtered", res);
             this.$nextTick(() => {

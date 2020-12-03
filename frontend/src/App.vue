@@ -338,7 +338,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          this.unexpected_error_occured(error)
         });
     },
     parse_dataframe_json() {
@@ -364,6 +364,10 @@ export default {
       this.loading.state = false;
       this.error = error;
       console.log(this.error);
+    },
+    unexpected_error_occured(error) {
+      console.log(error)
+      this.loading.state = false;
     },
     redirect_to_config(res) {
       // this.config = null
