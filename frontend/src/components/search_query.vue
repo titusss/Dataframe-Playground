@@ -3,7 +3,7 @@
     <loading v-if="loading" :increment="20" style="position: fixed;z-index: 100;top: 0;left: 0;width: 100vw;" />
     <b-form @submit="onSubmit" inline>
       <b-card bg-variant="light" v-for="(form_block_array, index) in query" v-bind:key="index" class="block-wrapper">
-        <div class="form" v-for="form_block in form_block_array" v-bind:key="form_block">
+        <div class="form" v-for="form_block in form_block_array" v-bind:key="form_block.id + String(index)">
           <div class="form-block" v-for="form in form_block.forms.items" v-bind:key="form.id">
             <label v-if="form.label" :for="form.id">{{ form.label }}</label>
             <!-- dropdown -->
@@ -23,6 +23,22 @@
               class="mb-2 mr-sm-2 mb-sm-0"
               required
             ></input_autocomplete>
+            <!-- tag select dropdown -->
+            <b-form-tags v-if="form.type === 'b-form-tags'" :id="form.id" v-model="form.selected" add-on-change no-outer-focus required class="mb-2 mr-sm-2 mb-sm-0 tags-form">
+              <template v-slot="{ tags, inputAttrs, inputHandlers, disabled, removeTag }">
+                <ul v-if="tags.length > 0" class="list-inline d-inline-block mb-0">
+                  <li v-for="tag in tags" :key="tag" class="list-inline-item">
+                    <b-form-tag @remove="removeTag(tag)" :title="tag" :disabled="disabled" variant="secondary">{{ tag }}</b-form-tag>
+                  </li>
+                </ul>
+                <b-form-select size="sm" v-bind="inputAttrs" v-on="inputHandlers" :disabled="disabled || availableOptions(form).length === 0" :options="availableOptions(form)" class="mb-0 mr-sm-0 mb-sm-0 tags-select">
+                  <template v-slot:first>
+                    <!-- This is required to prevent bugs with Safari -->
+                    <option disabled value>Add columns...</option>
+                  </template>
+                </b-form-select>
+              </template>
+            </b-form-tags>
             <!-- log-input and -preview -->
             <div v-if="form.type === 'int-input'">
               <b-form-input :id="form.id" v-model="form.selected" size="sm" class="mb-2 mr-sm-2 mb-sm-0 short-form" :style="form.style" type="number" :min="form.min" :max="form.max" required></b-form-input>
@@ -150,20 +166,10 @@ export default {
     input_autocomplete,
     loading,
   },
-  // watch: {
-  //   query: function() {
-  //     console.log(this.query);
-  //   }
-  // },
   methods: {
-    // get_text_from_value(obj) {
-    //   console.log(obj.options.length)
-    //   for(var i=0;i<obj.options.length;i++) {
-    //     if(obj.options[i].value === obj.selected) {
-    //       return obj.options[i].text
-    //     }
-    //   }
-    // },
+    availableOptions(form) {
+      return form.options.filter((opt) => form.selected.indexOf(opt) === -1);
+    },
     deep_copy(input) {
       let output, value, key;
       if (typeof input !== "object" || input === null) {
@@ -189,7 +195,7 @@ export default {
                   // Convert annotation id's to annotation name
                   let selected_parent = block.items[form].source.items.find((item) => item.id === block.items[form].selected);
                   block.items[form].selected = selected_parent.name;
-                  block.items[form].server_selected = selected_parent
+                  block.items[form].server_selected = selected_parent;
                 }
               }
               this.add_query_block(block, block_name, this.server_queries[i]["id"]);
@@ -206,7 +212,6 @@ export default {
       added_block["block_name"] = index;
       added_block["id"] = id;
       this.query.push([added_block]);
-      // console.log(this.query);
     },
     guidGenerator() {
       return (Math.random() * 1001) | 0;
@@ -302,14 +307,18 @@ export default {
           // if else, instead of checking every entry for two diffferent conditions.
           // It also might be useful to just restructure this mess.
           if (query_source[query_cat][query].items["filter_area"]) {
-            query_source[query_cat][query].items["filter_area"]["options"] = [].concat(query_source[query_cat][query].items["filter_area"]["default_options"], this.df_categories)
-          } if (query_source[query_cat][query].items["target_column"]) {
-            query_source[query_cat][query].items["target_column"]["options"] = [].concat(query_source[query_cat][query].items["target_column"]["default_options"], this.df_categories)
-          } if (query_source[query_cat][query].items["start_column"]) {
+            query_source[query_cat][query].items["filter_area"]["options"] = [].concat(query_source[query_cat][query].items["filter_area"]["default_options"], this.df_categories);
+          }
+          if (query_source[query_cat][query].items["target_column"]) {
+            query_source[query_cat][query].items["target_column"]["options"] = [].concat(query_source[query_cat][query].items["target_column"]["default_options"], this.df_categories);
+          }
+          if (query_source[query_cat][query].items["start_column"]) {
             query_source[query_cat][query].items["start_column"]["options"] = [].concat(query_source[query_cat][query].items["start_column"]["default_options"], this.df_categories);
-          } if (query_source[query_cat][query].items["end_column"]) {
+          }
+          if (query_source[query_cat][query].items["end_column"]) {
             query_source[query_cat][query].items["end_column"]["options"] = [].concat(query_source[query_cat][query].items["end_column"]["default_options"], this.df_categories);
-          } if (query_source[query_cat][query].items["counts_column"]) {
+          }
+          if (query_source[query_cat][query].items["counts_column"]) {
             query_source[query_cat][query].items["counts_column"]["options"] = [].concat(query_source[query_cat][query].items["counts_column"]["default_options"], this.df_categories);
           }
           if (query_source[query_cat][query].items["target_table"]) {
@@ -320,16 +329,15 @@ export default {
     },
   },
   created() {
-    this.filters = require(`../assets/organisms${this.active_organism.path}/filters.json`)
+    this.filters = require(`../assets/organisms${this.active_organism.path}/filters.json`);
     try {
-      this.pathways = require(`../assets/organisms${this.active_organism.path}/pathways.json`)
-    }
-    catch(e) {
-      console.log("No pathway.json found for this organism. Ignore this if the selected organism doesn't have annotation pathways.")
+      this.pathways = require(`../assets/organisms${this.active_organism.path}/pathways.json`);
+    } catch (e) {
+      console.log("No pathway.json found for this organism. Ignore this if the selected organism doesn't have annotation pathways.");
     }
     this.load_autocomplete_json();
-    for(var query_type in this.filters.items) {
-      this.load_categories_json(this.filters.items[query_type])
+    for (var query_type in this.filters.items) {
+      this.load_categories_json(this.filters.items[query_type]);
     }
     this.convert_server_query_blocks(this.filters.items);
   },
@@ -339,7 +347,7 @@ export default {
       loading: false,
       query: [],
       filters: null,
-      pathways: null
+      pathways: null,
     };
   },
 };
@@ -363,6 +371,8 @@ button {
 }
 .card-body {
   padding: 0.35rem;
+  display: flex;
+  align-items: center;
 }
 .card {
   margin-bottom: 0.5rem;
@@ -370,6 +380,7 @@ button {
 }
 .form-block {
   display: inline-flex;
+  align-items: center;
 }
 .submit-button-parent {
   flex: 1;
@@ -377,6 +388,7 @@ button {
 }
 .form {
   display: inline-flex;
+  max-width: 95%;
 }
 .short-form {
   width: 4rem !important;
@@ -389,4 +401,13 @@ button {
   border: 0.15em solid currentColor;
   border-right-color: transparent;
 } */
+.tags-select {
+  max-width: 150px !important;
+}
+.list-inline-item {
+  margin-right: 0rem !important;
+}
+.tags-form {
+  padding: 0.2rem !important;
+}
 </style>

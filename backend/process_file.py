@@ -10,7 +10,6 @@ max_y = 1
 active_matrices = [[]]
 
 def convert_to_df(input_file, extension, metadata,):
-    print(metadata["database_columns"])
     import experimental_features
     if extension == ".xlsx":
         df = pd.read_excel(input_file)

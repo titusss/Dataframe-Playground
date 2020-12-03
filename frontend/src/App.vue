@@ -16,11 +16,11 @@
       <div>
         <div class="ball-grid-pulse"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <h5 class="title initial_load_text">Loading Session</h5>
-        <small>v0.6.4-index</small>
+        <small>v0.6.6-multiindex</small>
       </div>
     </div>
-    <b-alert variant="info" show dismissible><strong class="alert-heading">Update v0.6.4-index</strong>
-      Scatterplot. New index transformations. New Filter presets for B. Theta. HIRI Heatmap supports negative values.
+    <b-alert variant="info" show dismissible><strong class="alert-heading">Update v0.6.6-multiindex</strong>
+      New multi index. Updated Salmonella sORF data. Scatterplot. New index transformations. New Filter presets for B. Theta.
     </b-alert>
     <!-- <b-progress v-if="loading.state" :value="loading.bar.value" :variant="loading.bar.variant" :key="loading.bar.variant" height="6px"></b-progress> -->
     <!-- <div class="loading" v-if="loading"><b-spinner label="Spinning"></b-spinner><span>Loading ...</span></div> -->

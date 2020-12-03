@@ -9,12 +9,12 @@
           },
           "items": {
             "target_column": {
-              "label": "Round values in column",
-              "type": "b-form-select",
+              "label": "Round values in columns",
+              "type": "b-form-tags",
               "default_options": ["all columns"],
               "options": ["all columns"],
               "id": "hide_column",
-              "selected": "all columns"
+              "selected": ["all columns"]
             },
             "round_value": {
               "label": "to decimal place",
@@ -33,28 +33,11 @@
             "query": "expression"
           },
           "items": {
-            "filter_area": {
-              "label": "Change values in ",
-              "type": "b-form-select",
-              "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
-              "id": "filter_values_area",
-              "selected": "any column"
-            },
             "logical_operator": {
-              "label": "that are",
+              "label": "Change values that are",
               "type": "b-form-select",
               "default_options": [],
-              "options": [
-                "< less than",
-                "> more than",
-                ">= more or equal to",
-                "<= less or equal to",
-                "= equal to",
-                "!= not"
-              ],
+              "options": ["< less than", "> more than", ">= more or equal to", "<= less or equal to", "= equal to", "!= not"],
               "id": "change_values_logical-operator",
               "selected": null
             },
@@ -62,6 +45,14 @@
               "type": "b-form-input",
               "id": "change_values_current-value",
               "selected": null
+            },
+            "filter_area": {
+              "label": "in ",
+              "type": "b-form-tags",
+              "default_options": ["any column", "all columns"],
+              "options": ["any column", "all columns"],
+              "id": "filter_values_area",
+              "selected": ["any column"]
             },
             "target_value": {
               "label": "to",
@@ -78,12 +69,12 @@
           },
           "items": {
             "target_column": {
-              "label": "Convert to index column",
-              "type": "b-form-select",
+              "label": "Convert to string index columns",
+              "type": "b-form-tags",
               "default_options": ["all columns"],
               "options": ["all columns"],
               "id": "to_index_column",
-              "selected": "all columns"
+              "selected": ["all columns"]
             }
           }
         },
@@ -94,12 +85,12 @@
           },
           "items": {
             "target_column": {
-              "label": "Hide column",
-              "type": "b-form-select",
+              "label": "Hide columns",
+              "type": "b-form-tags",
               "default_options": ["all columns"],
               "options": ["all columns"],
               "id": "hide_column",
-              "selected": "all columns"
+              "selected": ["all columns"]
             }
           }
         }
@@ -275,14 +266,7 @@
               "label": "Show rows with values that are",
               "type": "b-form-select",
               "default_options": [],
-              "options": [
-                "= equal to",
-                "!= not",
-                "< less than",
-                "> more than",
-                ">= more or equal to",
-                "<= less or equal to"
-              ],
+              "options": ["= equal to", "!= not", "< less than", "> more than", ">= more or equal to", "<= less or equal to"],
               "id": "filter_values_logical-operator",
               "selected": null
             },
@@ -293,13 +277,11 @@
             },
             "filter_area": {
               "label": "for ",
-              "type": "b-form-select",
+              "type": "b-form-tags",
               "default_options": ["any column", "all columns"],
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "id": "filter_values_area",
-              "selected": "any column"
+              "selected": ["any column"]
             }
           }
         }

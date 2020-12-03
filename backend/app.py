@@ -207,7 +207,6 @@ def search_query():
         import filter_dataframe
         query = json.loads(request.form['query'])
         url = json.loads(request.form['url'])
-        print(query)
         db_entry = db.visualizations.find_one(
             {"_id": ObjectId(url)}, {'_id': False})
         df = pd.read_parquet(BytesIO(db_entry['transformed_dataframe']))

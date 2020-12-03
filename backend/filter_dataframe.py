@@ -24,6 +24,7 @@ def main(query, df):
                 df_mask = list(df_mask) # Maybe bad. This converts the df_mask to a python list, only in certain circumstances. Replacing values in the 2D array isn't easy otherwise.
                 for i in range(len(df_mask)):
                     # You can swap True with False to filter for rows where ALL columns satisfy the filter_value.
+                    # any_column is a boolean.
                     if any_column in df_mask[i]:
                         df_mask[i] = any_column
                     else:
@@ -33,18 +34,16 @@ def main(query, df):
             try:
                 target_value = float(block["forms"]["target_value"])
             except ValueError:
-                target_value = block["forms"]["target_value"]
-            print(filter_area)
-            print(df_mask)
+                target_value = str(block["forms"]["target_value"])
             df[filter_area] = df[filter_area].where(~df_mask, other=target_value)
-            print(df[filter_area])
-            if type(filter_area) == list:
-                for column in filter_area:
-                    df[column] = pd.to_numeric(df[column], downcast="integer", errors="ignore") # If all values of the target column are now numeric, try to change the dtype of that column to numeric
-            else:
-                df[filter_area] = pd.to_numeric(df[filter_area], downcast="integer", errors="ignore")
+            # TO-DO fix numeric to string replacement
+            for column in filter_area:
+                try:
+                    df[column] = pd.to_numeric(df[column], downcast="integer") # If all values of the target column are now numeric, try to change the dtype of that column to numeric
+                except Exception:
+                    df[column] = df[column].astype(str)
         elif block_type == "hide":
-            if block["forms"]["target_column"] == "all columns":
+            if "all columns" in block["forms"]["target_column"]:
                 target_area = list(df.columns)
             else:
                 target_area = block["forms"]["target_column"]
@@ -66,11 +65,11 @@ def main(query, df):
             df.drop(block["forms"]["target_column"], axis=1, inplace=True) # Remove base columns.
             df.replace([np.inf, -np.inf], np.nan, inplace=True)
         elif block_type == "round":
-            if block["forms"]["target_column"] == "all columns":
+            if "all columns" in block["forms"]["target_column"]:
                 target_area = list(df.columns)
             else:
                 target_area = block["forms"]["target_column"]
-            df[filter_area] = np.round(df[filter_area], int(block["forms"]["round_value"]))
+            df[target_area] = np.round(df[target_area], int(block["forms"]["round_value"]))
         elif block_type == "transcript_length":
             metadata = {
                 "start_column_title": filter_area,
@@ -88,7 +87,7 @@ def main(query, df):
             import transform_dataframe
             df = transform_dataframe.main("calculate_tpm", metadata, df, unfiltered_df)
         elif block_type == "convert_to_index":
-            if block["forms"]["target_column"] == "all columns":
+            if "all columns" in block["forms"]["target_column"]:
                 target_area = list(df.columns)
             else:
                 target_area = [block["forms"]["target_column"]]
@@ -105,7 +104,12 @@ def setup_query_parameters(forms, df):
     # NOTE: This should be reworked. There should be at least 4 functions: 1 for "Filters", 1 for "Hide", 1 for "Transformation", 1 for "Replace"
     any_column = True # If this is set to False, all columns must satisfy the filter value.
     try:
-        if forms["filter_area"] == "all columns":
+        if "any column" in forms["filter_area"]:
+            forms["filter_area"] = "any column"
+        elif "all columns" in forms["filter_area"]:
+            forms["filter_area"] = "all columns"
+            any_column = False
+        else:
             any_column = False
     except:
         pass
@@ -115,7 +119,7 @@ def setup_query_parameters(forms, df):
         # If no comparison operator is explicity given, set it to "equal (=)"
         comparison_operator = operator.eq
     try:
-        if forms["filter_area"] == "any column" or forms["filter_area"] == "all columns":
+        if "any column" in forms["filter_area"] or "all columns" in forms["filter_area"]:
             if comparison_operator == operator.eq:
                 filter_area = list(df.columns)
             else:
