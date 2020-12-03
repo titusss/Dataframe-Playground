@@ -265,15 +265,8 @@
             "logical_operator": {
               "label": "Show rows with values that are",
               "type": "b-form-select",
-              "options": [
-                "= equal to",
-                "!= not",
-                "< less than",
-                "> more than",
-                ">= more or equal to",
-                "<= less or equal to"
-              ],
               "default_options": [],
+              "options": ["= equal to", "!= not", "< less than", "> more than", ">= more or equal to", "<= less or equal to"],
               "id": "filter_values_logical-operator",
               "selected": null
             },
@@ -284,13 +277,11 @@
             },
             "filter_area": {
               "label": "for ",
-              "type": "b-form-select",
-              "options": [
-                "any column", "all columns"
-              ],
-              "id": "filter_values_area",
+              "type": "b-form-tags",
               "default_options": ["any column", "all columns"],
-              "selected": "any column"
+              "options": ["any column", "all columns"],
+              "id": "filter_values_area",
+              "selected": ["any column"]
             }
           }
         }
