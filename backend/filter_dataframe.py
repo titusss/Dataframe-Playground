@@ -148,8 +148,12 @@ def filter_for(forms, properties, df, comparison_operator, filter_area):
                 raise NameError
             # print('df_mask: ', df_mask)
         except ValueError: # Filter for string or semi-colon-seperated list of strings
-            filter_value = str(forms["filter_value"]).split('; ')
-            df_mask = df[filter_area].isin(filter_value).values
+            if comparison_operator == operator.eq:
+                filter_value = str(forms["filter_value"]).split('; ')
+                df_mask = df[filter_area].isin(filter_value).values
+            elif comparison_operator == operator.ne:
+                filter_value = str(forms["filter_value"]).split('; ')
+                df_mask = ~df[filter_area].isin(filter_value).values
         except NameError:
             # numeric_columns = df.select_dtypes(include=np.number).columns.tolist()
             # print([filter_area])
