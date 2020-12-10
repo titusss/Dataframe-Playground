@@ -2,17 +2,17 @@
   <div>
     <loading v-if="loading" :increment="20" style="position: fixed;z-index: 100;top: 0;left: 0;width: 100vw;" />
     <b-form @submit="onSubmit" inline>
-      <b-card bg-variant="light" v-for="(form_block_array, index) in query" v-bind:key="index" class="block-wrapper">
-        <div class="form" v-for="form_block in form_block_array" v-bind:key="form_block.id + String(index)">
+      <b-card bg-variant="light" v-for="(form_block_array, block_index) in query" v-bind:key="block_index" class="block-wrapper">
+        <div class="form" v-for="form_block in form_block_array" v-bind:key="form_block.id + String(block_index)">
           <div class="form-block" v-for="form in form_block.forms.items" v-bind:key="form.id">
             <label v-if="form.label" :for="form.id">{{ form.label }}</label>
             <!-- dropdown -->
             <b-form-select v-if="form.type === 'b-form-select'" :options="form.options" :value="null" :id="form.id" v-model="form.selected" size="sm" class="mb-2 mr-sm-2 mb-sm-0" required></b-form-select>
             <!-- input -->
-            <b-form-input v-if="form.type === 'b-form-input'" :id="form.id" v-model="form.selected" size="sm" class="mb-2 mr-sm-2 mb-sm-0" :style="form.style" required></b-form-input>
+            <b-form-input v-else-if="form.type === 'b-form-input'" :id="form.id" v-model="form.selected" size="sm" class="mb-2 mr-sm-2 mb-sm-0" :style="form.style" required></b-form-input>
             <!-- autocomplete -->
             <input_autocomplete
-              v-if="form.type === 'input-autocomplete'"
+              v-else-if="form.type === 'input-autocomplete'"
               :id="form.id"
               v-model="form.selected"
               v-bind:term_id="form.selected"
@@ -24,7 +24,7 @@
               required
             ></input_autocomplete>
             <!-- tag select dropdown -->
-            <b-form-tags v-if="form.type === 'b-form-tags'" :id="form.id" v-model="form.selected" add-on-change no-outer-focus required class="mb-2 mr-sm-2 mb-sm-0 tags-form">
+            <b-form-tags v-else-if="form.type === 'b-form-tags'" :id="form.id" v-model="form.selected" add-on-change no-outer-focus required class="mb-2 mr-sm-2 mb-sm-0 tags-form">
               <template v-slot="{ tags, inputAttrs, inputHandlers, disabled, removeTag }">
                 <ul v-if="tags.length > 0" class="list-inline d-inline-block mb-0">
                   <li v-for="tag in tags" :key="tag" class="list-inline-item">
@@ -40,7 +40,7 @@
               </template>
             </b-form-tags>
             <!-- log-input and -preview -->
-            <div v-if="form.type === 'int-input'">
+            <div v-else-if="form.type === 'int-input'">
               <b-form-input :id="form.id" v-model="form.selected" size="sm" class="mb-2 mr-sm-2 mb-sm-0 short-form" :style="form.style" type="number" :min="form.min" :max="form.max" required></b-form-input>
               <div v-if="form.formula" class="log-preview">
                 <b-badge variant="dark" class="log-preview-badge">
@@ -58,27 +58,12 @@
                 </b-badge>
               </div>
             </div>
+            <b-form-select v-else-if="form.type === 'b-form-select-sync' && form_block_array[1].forms.items.operator" :options="form.options" :value="null" :id="form.id" v-model="form_block_array[1].forms.items.operator.selected" size="sm" class="mb-2 mr-sm-2 mb-sm-0" required></b-form-select>
           </div>
         </div>
-        <!-- <b-dropdown
-          v-if="form_block_array[form_block_array.length-1]['logic']"
-          size="sm"
-          variant="link"
-          pill
-          id="add-dropdown"
-          text="Add..."
-          class="m-md-2 rounded"
-          no-caret
-          toggle-class="text-decoration-none"
-        >
-          <template v-slot:button-content>
-            <b-icon icon="plus-circle"></b-icon>
-          </template>
-          <b-dropdown-item v-on:click="add_inline_query_block('and', form_block_array)">and</b-dropdown-item>
-          <b-dropdown-item v-on:click="add_inline_query_block('or', form_block_array)">or</b-dropdown-item>
-        </b-dropdown>
+
         <b-dropdown
-          v-if="form_block_array[form_block_array.length-1]['logic'] === false"
+          v-if="form_block_array[form_block_array.length - 1]['logic'] && form_block_array[0].forms.properties.type === 'filter'"
           size="sm"
           variant="link"
           pill
@@ -91,16 +76,36 @@
           <template v-slot:button-content>
             <b-icon icon="plus-circle"></b-icon>
           </template>
-          <b-dropdown-item
-            v-on:click="add_inline_query_block('change_values', form_block_array)"
-          >Change values...</b-dropdown-item>
-          <b-dropdown-item
-            v-on:click="add_inline_query_block('values_in_column', form_block_array)"
-          >Values in column...</b-dropdown-item>
-          <b-dropdown-item
-            v-on:click="add_inline_query_block('values_in_row', form_block_array)"
-          >Values in row...</b-dropdown-item>
-        </b-dropdown>-->
+          <b-dropdown-item v-for="(operator, index) in filters.items.other.logical_operators" :key="index" v-on:click="add_query_block(operator, index, guidGenerator(), false, [block_index, form_block_array.length])">{{
+            index
+          }}</b-dropdown-item>
+          <!-- <b-dropdown-item v-for="(template, index) in filter_template_group" :key="index" v-on:click="add_query_block(template, index, guidGenerator(), true, false)">{{ index }}</b-dropdown-item> -->
+          <!-- v-on:click="add_query_block(this.logical_operators, 'and', guidGenerator(), false)">and</b-dropdown-item> -->
+          <!-- Filter values{ "properties": { "type": "filter", "query": "expression" }, "items": { "logical_operator": { "label": "Show rows with values that are", "type": "b-form-select", "default_options": [], "options": [ "= equal to", "!= not", "< less than", "> more than", ">= more or equal to", "<= less or equal to" ], "id": "filter_values_logical-operator", "selected": null }, "filter_value": { "type": "b-form-input", "id": "filter_values_value", "selected": null }, "filter_area": { "label": "for ", "type": "b-form-tags", "default_options": [ "any column", "all columns" ], "options": [ "any column", "all columns", "locus tag", "(sdfds) logFC", "(sdfds) logCPM", "(sdfds) PValue", "(sdfds) FDR" ], "id": "filter_values_area", "selected": [ "any column" ] } } } -->
+          <!-- <b-dropdown-item v-on:click="add_query_block(form_block_array, 'or', guidGenerator(), false)">or</b-dropdown-item> -->
+        </b-dropdown>
+
+        <b-dropdown v-else-if="form_block_array[0].forms.properties.type === 'filter'" size="sm" variant="link" pill id="add-dropdown" text="Add..." class="m-md-2 rounded" no-caret toggle-class="text-decoration-none">
+          <template v-slot:button-content>
+            <b-icon icon="plus-circle"></b-icon>
+          </template>
+          <b-dropdown-group v-for="(filter_template_group, index) in filters.items.templates" :key="index" :header="index" id="dropdown-group-numeric">
+            <b-dropdown-item v-for="(template, index) in filter_template_group" :key="index" v-on:click="add_query_block(template, index, guidGenerator(), true, [block_index, form_block_array.length])">{{ index }}</b-dropdown-item>
+            <b-dropdown-divider></b-dropdown-divider>
+          </b-dropdown-group>
+          <b-dropdown-group v-for="(filter_preset_group, index) in filters.items.presets" :key="index" :header="index" id="dropdown-group-numeric">
+            <b-dropdown-item v-for="(preset, index) in filter_preset_group" :key="index" v-on:click="add_query_block(preset, index, guidGenerator(), true, [block_index, form_block_array.length])">{{ index }}</b-dropdown-item>
+            <b-dropdown-divider></b-dropdown-divider>
+          </b-dropdown-group>
+        </b-dropdown>
+        <!-- <b-dropdown v-if="form_block_array[form_block_array.length - 1]['logic'] === false" size="sm" variant="link" pill id="add-dropdown" text="Add..." class="m-md-2 rounded" no-caret toggle-class="text-decoration-none">
+          <template v-slot:button-content>
+            <b-icon icon="plus-circle"></b-icon>
+          </template>
+          <b-dropdown-item v-on:click="add_inline_query_block('change_values', form_block_array)">Change values...</b-dropdown-item>
+          <b-dropdown-item v-on:click="add_inline_query_block('values_in_column', form_block_array)">Values in column...</b-dropdown-item>
+          <b-dropdown-item v-on:click="add_inline_query_block('values_in_row', form_block_array)">Values in row...</b-dropdown-item>
+        </b-dropdown> -->
         <b-button size="sm" variant="link" v-on:click="remove_query_block(form_block_array)">
           <b-icon icon="trash"></b-icon>
         </b-button>
@@ -112,17 +117,18 @@
         >
         <template v-slot:button-content><b-icon icon="plus-circle-fill"></b-icon> Add Filter </template>
         <b-dropdown-group v-for="(filter_template_group, index) in filters.items.templates" :key="index" :header="index" id="dropdown-group-numeric">
-          <b-dropdown-item v-for="(template, index) in filter_template_group" :key="index" v-on:click="add_query_block(template, index, guidGenerator())">{{ index }}</b-dropdown-item>
+          <b-dropdown-item v-for="(template, index) in filter_template_group" :key="index" v-on:click="add_query_block(template, index, guidGenerator(), true, false)">{{ index }}</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
         </b-dropdown-group>
       </b-dropdown>
+
       <b-dropdown size="sm" variant="link" pill id="load-query-dropdown" text="Add..." class="m-md-2 rounded" no-caret toggle-class="text-decoration-none">
         <b-popover id="tutorial_popover" :no-fade="true" triggers placement="rightbottom" target="load-query-dropdown" title="3. Load preset filters"
           >Load pre-filled filters to search for pathogenicity islands, sORF, or just faulty data.</b-popover
         >
         <template v-slot:button-content> <b-icon icon="intersect"></b-icon> Preset Filters </template>
         <b-dropdown-group v-for="(filter_preset_group, index) in filters.items.presets" :key="index" :header="index" id="dropdown-group-numeric">
-          <b-dropdown-item v-for="(preset, index) in filter_preset_group" :key="index" v-on:click="add_query_block(preset, index, guidGenerator())">{{ index }}</b-dropdown-item>
+          <b-dropdown-item v-for="(preset, index) in filter_preset_group" :key="index" v-on:click="add_query_block(preset, index, guidGenerator(), true, false)">{{ index }}</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
         </b-dropdown-group>
       </b-dropdown>
@@ -133,7 +139,7 @@
         >
         <template v-slot:button-content> <b-icon icon="calculator-fill"></b-icon>Transform Data </template>
         <b-dropdown-group v-for="(filter_preset_group, index) in filters.items.transformations" :key="index" :header="index" id="dropdown-group-numeric">
-          <b-dropdown-item v-for="(preset, index) in filter_preset_group" :key="index" v-on:click="add_query_block(preset, index, guidGenerator())">{{ index }}</b-dropdown-item>
+          <b-dropdown-item v-for="(preset, index) in filter_preset_group" :key="index" v-on:click="add_query_block(preset, index, guidGenerator(), true, false)">{{ index }}</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
         </b-dropdown-group>
       </b-dropdown>
@@ -167,6 +173,10 @@ export default {
     loading,
   },
   methods: {
+    syncedForm(form_block, form) {
+      print(form_block, form);
+      return form.selected;
+    },
     availableOptions(form) {
       return form.options.filter((opt) => form.selected.indexOf(opt) === -1);
     },
@@ -183,38 +193,70 @@ export default {
       return output;
     },
     convert_server_query_blocks(templates) {
-      for (let i in this.server_queries) {
-        let block_name = this.server_queries[i].name;
-        template_type: for (let type in templates) {
-          for (let query_group in templates[type]) {
-            if (block_name in templates[type][query_group] === true) {
-              let block = this.deep_copy(templates[type][query_group][block_name]);
-              for (let form in this.server_queries[i].forms) {
-                block.items[form].selected = this.server_queries[i].forms[form];
-                if (this.server_queries[i].forms.filter_annotation && block.items[form].source) {
-                  // Convert annotation id's to annotation name
-                  let selected_parent = block.items[form].source.items.find((item) => item.id === block.items[form].selected);
-                  block.items[form].selected = selected_parent.name;
-                  block.items[form].server_selected = selected_parent;
+      for (var i = 0; i < this.server_queries.length; i++) {
+        for (var j = 0; j < this.server_queries[i].length; j++) {
+          let block_name = this.server_queries[i][j].name;
+          template_type: for (let type in templates) {
+            for (let query_group in templates[type]) {
+              if (block_name in templates[type][query_group] === true) {
+                let block = this.deep_copy(templates[type][query_group][block_name]);
+                for (let form in this.server_queries[i][j].forms) {
+                  block.items[form].selected = this.server_queries[i][j].forms[form];
+                  if (this.server_queries[i][j].forms.filter_annotation && block.items[form].source) {
+                    // Convert annotation id's to annotation name
+                    let selected_parent = block.items[form].source.items.find((item) => item.id === block.items[form].selected);
+                    block.items[form].selected = selected_parent.name;
+                    block.items[form].server_selected = selected_parent;
+                  }
                 }
+                this.add_query_block(block, block_name, this.server_queries[i][j]["id"], this.server_queries[i][j]["logic"], this.server_queries[i][j]["inline_coordinates"]);
+                break template_type;
               }
-              this.add_query_block(block, block_name, this.server_queries[i]["id"]);
-              break template_type;
             }
           }
         }
       }
     },
-    add_query_block(block, index, id) {
+    prepare_query_block(forms, index, id, logic, inline_coordinates) {
       let added_block = {};
-      added_block["forms"] = this.deep_copy(block);
-      added_block["logic"] = true;
-      added_block["block_name"] = index;
+      added_block["forms"] = this.deep_copy(forms);
+      added_block["logic"] = logic;
+      added_block["name"] = index;
       added_block["id"] = id;
-      this.query.push([added_block]);
+      added_block["inline_coordinates"] = inline_coordinates;
+      return added_block;
     },
+    add_query_block(forms, index, id, logic, inline_coordinates) {
+      if (!inline_coordinates) {
+        this.query.push([this.prepare_query_block(forms, index, id, logic, inline_coordinates)]);
+      } else {
+        this.query[inline_coordinates[0]].splice(inline_coordinates[1], 0, this.prepare_query_block(forms, index, id, logic, inline_coordinates));
+      }
+    },
+    // add_inline_query_block(block, form) {
+    //   console.log(block);
+    //   console.log(form);
+    //   console.log(this.query);
+    //   let added_block = this.query.find(x => x.id === form.id)[0];
+    //   console.log(added_block);
+    //   if (block === "or" || block === "and") {
+    //     added_block["logic"] = false;
+    //   } else {
+    //     added_block["logic"] = true;
+    //   }
+    //   console.log(this.query);
+    //   this.query[this.query.indexOf(form)].push(added_block);
+    //   console.log(this.query);
+    //   this.id++;
+    // },
     guidGenerator() {
-      return (Math.random() * 1001) | 0;
+      return (
+        "_" +
+        Math.random()
+          .toString(36)
+          .substr(2, 9)
+      );
+      // return (Math.random() * 1001) | 0;
     },
     restructure_query() {
       let structured_query = [];
@@ -222,28 +264,24 @@ export default {
         for (let sub_array in this.query[array]) {
           let structured_query_block = {};
           // console.log(this.query[array][sub_array]);
-          structured_query_block["name"] = this.query[array][sub_array]["block_name"];
+          structured_query_block["name"] = this.query[array][sub_array]["name"];
           structured_query_block["properties"] = this.query[array][sub_array]["forms"]["properties"];
           structured_query_block["id"] = this.query[array][sub_array]["id"];
+          structured_query_block["logic"] = this.query[array][sub_array]["logic"];
+          structured_query_block["inline_coordinates"] = this.query[array][sub_array]["inline_coordinates"];
           structured_query_block["forms"] = {};
           for (let form in this.query[array][sub_array]["forms"]["items"]) {
             structured_query_block["forms"][form] = this.query[array][sub_array]["forms"]["items"][form]["selected"];
           }
-          structured_query.push(structured_query_block);
+          if (structured_query_block["inline_coordinates"]) {
+            structured_query[structured_query_block["inline_coordinates"][0]].splice(structured_query_block["inline_coordinates"][1], 0, structured_query_block);
+          } else {
+            structured_query.push([structured_query_block]);
+          }
         }
       }
       return structured_query;
     },
-    // add_inline_query_block(block, form) {
-    //   let added_block = this.form_blocks[block];
-    //   if (block === "or" || block === "and") {
-    //     added_block["logic"] = false;
-    //   } else {
-    //     added_block["logic"] = true;
-    //   }
-    //   this.query[this.query.indexOf(form)].push(added_block);
-    //   this.id++;
-    // },
     remove_query_block(block_array) {
       const index = this.query.indexOf(block_array);
       if (index > -1) {
@@ -251,7 +289,7 @@ export default {
       }
       for (let i in this.server_queries) {
         // Optional: Push filter query as soon as a filter is removed
-        if (this.server_queries[i]["id"] === block_array[0]["id"]) {
+        if (this.server_queries[i][0]["id"] === block_array[0]["id"]) {
           this.loading = true;
           this.post_query();
           break;
@@ -343,7 +381,6 @@ export default {
   },
   data() {
     return {
-      test: 5,
       loading: false,
       query: [],
       filters: null,
@@ -370,8 +407,8 @@ button {
   margin: 0 !important;
 }
 .card-body {
-  padding: 0.35rem;
-  display: flex;
+  padding: 0.35rem 0.35rem 0 0.35rem;
+  display: block;
   align-items: center;
 }
 .card {
@@ -388,6 +425,7 @@ button {
 }
 .form {
   display: inline-flex;
+  padding-bottom: 0.35rem;
   max-width: 95%;
 }
 .short-form {

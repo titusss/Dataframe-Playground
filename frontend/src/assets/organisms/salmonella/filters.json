@@ -189,20 +189,16 @@
             "filter_area": {
               "label": "Calculate length between transcript start column ",
               "type": "b-form-select",
-              "options": [
-                {"value": null, "text": "Select 'start' column"}
-              ],
-              "default_options": [{"value": null, "text": "Select 'start' column"}],
+              "options": [{ "value": null, "text": "Select 'start' column" }],
+              "default_options": [{ "value": null, "text": "Select 'start' column" }],
               "id": "filter_values_area",
               "selected": null
             },
             "target_column": {
               "label": "and transcript end column",
               "type": "b-form-select",
-              "options": [
-                {"value": null, "text": "Select 'end' column" }
-              ],
-              "default_options": [{"value": null, "text": "Select 'end' column" }],
+              "options": [{ "value": null, "text": "Select 'end' column" }],
+              "default_options": [{ "value": null, "text": "Select 'end' column" }],
               "id": "filter_values_area",
               "selected": null
             },
@@ -223,30 +219,24 @@
             "counts_column": {
               "label": "Calculate TPM for column ",
               "type": "b-form-select",
-              "options": [
-                {"value": null, "text": "Select counts column"}
-              ],
-              "default_options": [{"value": null, "text": "Select counts column"}],
+              "options": [{ "value": null, "text": "Select counts column" }],
+              "default_options": [{ "value": null, "text": "Select counts column" }],
               "id": "filter_values_area",
               "selected": null
             },
             "start_column": {
               "label": "Transcript start column",
               "type": "b-form-select",
-              "options": [
-                {"value": null, "text": "Select 'start' column"}
-              ],
-              "default_options": [{"value": null, "text": "Select 'start' column"}],
+              "options": [{ "value": null, "text": "Select 'start' column" }],
+              "default_options": [{ "value": null, "text": "Select 'start' column" }],
               "id": "filter_values_area",
               "selected": null
             },
             "end_column": {
               "label": "Transcript end column",
               "type": "b-form-select",
-              "options": [
-                {"value": null, "text": "Select 'end' column" }
-              ],
-              "default_options": [{"value": null, "text": "Select 'end' column" }],
+              "options": [{ "value": null, "text": "Select 'end' column" }],
+              "default_options": [{ "value": null, "text": "Select 'end' column" }],
               "id": "filter_values_area",
               "selected": null
             }
@@ -307,9 +297,7 @@
             "filter_area": {
               "label": "for ",
               "type": "b-form-select",
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
@@ -336,9 +324,7 @@
             "filter_area": {
               "label": "for ",
               "type": "b-form-select",
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
@@ -365,9 +351,7 @@
             "filter_area": {
               "label": "for ",
               "type": "b-form-select",
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
@@ -393,9 +377,7 @@
             "filter_area": {
               "label": "in ",
               "type": "b-form-select",
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
@@ -419,9 +401,7 @@
             "filter_area": {
               "label": "in ",
               "type": "b-form-select",
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
@@ -443,9 +423,7 @@
             "filter_area": {
               "label": "in ",
               "type": "b-form-select",
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
@@ -467,9 +445,7 @@
             "filter_area": {
               "label": "in ",
               "type": "b-form-select",
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
@@ -491,9 +467,7 @@
             "filter_area": {
               "label": "in ",
               "type": "b-form-select",
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
@@ -515,9 +489,7 @@
             "filter_area": {
               "label": "in ",
               "type": "b-form-select",
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
@@ -539,9 +511,7 @@
             "filter_area": {
               "label": "in ",
               "type": "b-form-select",
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
@@ -563,9 +533,7 @@
             "filter_area": {
               "label": "in ",
               "type": "b-form-select",
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
@@ -587,9 +555,7 @@
             "filter_area": {
               "label": "in ",
               "type": "b-form-select",
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
@@ -611,12 +577,44 @@
             "filter_area": {
               "label": "in ",
               "type": "b-form-select",
-              "options": [
-                "any column", "all columns"
-              ],
+              "options": ["any column", "all columns"],
               "default_options": ["any column", "all columns"],
               "id": "filter_annotation_area",
               "selected": "any column"
+            }
+          }
+        }
+      }
+    },
+    "other": {
+      "logical_operators": {
+        "or": {
+          "properties": {
+            "type": "logic"
+          },
+          "items": {
+            "operator": {
+              "label": "",
+              "type": "b-form-select-sync",
+              "default_options": ["or", "and"],
+              "options": ["or", "and"],
+              "id": "logical_and_or-or",
+              "selected": "or"
+            }
+          }
+        },
+        "and": {
+          "properties": {
+            "type": "logic"
+          },
+          "items": {
+            "operator": {
+              "label": "",
+              "type": "b-form-select-sync",
+              "default_options": ["or", "and"],
+              "options": ["or", "and"],
+              "id": "logical_and_or-and",
+              "selected": "and"
             }
           }
         }
