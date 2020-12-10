@@ -36,7 +36,7 @@ def main(query, df):
                 df_mask = filter_for(
                     block["forms"], block["properties"], df, comparison_operator, filter_area)
                 # If the mask_area is larger than one column, we need to convert the mask from a 2D array to a 1D list.
-                if len(df_mask.shape) > 1:
+                if df_mask and len(df_mask.shape) > 1:
                     # Maybe bad. This converts the df_mask to a python list, only in certain circumstances. Replacing values in the 2D array isn't easy otherwise.
                     df_mask = list(df_mask)
                     for j in range(len(df_mask)):
