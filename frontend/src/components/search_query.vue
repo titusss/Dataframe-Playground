@@ -173,6 +173,13 @@ export default {
     loading,
   },
   methods: {
+    adjustOldQueries() {
+      if (typeof this.query[0] === 'object' && this.query[0] !== null) {
+        for (var i = 0; i < this.query.length; i++) {
+          this.query[i] = [this.query[i]]
+        }
+      }
+    },
     syncedForm(form_block, form) {
       print(form_block, form);
       return form.selected;
@@ -374,6 +381,7 @@ export default {
       console.log("No pathway.json found for this organism. Ignore this if the selected organism doesn't have annotation pathways.");
     }
     this.load_autocomplete_json();
+    this.adjustOldQueries();
     for (var query_type in this.filters.items) {
       this.load_categories_json(this.filters.items[query_type]);
     }
