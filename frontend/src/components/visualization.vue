@@ -12,15 +12,9 @@ export default {
   },
   created() {
     this.vis_link
-    console.log("jajaja");
     // this.vis_link = this.$route.query.vis
     console.log(this.vis_link);
   },
-  watch: {
-    vis_link: function (newLink, oldLink) {
-      console.log(newLink, 'aha', oldLink)
-    }
-  }
 };
 </script>
 

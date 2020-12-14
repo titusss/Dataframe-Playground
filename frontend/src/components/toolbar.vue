@@ -113,7 +113,6 @@ export default {
     };
   },
   created() {
-    console.log(this.tutorial_activated)
     this.url = window.location.href;
     if (this.locked == true) {
       this.disabled_lock = true;

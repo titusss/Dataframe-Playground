@@ -243,9 +243,16 @@ export default {
     $route: "load_config",
   },
   methods: {
+    adjustOldQueries() {
+      console.log(this.config.query);
+      if (typeof this.config.query[0] === 'object' && this.config.query[0] !== null) {
+        for (var i = 0; i < this.config.query.length; i++) {
+          this.config.query[i] = [this.config.query[i]]
+        }
+      }
+    },
     set_local_organism(organism_id) {
       this.config.active_organism_id = organism_id
-      
     },
     select_plugin(plugin) {
       if (this.config.active_matrices.length > 0) {
@@ -329,6 +336,7 @@ export default {
             this.parse_dataframe_json();
             this.active_plugin_id = this.config.active_plugin_id
             this.active_vis_link = this.get_active_vis_link(this.active_plugin_id) // PERFORMANCE: Maybe check for "", undefined, or null of active_plugin_id
+            this.adjustOldQueries()
             this.$nextTick(() => {
               this.loading.state = false;
               this.initializing = false;

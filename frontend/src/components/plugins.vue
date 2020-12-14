@@ -39,8 +39,6 @@ export default {
   watch: {
     active_plugin: {
       handler() {
-        console.log("changed");
-        console.log(this.active_plugin);
         this.toggle_selected();
       }
     }
@@ -51,10 +49,8 @@ export default {
     },
     toggle_selected() {
       if (this.id == this.active_plugin) {
-        console.log('the same')
         this.isSelected = true;
       } else {
-        console.log("different id's")
         this.isSelected = false;
       }
     }
