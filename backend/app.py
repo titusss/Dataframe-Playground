@@ -17,7 +17,7 @@ import numpy as np
 
 # instantiate the app
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}}) # enable CORS for all routes and resource types
 
 # variables
 UPLOAD_FOLDER = '/static'  # NOTE: Change this to /uploads in production
