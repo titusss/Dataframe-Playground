@@ -14,16 +14,11 @@ from io import BytesIO
 import pandas as pd
 import numpy as np
 
-
-# instantiate the app
-app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}}) # enable CORS for all routes and resource types
-
 # variables
 UPLOAD_FOLDER = '/static'  # NOTE: Change this to /uploads in production
 ALLOWED_EXTENSIONS_MATRIX = {'txt', 'xlsx', 'csv', 'tsv'}
 ALLOWED_EXTENSIONS_ICON = {'svg', 'png', 'jpg', 'jpeg', 'gif'}
-PRE_CONFIGURED_PLUGINS = [ObjectId('5f984ac1b478a2c8653ed827'), ObjectId('5pf284a560831e4a42a30d698'), ObjectId('5f284bc60831e4a42a30d699'), ObjectId('5fc156db0ccdd1e1e454f116')]
+PRE_CONFIGURED_PLUGINS = [ObjectId('5f984ac1b478a2c8653ed827'), ObjectId('5f284a560831e4a42a30d698'), ObjectId('5f284bc60831e4a42a30d699'), ObjectId('5fc156db0ccdd1e1e454f116')]
 MATRIX = [
     {
         "id": uuid.uuid4().hex,
@@ -106,8 +101,13 @@ ERROR_MESSAGES = {
         }
     },
 }
-
+# instantiate the app
+app = Flask(__name__)
+# app.secret_key = "super secret key"  # NOTE: INSECURE AND FOR DEBUGGING PURPOSES
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+CORS(app, resources={r'/*': {'origins': '*'}})  # enable CORS
+# cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 # MongoDB
 client = MongoClient(os.environ.get("mongocredential"))
 # client = MongoClient() # For offline testing.
@@ -117,6 +117,8 @@ plugins = db.plugins
 
 # configuration
 DEBUG = True
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
@@ -354,7 +356,7 @@ def add_matrix():
             metadata['formatting']['file']['decimal_character'] = metadata['source']['database']['decimal_character'] # This is because all database files were exported with german decimals
         source, extension = upload_file(request, ALLOWED_EXTENSIONS_MATRIX, metadata)
         db_entry_id = process_file.add_matrix(source, metadata, extension, db, PRE_CONFIGURED_PLUGINS)
-        return Response(dumps({'db_entry_id': db_entry_id}, allow_nan=True), mimetype="application/json")
+        return Response(dumps({'db_entry_id': db_entry_id}, allow_nan=True), mimetype='application/json')
     except Exception as e:
         print(str(e))
         return respond_error(ERROR_MESSAGES['upload_error']['expected']['type'], str(e))
