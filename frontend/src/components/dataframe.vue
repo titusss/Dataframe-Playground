@@ -165,6 +165,7 @@ table {
   background-color: #fff;
 }
 .table-wrapper {
+  line-height: normal;
   overflow: auto;
   border-radius: 8px;
 }

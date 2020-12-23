@@ -4,7 +4,7 @@
     <error_alert
       :error="error"
       @error_alert_dismissed="error = null"
-      style="position:fixed;top:10px;width:100vw;z-index:1060;"
+      style="position:fixed;top:10px;width:100vw;z-index:1100;"
     />
     <loading
       v-if="this.loading.state"
@@ -16,10 +16,10 @@
       <div>
         <div class="ball-grid-pulse"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <h5 class="title initial_load_text">Loading Session</h5>
-        <small>v0.7.1-logic</small>
+        <small>v0.7.3-logic</small>
       </div>
     </div>
-    <b-alert variant="info" show dismissible><strong class="alert-heading">Update v0.7.1-logic</strong>
+    <b-alert variant="info" show dismissible><strong class="alert-heading">Update v0.7.3-logic</strong>
       Added or/and gating.
     </b-alert>
     <!-- <b-progress v-if="loading.state" :value="loading.bar.value" :variant="loading.bar.variant" :key="loading.bar.variant" height="6px"></b-progress> -->
@@ -243,14 +243,6 @@ export default {
     $route: "load_config",
   },
   methods: {
-    // adjustOldQueries() {
-    //   console.log(this.config.query);
-    //   if (typeof this.config.query[0] === 'object' && this.config.query[0] !== null) {
-    //     for (var i = 0; i < this.config.query.length; i++) {
-    //       this.config.query[i] = [this.config.query[i]]
-    //     }
-    //   }
-    // },
     set_local_organism(organism_id) {
       this.config.active_organism_id = organism_id
     },
@@ -336,12 +328,10 @@ export default {
             this.parse_dataframe_json();
             this.active_plugin_id = this.config.active_plugin_id
             this.active_vis_link = this.get_active_vis_link(this.active_plugin_id) // PERFORMANCE: Maybe check for "", undefined, or null of active_plugin_id
-            // this.adjustOldQueries()
             this.$nextTick(() => {
               this.loading.state = false;
               this.initializing = false;
               console.log(this.config);
-              // console.log(this.config.plugins[0]);
             });
           }
         })
@@ -374,7 +364,8 @@ export default {
       console.log(this.error);
     },
     unexpected_error_occured(error) {
-      console.log(error)
+      this.error = {error_type: "Unexpected Error:", error_message: String(error)};
+      console.log(error);
       this.loading.state = false;
     },
     redirect_to_config(res) {

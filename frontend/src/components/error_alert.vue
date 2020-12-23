@@ -17,7 +17,6 @@ export default {
   watch: {
     error: {
       handler() {
-        console.log('jaaa')
         this.showAlert();
       }
     }
