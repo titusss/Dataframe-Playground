@@ -18,7 +18,6 @@ import numpy as np
 # instantiate the app
 app = Flask(__name__)
 CORS(app)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # variables
 UPLOAD_FOLDER = '/static'  # NOTE: Change this to /uploads in production
@@ -108,6 +107,7 @@ ERROR_MESSAGES = {
     },
 }
 
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # MongoDB
 client = MongoClient(os.environ.get("mongocredential"))
 # client = MongoClient() # For offline testing.
