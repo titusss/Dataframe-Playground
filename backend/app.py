@@ -15,7 +15,6 @@ import pandas as pd
 import numpy as np
 
 # variables
-UPLOAD_FOLDER = '/static'  # NOTE: Change this to /uploads in production
 ALLOWED_EXTENSIONS_MATRIX = {'txt', 'xlsx', 'csv', 'tsv'}
 ALLOWED_EXTENSIONS_ICON = {'svg', 'png', 'jpg', 'jpeg', 'gif'}
 PRE_CONFIGURED_PLUGINS = [ObjectId('5f984ac1b478a2c8653ed827'), ObjectId('5f284a560831e4a42a30d698'), ObjectId('5f284bc60831e4a42a30d699'), ObjectId('5fc156db0ccdd1e1e454f116')]
@@ -101,12 +100,19 @@ ERROR_MESSAGES = {
         }
     },
 }
-# instantiate the app
+# # instantiate the app
+# app = Flask(__name__)
+# # app.secret_key = "super secret key"  # NOTE: INSECURE AND FOR DEBUGGING PURPOSES
+# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# CORS(app, resources={r'/*': {'origins': '*'}})  # enable CORS
+# # cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 app = Flask(__name__)
-# app.secret_key = "super secret key"  # NOTE: INSECURE AND FOR DEBUGGING PURPOSES
+cors = CORS(app, resources={r'/*': {"origins": '*'}})
+app.config['CORS_HEADER'] = 'Content-Type'
+UPLOAD_FOLDER = '/static'  # NOTE: Change this to /uploads in production
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-CORS(app, resources={r'/*': {'origins': '*'}})  # enable CORS
-# cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 
 # MongoDB
 client = MongoClient(os.environ.get("mongocredential"))
@@ -120,8 +126,8 @@ DEBUG = True
 
 
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+# if __name__ == '__main__':
+#     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
 
 
 def allowed_file(filename, extension_whitelist):
