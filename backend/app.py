@@ -109,6 +109,7 @@ ERROR_MESSAGES = {
 
 app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 UPLOAD_FOLDER = '/static'  # NOTE: Change this to /uploads in production
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
