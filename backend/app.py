@@ -109,7 +109,7 @@ ERROR_MESSAGES = {
 
 app = Flask(__name__)
 cors = CORS(app, resources={r'/*': {"origins": '*'}})
-app.config['CORS_HEADER'] = 'Content-Type'
+app.config['CORS_HEADERS'] = 'Content-Type'
 UPLOAD_FOLDER = '/static'  # NOTE: Change this to /uploads in production
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -135,11 +135,14 @@ def allowed_file(filename, extension_whitelist):
            filename.rsplit('.', 1)[1].lower() in extension_whitelist
 
 # @app.route('/',methods = ['GET','POST'])
+@cross_origin()
 # def helloWorld():
 #     print('hello world')
 #     return "Hello world!"
 
 @app.route('/export', methods=['POST'])
+@cross_origin()
+@cross_origin()
 def export_df():
     try:
         export_form = json.loads(request.form['export_form'])
@@ -204,10 +207,12 @@ def upload_db_entry(db_entry, mongo_update, url):
     return db_entry_id
 
 @app.route('/status', methods=['GET'])
+@cross_origin()
 def status():
     return "alive"
 
 @app.route('/query', methods=['POST'])
+@cross_origin()
 def search_query():
     try:
         import filter_dataframe
@@ -232,6 +237,7 @@ def search_query():
         return respond_error(ERROR_MESSAGES['query_error']['expected']['type'], str(e))
 
 @app.route('/locked', methods=['POST'])
+@cross_origin()
 def lock_session():
     print('locking')
     try:
@@ -246,6 +252,7 @@ def lock_session():
         return respond_error(ERROR_MESSAGES['locking_error']['expected']['type'], str(e))
 
 @app.route('/active_plugin', methods=['POST'])
+@cross_origin()
 def set_active_plugin():
     try:
         from pymongo import MongoClient
@@ -262,6 +269,7 @@ def set_active_plugin():
         return respond_error('Error in active plugin loading', str(e))
 
 @app.route('/visualization', methods=['POST'])
+@cross_origin()
 def make_vis_link():
     try:
         plugin = json.loads(request.form['plugin'])
@@ -285,6 +293,7 @@ def make_vis_link():
         return respond_error(ERROR_MESSAGES['visualization_error']['expected']['type'], str(e))
 
 @app.route('/plugins', methods=['POST'])
+@cross_origin()
 def add_plugin():
     from pymongo import MongoClient
     from bson.json_util import ObjectId
@@ -316,6 +325,7 @@ def add_plugin():
     return Response(dumps({'db_entry_id': db_entry_id}, allow_nan=True), mimetype="application/json")
 
 @app.route('/config', methods=['GET', 'POST'])
+@cross_origin()
 def respond_config():
     print('responding...')
     if request.form['url'] != 'undefined':
@@ -354,6 +364,7 @@ def respond_error(error_type, error_message):
     return Response(dumps({'error_type': error_type, 'error_message': error_message}, allow_nan=True), mimetype="application/json")
 
 @app.route('/upload', methods=['GET', 'POST'])
+@cross_origin()
 def add_matrix():
     try:
         metadata = json.loads(request.form['form'])
@@ -393,10 +404,12 @@ def upload_file(request, extension_whitelist, metadata):
     return "failure"
 
 @app.route('/uploads/<filename>')
+@cross_origin()
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @app.route('/matrix/<matrix_id>', methods=['GET', 'POST'])
+@cross_origin()
 def remove_matrix(matrix_id):
     metadata = json.loads(request.form['form'])
     print('###### metadata: ', metadata)
