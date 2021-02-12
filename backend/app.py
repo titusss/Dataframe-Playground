@@ -135,13 +135,11 @@ def allowed_file(filename, extension_whitelist):
            filename.rsplit('.', 1)[1].lower() in extension_whitelist
 
 # @app.route('/',methods = ['GET','POST'])
-@cross_origin()
 # def helloWorld():
 #     print('hello world')
 #     return "Hello world!"
 
 @app.route('/export', methods=['POST'])
-@cross_origin()
 @cross_origin()
 def export_df():
     try:
