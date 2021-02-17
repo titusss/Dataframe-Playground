@@ -277,34 +277,36 @@
         }
       }
     },
-    "logical_operators": {
-      "or": {
-        "properties": {
-          "type": "logic"
-        },
-        "items": {
-          "operator": {
-            "label": "",
-            "type": "b-form-select-sync",
-            "default_options": ["or", "and"],
-            "options": ["or", "and"],
-            "id": "logical_and_or-or",
-            "selected": "or"
+    "other": {
+      "logical_operators": {
+        "or": {
+          "properties": {
+            "type": "logic"
+          },
+          "items": {
+            "operator": {
+              "label": "",
+              "type": "b-form-select-sync",
+              "default_options": ["or", "and"],
+              "options": ["or", "and"],
+              "id": "logical_and_or-or",
+              "selected": "or"
+            }
           }
-        }
-      },
-      "and": {
-        "properties": {
-          "type": "logic"
         },
-        "items": {
-          "operator": {
-            "label": "",
-            "type": "b-form-select-sync",
-            "default_options": ["or", "and"],
-            "options": ["or", "and"],
-            "id": "logical_and_or-and",
-            "selected": "and"
+        "and": {
+          "properties": {
+            "type": "logic"
+          },
+          "items": {
+            "operator": {
+              "label": "",
+              "type": "b-form-select-sync",
+              "default_options": ["or", "and"],
+              "options": ["or", "and"],
+              "id": "logical_and_or-and",
+              "selected": "and"
+            }
           }
         }
       }
