@@ -704,7 +704,7 @@
               "label": "Show SusC homolog and cis-antisense RNAs ",
               "type": "b-form-input",
               "id": "filter_values",
-              "selected": "BTnc009, BT_0190, BTnc011, BT_0268, BTnc055, BT_1280, BTnc077, BT_1619, BTnc111, BT_2032, BTnc123, BT_2196, BTnc136, BT_2461, BTnc210, BT_3750, BTnc249, BT_4357, BTnc252, BT_4460, BTnc327, BT_2364, BTnc352, BT_2952, BTnc368, BT_3332"
+              "selected": "BTnc009; BT_0190; BTnc011; BT_0268; BTnc055; BT_1280; BTnc077; BT_1619; BTnc111; BT_2032; BTnc123; BT_2196; BTnc136; BT_2461; BTnc210; BT_3750; BTnc249; BT_4357; BTnc252; BT_4460; BTnc327; BT_2364; BTnc352; BT_2952; BTnc368; BT_3332"
             },
             "filter_area": {
               "label": "in ",
