@@ -3,7 +3,7 @@
 </p>
 
 <h2 align="center"><a href="http://dataframe-playground.test.fedcloud.eu/">Open Web App (Pre-Release Alpha)</a></h2>
-Simple data mining without any coding in your browser. Chained filters, interactive data visualizations, and many special features for bioinformatics. Shareable URLs for presenting your data in an interactive environment.
+Simple data mining without any coding in your browser. Chained filters, interactive data visualizations, and many special features for bioinformatics. Shareable URLs for presenting your data in an interactive environment. Interactive 3D & 2D Web.gl enabled heatmap included.
 <p align="center"><img width="70%" src="docs/resources/screenshot_01.png" /></p>
 
 ## 🧮 Features
@@ -28,6 +28,10 @@ Simple data mining without any coding in your browser. Chained filters, interact
 ### 🔗 Sharing
 * Sessions can be locked and the URL shared
 * Data in a locked session can be interactively explored by receipients
+
+![dfp_overview](https://user-images.githubusercontent.com/26855197/108297122-a6d0f800-714f-11eb-8464-781e4ea4d1bc.png)
+
+<hr>
 
 ## 🛠️ Local installation
 > This web-app consists of a Vue.js frontend communicating with a Python backend over flask. Sessions are stored in a MongoDB. ℹ️ The application always requires a running backend `flask run` and frontend `npm run serve`.
