@@ -5,7 +5,7 @@
 <h2 align="center"><a href="http://dataframe-playground.test.fedcloud.eu/">Open Web App (Alpha)</a></h2>
 
 <h4 align="center"><a href="http://dataframe-playground.test.fedcloud.eu/?config=5feb57e749815081f54e381a">Or start with sample session</a></h4>
-Simple data mining without any coding in your browser. Chained filters, interactive data visualizations, and many special features for bioinformatics. Shareable URLs for presenting your data in an interactive environment. Interactive 3D & 2D Web.gl enabled heatmap included.
+Simple data mining without any coding in your browser. Chained filters, interactive data visualizations, and many special features for bioinformatics. Shareable URLs for presenting your data in an interactive environment. Interactive 3D & 2D Web.gl enabled heatmap build on Uber's Deck.gl included.
 <p align="center"><img width="70%" src="docs/resources/screenshot_01.png" /></p>
 
 ## 🧮 Features
